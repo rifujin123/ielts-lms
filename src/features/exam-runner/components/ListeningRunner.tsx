@@ -16,10 +16,11 @@ export const ListeningRunner: React.FC<ListeningRunnerProps> = ({ skillData }) =
     flaggedQuestions,
     toggleFlag,
     isSubmitted,
+    examMode,
   } = useFullExamStore()
 
   // Audio simulator state
-  const [isPlaying, setIsPlaying] = useState<boolean>(false)
+  const [isPlaying, setIsPlaying] = useState<boolean>(examMode === 'STRICT')
   const [volume, setVolume] = useState<number>(80)
   const [isMuted, setIsMuted] = useState<boolean>(false)
 
@@ -82,21 +83,28 @@ export const ListeningRunner: React.FC<ListeningRunnerProps> = ({ skillData }) =
 
             {/* Audio Controls Embedded Inside the Section Card */}
             <div className="flex items-center gap-3 rounded-xl bg-slate-50 p-2 border border-slate-200/80 self-start sm:self-auto shadow-2xs">
-              <button
-                type="button"
-                onClick={() => setIsPlaying(!isPlaying)}
-                className="btn-interactive flex h-9 items-center gap-1.5 rounded-lg bg-red-600 px-3.5 text-xs font-bold text-white hover:bg-red-700 shadow-xs active:scale-95 transition-all"
-              >
-                {isPlaying ? (
-                  <>
-                    <Pause className="h-3.5 w-3.5" /> <span>Tạm dừng</span>
-                  </>
-                ) : (
-                  <>
-                    <Play className="h-3.5 w-3.5" /> <span>Phát Audio</span>
-                  </>
-                )}
-              </button>
+              {examMode === 'STRICT' ? (
+                <div className="flex h-9 items-center gap-1.5 rounded-lg bg-slate-900 px-3.5 text-xs font-bold text-white shadow-xs select-none">
+                  <Headphones className="h-3.5 w-3.5 text-red-500 animate-pulse" />
+                  <span>Phát liên tục (Thi thật)</span>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setIsPlaying(!isPlaying)}
+                  className="btn-interactive flex h-9 items-center gap-1.5 rounded-lg bg-red-600 px-3.5 text-xs font-bold text-white hover:bg-red-700 shadow-xs active:scale-95 transition-all"
+                >
+                  {isPlaying ? (
+                    <>
+                      <Pause className="h-3.5 w-3.5" /> <span>Tạm dừng</span>
+                    </>
+                  ) : (
+                    <>
+                      <Play className="h-3.5 w-3.5" /> <span>Phát Audio</span>
+                    </>
+                  )}
+                </button>
+              )}
 
               <div className="flex items-center gap-2 pr-1">
                 <button

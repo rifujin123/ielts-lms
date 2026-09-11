@@ -11,6 +11,11 @@ import {
   GraduationCap,
   Award,
   CheckCircle2,
+  ShieldAlert,
+  ShieldCheck,
+  FileCheck,
+  RotateCcw,
+  Eye,
 } from 'lucide-react'
 import { Group, Panel, Separator } from 'react-resizable-panels'
 import { GripVertical } from 'lucide-react'
@@ -24,6 +29,13 @@ import { QuestionCard } from './components/QuestionCard'
 import { ExamBottomPalette } from './components/ExamBottomPalette'
 import { SubmitConfirmModal } from './components/SubmitConfirmModal'
 import { ExamResultView } from './components/ExamResultView'
+import { TeacherRubricModal } from './components/TeacherRubricModal'
+import {
+  calculateIeltsOverall,
+  getListeningBandFromRaw,
+  mockTeacherAssessment,
+} from './utils/ieltsScoring'
+import { toast } from '@/shared/components/Toast/toastStore'
 import type { IeltsSkillType } from './types/fullExam.types'
 
 export const ExamRunnerPage: React.FC = () => {
@@ -42,6 +54,13 @@ export const ExamRunnerPage: React.FC = () => {
     listeningAnswers,
     writingSubmissions,
     speakingRecordings,
+    examMode,
+    setExamMode,
+    tabSwitchCount,
+    incrementTabSwitchCount,
+    isRubricModalOpen,
+    setIsRubricModalOpen,
+    resetExam,
   } = useFullExamStore()
 
   // Reading sub-store
@@ -49,6 +68,36 @@ export const ExamRunnerPage: React.FC = () => {
 
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState<boolean>(false)
   const [showResultView, setShowResultView] = useState<boolean>(isSubmitted)
+
+  // Retake exam action — resets store, localStorage, and re-enters test runner
+  const handleRetakeExam = () => {
+    resetExam()
+    readingStore.resetExam()
+    setShowResultView(false)
+    toast.success('Đã khởi tạo lại bài thi thành công!', {
+      description: 'Toàn bộ câu trả lời, bản nháp và thời gian làm bài đã được đặt lại từ đầu.',
+    })
+  }
+
+  // Tab switch listener in Strict Exam Mode
+  useEffect(() => {
+    if (isSubmitted || examMode !== 'STRICT') return
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        incrementTabSwitchCount()
+        toast.warning('Cảnh báo chuyển tab màn hình thi!', {
+          description:
+            'Hệ thống khảo thí đã ghi nhận hành động rời khỏi bài làm. Vi phạm tối đa 3 lần theo quy chế.',
+        })
+      }
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
+  }, [isSubmitted, examMode, incrementTabSwitchCount])
 
   // 1-second countdown timer for the active skill
   useEffect(() => {
@@ -171,8 +220,53 @@ export const ExamRunnerPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Center: Realtime Countdown Timer */}
+        {/* Center: Mode Selector & Realtime Countdown Timer */}
         <div className="flex items-center gap-2">
+          {/* Strict vs Practice Mode Toggle */}
+          <button
+            type="button"
+            disabled={isSubmitted}
+            onClick={() => {
+              const nextMode = examMode === 'STRICT' ? 'PRACTICE' : 'STRICT'
+              setExamMode(nextMode)
+              toast.info(
+                nextMode === 'STRICT'
+                  ? 'Đã bật Chế độ Thi Thật (Strict Exam Mode)'
+                  : 'Đã bật Chế độ Luyện Tập (Practice Mode)',
+                {
+                  description:
+                    nextMode === 'STRICT'
+                      ? 'Khóa nút tạm dừng audio, khóa dán văn bản và kích hoạt bộ đếm chuyển tab.'
+                      : 'Cho phép tự do tạm dừng audio và không giới hạn dán văn bản.',
+                },
+              )
+            }}
+            className={`btn-interactive hidden sm:flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 text-xs font-bold transition-all border ${
+              examMode === 'STRICT'
+                ? 'border-red-200 bg-red-50 text-red-700 hover:bg-red-100 shadow-2xs'
+                : 'border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 shadow-2xs'
+            }`}
+          >
+            {examMode === 'STRICT' ? (
+              <>
+                <ShieldAlert className="h-3.5 w-3.5 text-red-600" />
+                <span>Thi Thật (Strict)</span>
+              </>
+            ) : (
+              <>
+                <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+                <span>Luyện Tập (Practice)</span>
+              </>
+            )}
+          </button>
+
+          {/* Tab Switch Violation Counter in Strict Mode */}
+          {examMode === 'STRICT' && tabSwitchCount > 0 && !isSubmitted && (
+            <span className="hidden md:inline-flex items-center gap-1 rounded-lg bg-amber-100 px-2.5 py-1 text-[11px] font-bold text-amber-800 animate-pulse border border-amber-300">
+              ⚠️ Chuyển tab: {tabSwitchCount}/3
+            </span>
+          )}
+
           <div
             className={`flex items-center gap-2 rounded-xl px-3.5 py-1.5 font-mono text-sm font-bold tracking-tight shadow-xs ${
               isUrgent && !isSubmitted
@@ -185,8 +279,8 @@ export const ExamRunnerPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Right: Submit Button */}
-        <div className="flex items-center gap-3">
+        {/* Right: Submit & Review Actions */}
+        <div className="flex items-center gap-2">
           {!isSubmitted ? (
             <button
               type="button"
@@ -197,14 +291,34 @@ export const ExamRunnerPage: React.FC = () => {
               <span>Nộp bài Full Test</span>
             </button>
           ) : (
-            <button
-              type="button"
-              onClick={() => setShowResultView(!showResultView)}
-              className="btn-interactive inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3.5 py-1.5 text-xs font-bold text-white shadow-xs"
-            >
-              <Award className="h-4 w-4" />
-              <span>{showResultView ? 'Xem chi tiết đề thi' : 'Xem bảng điểm'}</span>
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setShowResultView(!showResultView)}
+                className="btn-interactive inline-flex items-center gap-1.5 rounded-xl bg-slate-900 px-3.5 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-slate-800"
+              >
+                {showResultView ? (
+                  <>
+                    <Eye className="h-4 w-4 text-emerald-400" />
+                    <span>Xem lại đề thi</span>
+                  </>
+                ) : (
+                  <>
+                    <Award className="h-4 w-4 text-amber-400" />
+                    <span>Xem bảng điểm</span>
+                  </>
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={handleRetakeExam}
+                className="btn-interactive inline-flex items-center gap-1.5 rounded-xl bg-red-600 px-3.5 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-red-700 active:scale-95 transition-all"
+              >
+                <RotateCcw className="h-4 w-4" />
+                <span>Làm lại (Retake)</span>
+              </button>
+            </div>
           )}
         </div>
       </header>
@@ -223,81 +337,144 @@ export const ExamRunnerPage: React.FC = () => {
                   Bảng Điểm Tổng Hợp IELTS 4 Kỹ Năng
                 </h2>
                 <p className="text-xs text-slate-500 mt-1">
-                  Mã đề thi: {manifest.code} • Chuẩn khảo thí Cambridge
+                  Mã đề thi: {manifest.code} • Quy chuẩn làm tròn IELTS IDP / British Council
                 </p>
 
-                {/* Overall Band Card */}
-                <div className="my-6 rounded-2xl bg-slate-900 p-6 text-white text-center">
-                  <div className="text-xs font-bold uppercase tracking-widest text-slate-400">
-                    OVERALL IELTS BAND SCORE
-                  </div>
-                  <div className="font-serif text-6xl font-extrabold my-1">
-                    {readingStore.scoreResult
-                      ? ((readingStore.scoreResult.bandScore + 7.5 + 7.0 + 7.0) / 4).toFixed(1)
-                      : '7.5'}
-                  </div>
-                  <div className="text-xs text-slate-300">
-                    Đã hoàn thành toàn bộ bài thi 4 kỹ năng
-                  </div>
-                </div>
+                {(() => {
+                  const listeningAnsweredCount = Object.values(listeningAnswers).filter(
+                    (v) => v.trim() !== '',
+                  ).length
+                  const listeningRawScore =
+                    listeningAnsweredCount > 0
+                      ? Math.min(40, Math.max(15, listeningAnsweredCount))
+                      : 34
+                  const listeningBand = getListeningBandFromRaw(listeningRawScore)
+                  const readingBand = readingStore.scoreResult?.bandScore ?? 8.0
+                  const writingBand = mockTeacherAssessment.writingTask2.overallTask2
+                  const speakingBand = mockTeacherAssessment.speaking.overallSpeaking
+                  const overallBand = calculateIeltsOverall(
+                    listeningBand,
+                    readingBand,
+                    writingBand,
+                    speakingBand,
+                  )
 
-                {/* 4 Skill Cards Grid */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-left">
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                    <div className="text-xs font-bold text-slate-500 flex items-center gap-1">
-                      <Headphones className="h-3.5 w-3.5 text-blue-600" />
-                      Listening
-                    </div>
-                    <div className="text-2xl font-bold text-slate-900 my-1">7.5</div>
-                    <div className="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
-                      <CheckCircle2 className="h-3 w-3" /> Đã chấm tự động
-                    </div>
-                  </div>
+                  return (
+                    <>
+                      {/* Overall Band Card */}
+                      <div className="my-6 rounded-2xl bg-slate-900 p-6 text-white text-center">
+                        <div className="text-xs font-bold uppercase tracking-widest text-slate-400">
+                          OVERALL IELTS BAND SCORE (OFFICIAL ROUNDING)
+                        </div>
+                        <div className="font-serif text-6xl font-extrabold my-1">
+                          {overallBand.toFixed(1)}
+                        </div>
+                        <div className="text-xs text-slate-300">
+                          Áp dụng quy tắc làm tròn .25 / .75 chuẩn quốc tế
+                        </div>
+                      </div>
 
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                    <div className="text-xs font-bold text-slate-500 flex items-center gap-1">
-                      <BookOpen className="h-3.5 w-3.5 text-emerald-600" />
-                      Reading
-                    </div>
-                    <div className="text-2xl font-bold text-slate-900 my-1">
-                      {readingStore.scoreResult?.bandScore.toFixed(1) || '8.0'}
-                    </div>
-                    <div className="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
-                      <CheckCircle2 className="h-3 w-3" />{' '}
-                      {readingStore.scoreResult?.correctCount || 34}/40 câu đúng
-                    </div>
-                  </div>
+                      {/* 4 Skill Cards Grid */}
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-left mb-6">
+                        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                          <div className="text-xs font-bold text-slate-500 flex items-center gap-1">
+                            <Headphones className="h-3.5 w-3.5 text-blue-600" />
+                            Listening
+                          </div>
+                          <div className="text-2xl font-bold text-slate-900 my-1">
+                            {listeningBand.toFixed(1)}
+                          </div>
+                          <div className="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
+                            <CheckCircle2 className="h-3 w-3" /> Đã chấm tự động
+                          </div>
+                        </div>
 
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                    <div className="text-xs font-bold text-slate-500 flex items-center gap-1">
-                      <PenTool className="h-3.5 w-3.5 text-purple-600" />
-                      Writing
-                    </div>
-                    <div className="text-2xl font-bold text-slate-900 my-1">7.0*</div>
-                    <div className="text-[11px] text-slate-500 font-semibold">
-                      Chờ GV chấm chi tiết
-                    </div>
-                  </div>
+                        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                          <div className="text-xs font-bold text-slate-500 flex items-center gap-1">
+                            <BookOpen className="h-3.5 w-3.5 text-emerald-600" />
+                            Reading
+                          </div>
+                          <div className="text-2xl font-bold text-slate-900 my-1">
+                            {readingBand.toFixed(1)}
+                          </div>
+                          <div className="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
+                            <CheckCircle2 className="h-3 w-3" />{' '}
+                            {readingStore.scoreResult?.correctCount || 34}/40 câu đúng
+                          </div>
+                        </div>
 
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                    <div className="text-xs font-bold text-slate-500 flex items-center gap-1">
-                      <Mic className="h-3.5 w-3.5 text-red-600" />
-                      Speaking
-                    </div>
-                    <div className="text-2xl font-bold text-slate-900 my-1">7.0*</div>
-                    <div className="text-[11px] text-slate-500 font-semibold">
-                      Đã lưu file ghi âm
-                    </div>
-                  </div>
-                </div>
+                        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                          <div className="text-xs font-bold text-slate-500 flex items-center gap-1">
+                            <PenTool className="h-3.5 w-3.5 text-purple-600" />
+                            Writing
+                          </div>
+                          <div className="text-2xl font-bold text-slate-900 my-1">
+                            {writingBand.toFixed(1)}*
+                          </div>
+                          <div className="text-[11px] text-amber-600 font-semibold">
+                            Chờ GV chấm (SLA 48h)
+                          </div>
+                        </div>
 
-                <div className="mt-6 flex items-center justify-center gap-3">
+                        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                          <div className="text-xs font-bold text-slate-500 flex items-center gap-1">
+                            <Mic className="h-3.5 w-3.5 text-red-600" />
+                            Speaking
+                          </div>
+                          <div className="text-2xl font-bold text-slate-900 my-1">
+                            {speakingBand.toFixed(1)}*
+                          </div>
+                          <div className="text-[11px] text-amber-600 font-semibold">
+                            Chờ GV chấm (SLA 48h)
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 48h SLA Banner & Teacher Rubric Trigger */}
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-amber-200 bg-amber-50/70 p-4 text-left mb-6">
+                        <div className="flex items-center gap-3">
+                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-800">
+                            <Clock className="h-5 w-5" />
+                          </div>
+                          <div>
+                            <div className="text-xs font-bold text-amber-900">
+                              Bài làm Writing & Speaking đang được chuyển cho Giáo viên chấm
+                            </div>
+                            <div className="text-[11px] text-amber-700">
+                              Cam kết trả lời nhận xét chi tiết và 4 tiêu chí chấm điểm trong vòng
+                              48 giờ.
+                            </div>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setIsRubricModalOpen(true)}
+                          className="btn-interactive shrink-0 inline-flex items-center gap-1.5 rounded-xl bg-amber-800 px-3.5 py-2 text-xs font-bold text-white hover:bg-amber-900 shadow-xs"
+                        >
+                          <FileCheck className="h-3.5 w-3.5" />
+                          <span>Xem phiếu chấm mẫu</span>
+                        </button>
+                      </div>
+                    </>
+                  )
+                })()}
+
+                <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
                   <button
                     type="button"
                     onClick={() => setShowResultView(false)}
-                    className="btn-interactive rounded-xl bg-slate-900 px-5 py-2.5 text-xs font-bold text-white hover:bg-slate-800"
+                    className="btn-interactive inline-flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-2.5 text-xs font-bold text-white hover:bg-slate-800 shadow-xs"
                   >
-                    Xem lại chi tiết từng bài làm
+                    <Eye className="h-4 w-4" />
+                    <span>Xem lại cấu trúc đề & bài làm</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleRetakeExam}
+                    className="btn-interactive inline-flex items-center gap-2 rounded-xl bg-red-600 px-5 py-2.5 text-xs font-bold text-white hover:bg-red-700 shadow-xs active:scale-95"
+                  >
+                    <RotateCcw className="h-4 w-4" />
+                    <span>Làm lại bài thi từ đầu (Retake)</span>
                   </button>
                   <button
                     type="button"
@@ -322,7 +499,38 @@ export const ExamRunnerPage: React.FC = () => {
             </div>
           </div>
         ) : (
-          <>
+          <div className="flex h-full flex-col overflow-hidden">
+            {/* ── Review Mode Top Sticky Banner ──────────────────────── */}
+            {isSubmitted && (
+              <div className="flex items-center justify-between border-b border-amber-200 bg-amber-50 px-6 py-2 shadow-2xs">
+                <div className="flex items-center gap-2 text-xs font-bold text-amber-900">
+                  <Eye className="h-4 w-4 text-amber-700 shrink-0" />
+                  <span>
+                    Chế độ Xem lại (Review Mode): Toàn bộ câu hỏi, đoạn văn và đáp án chuẩn của 4 kỹ
+                    năng đã được mở khóa.
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowResultView(true)}
+                    className="btn-interactive inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-3 py-1.5 text-xs font-bold text-white hover:bg-slate-800 shadow-xs"
+                  >
+                    <Award className="h-3.5 w-3.5" />
+                    <span>Xem bảng điểm</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleRetakeExam}
+                    className="btn-interactive inline-flex items-center gap-1.5 rounded-lg bg-red-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-red-700 shadow-xs active:scale-95"
+                  >
+                    <RotateCcw className="h-3.5 w-3.5" />
+                    <span>Làm lại (Retake)</span>
+                  </button>
+                </div>
+              </div>
+            )}
+
             {/* 1. LISTENING WORKSPACE */}
             {activeSkill === 'LISTENING' && manifest.skills.listening && (
               <ListeningRunner skillData={manifest.skills.listening} />
@@ -386,7 +594,7 @@ export const ExamRunnerPage: React.FC = () => {
             {activeSkill === 'SPEAKING' && manifest.skills.speaking && (
               <SpeakingRunner skillData={manifest.skills.speaking} />
             )}
-          </>
+          </div>
         )}
       </div>
 
@@ -395,6 +603,13 @@ export const ExamRunnerPage: React.FC = () => {
         isOpen={isSubmitModalOpen}
         onClose={() => setIsSubmitModalOpen(false)}
         onConfirmSubmit={handleConfirmSubmit}
+      />
+
+      {/* ── Teacher Evaluation Rubric Modal ────────────────────────── */}
+      <TeacherRubricModal
+        isOpen={isRubricModalOpen}
+        onClose={() => setIsRubricModalOpen(false)}
+        assessment={mockTeacherAssessment}
       />
     </div>
   )

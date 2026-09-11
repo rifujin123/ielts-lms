@@ -10,6 +10,7 @@ import {
 } from 'lucide-react'
 import type { WritingExamSkill } from '../types/fullExam.types'
 import { useFullExamStore } from '../store/fullExamStore'
+import { toast } from '@/shared/components/Toast/toastStore'
 
 interface WritingRunnerProps {
   skillData: WritingExamSkill
@@ -17,7 +18,7 @@ interface WritingRunnerProps {
 
 export const WritingRunner: React.FC<WritingRunnerProps> = ({ skillData }) => {
   const [activeTaskIndex, setActiveTaskIndex] = useState<0 | 1>(0)
-  const { writingSubmissions, setWritingTaskAnswer, isSubmitted } = useFullExamStore()
+  const { writingSubmissions, setWritingTaskAnswer, isSubmitted, examMode } = useFullExamStore()
 
   const currentTask = skillData.tasks[activeTaskIndex] || skillData.tasks[0]
   const currentKey = activeTaskIndex === 0 ? 'task1' : 'task2'
@@ -199,6 +200,15 @@ export const WritingRunner: React.FC<WritingRunnerProps> = ({ skillData }) => {
               disabled={isSubmitted}
               value={currentText}
               onChange={(e) => setWritingTaskAnswer(currentKey, e.target.value)}
+              onPaste={(e) => {
+                if (examMode === 'STRICT') {
+                  e.preventDefault()
+                  toast.warning('Chế độ Thi Thật: Tính năng dán văn bản bị khóa', {
+                    description:
+                      'Vui lòng tự gõ bài viết để đảm bảo tính trung thực theo quy chế thi của trung tâm.',
+                  })
+                }
+              }}
               placeholder="Bắt đầu viết bài luận của bạn tại đây..."
               className="flex-1 w-full resize-none rounded-xl border border-slate-200 bg-slate-50/50 p-5 font-sans text-sm text-slate-900 leading-relaxed placeholder-slate-400 focus:border-slate-900 focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-slate-900/10 custom-scrollbar transition-colors"
             />

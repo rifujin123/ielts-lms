@@ -1,10 +1,13 @@
 import React, { useState, useRef } from 'react'
 import { Highlighter, Trash2, Bookmark } from 'lucide-react'
 import { useIeltsExamStore } from '../store/ieltsExamStore'
+import { useFullExamStore } from '../store/fullExamStore'
+import { toast } from '@/shared/components/Toast/toastStore'
 
 export const ReadingPassageView: React.FC = () => {
   const { manifest, activePassageId, fontSizeScale, highlights, addHighlight, removeHighlight } =
     useIeltsExamStore()
+  const { examMode } = useFullExamStore()
 
   const passage = manifest.passages.find((p) => p.id === activePassageId)
   const passageRef = useRef<HTMLDivElement>(null)
@@ -63,6 +66,15 @@ export const ReadingPassageView: React.FC = () => {
     <div
       ref={passageRef}
       onMouseUp={handleMouseUp}
+      onCopy={(e) => {
+        if (examMode === 'STRICT') {
+          e.preventDefault()
+          toast.warning('Chế độ Thi Thật: Sao chép văn bản bị khóa', {
+            description:
+              'Để đảm bảo tính trung thực của kỳ thi, vui lòng không sao chép văn bản bài đọc ra ngoài.',
+          })
+        }
+      }}
       className="relative h-full overflow-y-auto bg-slate-50/70 p-6 md:p-8 font-serif"
     >
       {/* ── Floating Highlight Toolbar ────────────────────────────── */}

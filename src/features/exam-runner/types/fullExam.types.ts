@@ -152,3 +152,40 @@ export interface FullExamStudentResponses {
   isSkillCompleted: Record<IeltsSkillType, boolean>
   isFullExamSubmitted: boolean
 }
+
+export type ExamMode = 'STRICT' | 'PRACTICE'
+
+export interface TeacherRubricAssessment {
+  teacherId: string
+  teacherName: string
+  teacherAvatarUrl?: string
+  gradedAt: string
+  overallBand: number
+  status: 'SUBMITTED_PENDING_REVIEW' | 'GRADING_IN_PROGRESS' | 'GRADED_PUBLISHED'
+  slaHoursRemaining?: number
+  writingTask1: {
+    taskAchievement: number // 1.0 - 9.0
+    coherenceCohesion: number
+    lexicalResource: number
+    grammaticalRangeAccuracy: number
+    overallTask1: number
+    feedbackComments: string
+  }
+  writingTask2: {
+    taskResponse: number
+    coherenceCohesion: number
+    lexicalResource: number
+    grammaticalRangeAccuracy: number
+    overallTask2: number
+    feedbackComments: string
+  }
+  speaking: {
+    fluencyCoherence: number
+    lexicalResource: number
+    grammaticalRangeAccuracy: number
+    pronunciation: number
+    overallSpeaking: number
+    audioFeedbackUrl?: string
+    examinerNotes: string
+  }
+}

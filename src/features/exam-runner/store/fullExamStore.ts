@@ -1,11 +1,13 @@
 import { create } from 'zustand'
-import type { FullIeltsExamManifest, IeltsSkillType } from '../types/fullExam.types'
+import type { FullIeltsExamManifest, IeltsSkillType, ExamMode } from '../types/fullExam.types'
 import { cambridgeFull4SkillMock } from '../data/cambridgeFull4SkillMock'
 
 interface FullExamStoreState {
   manifest: FullIeltsExamManifest
   activeSkill: IeltsSkillType
   activeSectionIndex: number // 0 to 3 for Listening sections or 0 to 2 for Reading passages
+  examMode: ExamMode // 'STRICT' (Chế độ thi thật) | 'PRACTICE' (Chế độ luyện tập)
+  tabSwitchCount: number
 
   // Skill responses
   listeningAnswers: Record<number, string>
@@ -17,11 +19,15 @@ interface FullExamStoreState {
   timeRemaining: Record<IeltsSkillType, number>
   isTimerRunning: boolean
   isSubmitted: boolean
+  isRubricModalOpen: boolean
 
   // Actions
   setManifest: (manifest: FullIeltsExamManifest) => void
   setActiveSkill: (skill: IeltsSkillType) => void
   setActiveSectionIndex: (index: number) => void
+  setExamMode: (mode: ExamMode) => void
+  incrementTabSwitchCount: () => void
+  setIsRubricModalOpen: (open: boolean) => void
   setListeningAnswer: (qId: number, val: string) => void
   setReadingAnswer: (qId: number, val: string) => void
   setWritingTaskAnswer: (task: 'task1' | 'task2', content: string) => void
@@ -59,6 +65,9 @@ export const useFullExamStore = create<FullExamStoreState>((set, get) => ({
   manifest: defaultManifest,
   activeSkill: (saved?.activeSkill as IeltsSkillType) ?? 'LISTENING',
   activeSectionIndex: saved?.activeSectionIndex ?? 0,
+  examMode: (saved?.examMode as ExamMode) ?? 'STRICT',
+  tabSwitchCount: saved?.tabSwitchCount ?? 0,
+  isRubricModalOpen: false,
 
   listeningAnswers: saved?.listeningAnswers ?? {},
   readingAnswers: saved?.readingAnswers ?? {},
@@ -79,12 +88,38 @@ export const useFullExamStore = create<FullExamStoreState>((set, get) => ({
     set({ manifest })
   },
 
+  setExamMode: (mode) => {
+    set({ examMode: mode })
+    const state = get()
+    persistSession({
+      ...state,
+      examMode: mode,
+    })
+  },
+
+  incrementTabSwitchCount: () => {
+    set((state) => {
+      const nextCount = state.tabSwitchCount + 1
+      persistSession({
+        ...state,
+        tabSwitchCount: nextCount,
+      })
+      return { tabSwitchCount: nextCount }
+    })
+  },
+
+  setIsRubricModalOpen: (open) => {
+    set({ isRubricModalOpen: open })
+  },
+
   setActiveSkill: (skill) => {
     set({ activeSkill: skill, activeSectionIndex: 0 })
     const state = get()
     persistSession({
       activeSkill: skill,
       activeSectionIndex: 0,
+      examMode: state.examMode,
+      tabSwitchCount: state.tabSwitchCount,
       listeningAnswers: state.listeningAnswers,
       readingAnswers: state.readingAnswers,
       writingSubmissions: state.writingSubmissions,
@@ -197,6 +232,8 @@ export const useFullExamStore = create<FullExamStoreState>((set, get) => ({
         WRITING: (manifest.skills.writing?.durationMinutes ?? 60) * 60,
         SPEAKING: (manifest.skills.speaking?.durationMinutes ?? 14) * 60,
       },
+      tabSwitchCount: 0,
+      isRubricModalOpen: false,
       isTimerRunning: true,
       isSubmitted: false,
     })
