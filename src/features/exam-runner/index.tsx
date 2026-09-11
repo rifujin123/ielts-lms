@@ -14,6 +14,8 @@ import {
   FileCheck,
   RotateCcw,
   Eye,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react'
 import { useFullExamStore } from './store/fullExamStore'
 import { useIeltsExamStore } from './store/ieltsExamStore'
@@ -170,12 +172,27 @@ export const ExamRunnerPage: React.FC = () => {
     }
   }, [availableSkills, activeSkill, setActiveSkill])
 
+  // Auto-scroll the active skill tab into view smoothly
+  useEffect(() => {
+    const activeTabEl = document.getElementById(`skill-tab-${activeSkill}`)
+    if (activeTabEl) {
+      activeTabEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' })
+    }
+  }, [activeSkill])
+
+  const scrollSkills = (direction: 'left' | 'right') => {
+    const container = document.getElementById('exam-header-skills-scroll')
+    if (container) {
+      container.scrollBy({ left: direction === 'left' ? -120 : 120, behavior: 'smooth' })
+    }
+  }
+
   return (
     <div className="flex h-screen w-screen flex-col overflow-hidden bg-slate-100 select-none">
       {/* ── Top Universal Header ───────────────────────────────────── */}
-      <header className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-slate-200 bg-white px-4 shadow-xs">
+      <header className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-slate-200 bg-white px-3 sm:px-4 shadow-xs">
         {/* ── Left: Exit & Branding ─────────────────────────────────── */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <button
             type="button"
             onClick={() => navigate('/tests')}
@@ -185,62 +202,88 @@ export const ExamRunnerPage: React.FC = () => {
             <ArrowLeft className="h-5 w-5" strokeWidth={2} />
           </button>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2 sm:gap-2.5">
             <img
               src="/branding.png"
               alt="IELTS Hồ Thành"
-              className="h-8 w-auto max-w-[100px] object-contain"
+              className="h-8 w-auto max-w-[80px] sm:max-w-[100px] object-contain"
             />
-            <div className="hidden sm:block">
+            <div className="hidden md:block">
               <div className="text-[10px] font-bold text-red-600 uppercase tracking-wider">
                 IELTS Hồ Thành
               </div>
-              <div className="text-xs font-bold text-slate-800 line-clamp-1 max-w-[180px] lg:max-w-[220px]">
+              <div className="text-xs font-bold text-slate-800 line-clamp-1 max-w-[150px] lg:max-w-[220px]">
                 {manifest.title}
               </div>
             </div>
           </div>
         </div>
 
-        {/* ── Center: Dynamic Skill Switcher Tabs (Only renders skills configured in this test) ── */}
-        <div className="flex items-center justify-center">
+        {/* ── Center: Dynamic Skill Switcher Tabs (With Smooth Scroll Handling) ── */}
+        <div className="flex items-center justify-center min-w-0 max-w-[50vw] sm:max-w-[60vw] md:max-w-none px-1">
           {availableSkills.length > 1 ? (
-            <div className="flex items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200 shadow-2xs">
-              {availableSkills.map(({ key, label, icon: Icon }) => {
-                const isActive = activeSkill === key
-                const { label: compLabel, isDone } = getSkillCompletion(key)
+            <div className="relative flex items-center group max-w-full">
+              {/* Left scroll chevron button (Mobile / Narrow screens) */}
+              <button
+                type="button"
+                onClick={() => scrollSkills('left')}
+                title="Cuộn kỹ năng sang trái"
+                className="btn-interactive flex md:hidden h-8 w-5 items-center justify-center rounded-l-lg bg-slate-200/80 text-slate-600 hover:text-slate-900 hover:bg-slate-300/80 shrink-0 z-10 transition-colors"
+              >
+                <ChevronLeft className="h-3.5 w-3.5" />
+              </button>
 
-                return (
-                  <button
-                    key={key}
-                    type="button"
-                    onClick={() => setActiveSkill(key)}
-                    className={`btn-interactive flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
-                      isActive
-                        ? 'bg-slate-900 text-white shadow-xs'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
-                    }`}
-                  >
-                    <Icon className="h-3.5 w-3.5" />
-                    <span>{label}</span>
-                    <span
-                      className={`rounded-full px-1.5 py-0.2 text-[10px] ${
-                        isDone
-                          ? 'bg-emerald-500 text-white'
-                          : isActive
-                            ? 'bg-white/20 text-white'
-                            : 'bg-slate-200 text-slate-700'
+              <div
+                id="exam-header-skills-scroll"
+                className="flex items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200 shadow-2xs overflow-x-auto custom-scrollbar scroll-smooth whitespace-nowrap"
+              >
+                {availableSkills.map(({ key, label, icon: Icon }) => {
+                  const isActive = activeSkill === key
+                  const { label: compLabel, isDone } = getSkillCompletion(key)
+
+                  return (
+                    <button
+                      key={key}
+                      id={`skill-tab-${key}`}
+                      type="button"
+                      onClick={() => setActiveSkill(key)}
+                      className={`btn-interactive flex shrink-0 items-center gap-1.5 sm:gap-2 rounded-lg px-2.5 sm:px-3 py-1.5 text-xs font-bold transition-all border ${
+                        isActive
+                          ? 'border-slate-900 bg-slate-900 text-white shadow-xs'
+                          : 'border-transparent text-slate-600 hover:text-slate-900 hover:bg-white/60'
                       }`}
                     >
-                      {compLabel}
-                    </span>
-                  </button>
-                )
-              })}
+                      <Icon className="h-3.5 w-3.5 shrink-0" />
+                      <span>{label}</span>
+                      <span
+                        className={`rounded-full px-1.5 py-0.2 text-[10px] shrink-0 ${
+                          isDone
+                            ? 'bg-emerald-500 text-white'
+                            : isActive
+                              ? 'bg-white/20 text-white'
+                              : 'bg-slate-200 text-slate-700'
+                        }`}
+                      >
+                        {compLabel}
+                      </span>
+                    </button>
+                  )
+                })}
+              </div>
+
+              {/* Right scroll chevron button (Mobile / Narrow screens) */}
+              <button
+                type="button"
+                onClick={() => scrollSkills('right')}
+                title="Cuộn kỹ năng sang phải"
+                className="btn-interactive flex md:hidden h-8 w-5 items-center justify-center rounded-r-lg bg-slate-200/80 text-slate-600 hover:text-slate-900 hover:bg-slate-300/80 shrink-0 z-10 transition-colors"
+              >
+                <ChevronRight className="h-3.5 w-3.5" />
+              </button>
             </div>
           ) : availableSkills.length === 1 ? (
             /* Single Skill Exam Badge */
-            <div className="flex items-center gap-2 rounded-xl bg-slate-100 px-3.5 py-1.5 border border-slate-200 text-xs font-bold text-slate-800">
+            <div className="flex shrink-0 items-center gap-2 rounded-xl bg-slate-100 px-3.5 py-1.5 border border-slate-200 text-xs font-bold text-slate-800">
               {React.createElement(availableSkills[0].icon, { className: 'h-4 w-4 text-red-600' })}
               <span>{availableSkills[0].label} Test</span>
               <span className="rounded-full bg-slate-200 px-2 py-0.5 text-[10px] text-slate-700">

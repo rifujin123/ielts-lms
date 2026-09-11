@@ -84,7 +84,7 @@ export const ExamHeader: React.FC<ExamHeaderProps> = ({ onOpenSubmitModal, onExi
         </div>
 
         {/* Passage Navigation Tabs */}
-        <div className="flex items-center gap-1.5 rounded-xl bg-slate-100 p-1 border border-slate-200">
+        <div className="flex items-center gap-1.5 rounded-xl bg-slate-100 p-1 border border-slate-200 overflow-x-auto custom-scrollbar scroll-smooth">
           {manifest.passages.map((p) => {
             const { answered, total } = getPassageAnsweredCount(p.id)
             const isActive = activePassageId === p.id
@@ -95,7 +95,7 @@ export const ExamHeader: React.FC<ExamHeaderProps> = ({ onOpenSubmitModal, onExi
                 key={p.id}
                 type="button"
                 onClick={() => setActivePassage(p.id)}
-                className={`btn-interactive flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
+                className={`btn-interactive flex shrink-0 items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
                   isActive
                     ? 'bg-white text-slate-900 shadow-xs ring-1 ring-slate-900/10'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
