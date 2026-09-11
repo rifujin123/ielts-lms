@@ -73,10 +73,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, onItemClick }) => {
                 onClick={onItemClick}
                 className={({ isActive }) =>
                   cn(
-                    'group relative flex items-center gap-2.5 rounded-full px-3 py-2 text-body-sm transition-all duration-200 ease-out',
+                    'group relative flex items-center gap-2.5 rounded-full px-3 py-2 text-body-sm transition-all duration-200 ease-out border',
                     isActive
-                      ? 'bg-red-50 text-primary font-bold shadow-xs ring-1 ring-primary/20 scale-[1.01]'
-                      : 'text-secondary hover:bg-surface-container-low hover:text-on-surface hover:translate-x-0.5',
+                      ? 'bg-red-50 text-primary font-bold shadow-xs border-red-200 scale-[1.01]'
+                      : 'border-transparent text-secondary hover:bg-surface-container-low hover:text-on-surface hover:translate-x-0.5',
                   )
                 }
               >
