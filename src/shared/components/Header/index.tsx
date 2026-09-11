@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { Menu, ChevronLeft, Bell } from 'lucide-react'
 import { useUIStore } from '@/store/uiStore'
 
 /**
@@ -27,7 +28,7 @@ export const Header: React.FC = () => {
           aria-label="Toggle Navigation"
           className="flex h-10 w-10 items-center justify-center rounded-lg text-secondary hover:bg-surface-container md:hidden"
         >
-          <span className="material-symbols-outlined text-2xl">menu</span>
+          <Menu className="h-5 w-5" strokeWidth={2} />
         </button>
 
         {/* Back navigation left-chevron */}
@@ -38,7 +39,7 @@ export const Header: React.FC = () => {
           title="Quay lại"
           className="flex items-center justify-center rounded-lg p-1.5 text-secondary hover:bg-surface-container hover:text-on-surface transition-colors cursor-pointer"
         >
-          <span className="material-symbols-outlined text-[24px]">chevron_left</span>
+          <ChevronLeft className="h-5 w-5" strokeWidth={2.2} />
         </button>
 
         {/* Branding Logo */}
@@ -74,8 +75,8 @@ export const Header: React.FC = () => {
           aria-label="Thông báo"
           className="relative flex h-10 w-10 items-center justify-center rounded-full text-secondary hover:bg-surface-container transition-colors"
         >
-          <span className="material-symbols-outlined text-2xl">notifications</span>
-          <span className="animate-pop-in absolute right-2 top-2 h-2 w-2 rounded-full bg-primary" />
+          <Bell className="h-5 w-5" strokeWidth={1.8} />
+          <span className="animate-pop-in absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-primary" />
         </button>
 
         {/* User avatar */}

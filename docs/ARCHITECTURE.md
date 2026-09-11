@@ -285,6 +285,34 @@ JSX                            ← Uses semantic classes: text-primary, bg-surfa
 
 ---
 
+## Icon System Architecture — `lucide-react`
+
+> **MANDATORY RULE:**
+> DO NOT use web font icons (such as `<span className="material-symbols-outlined">`).
+> All icons MUST be imported directly as SVG components from **`lucide-react`**.
+
+### UX & Engineering Rationale:
+
+1. **Zero FOUT & Zero Layout Shift (0px)**: Font icons momentarily flash raw text (e.g. `dashboard`, `menu_book`) before web fonts load. Lucide SVGs render instantaneously and synchronously without layout or baseline jitter.
+2. **Subtle & Academic Weighting**: Default idle icons use `strokeWidth={1.75}`; active or emphasized states use `strokeWidth={2.2}` for crisp visual hierarchy without chunkiness.
+3. **Tree-Shakeable & Offline-Safe**: Zero external CDN requests; Vite compiles only used SVGs into the production chunk.
+
+```tsx
+// Usage Example:
+import { LayoutDashboard, BookOpen, ChevronRight, type LucideIcon } from 'lucide-react'
+
+// Standard icon:
+<LayoutDashboard className="h-[18px] w-[18px] text-secondary" strokeWidth={1.75} />
+
+// Dynamic active state with subtle stroke emphasis:
+<Icon
+  className={cn('h-[18px] w-[18px] transition-transform duration-200', isActive ? 'text-slate-900 scale-110' : 'text-secondary')}
+  strokeWidth={isActive ? 2.2 : 1.75}
+/>
+```
+
+---
+
 ## UX & Micro-Interaction Animation System
 
 The portal adheres to a **Subtle & Academic** motion philosophy (150–250ms, GPU-accelerated CSS, 0 KB JS bundle penalty). All agents building or refactoring UI features MUST reuse the standard micro-interaction utilities defined in `src/styles/globals.css`.

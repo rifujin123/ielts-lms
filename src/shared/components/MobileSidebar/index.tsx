@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
+import { X } from 'lucide-react'
 import { useUIStore } from '@/store/uiStore'
 import { Sidebar } from '@/shared/components/Sidebar'
 
@@ -35,9 +36,9 @@ export const MobileSidebar: React.FC = () => {
           <button
             onClick={closeSidebar}
             aria-label="Đóng menu"
-            className="flex h-9 w-9 items-center justify-center rounded-lg text-secondary hover:bg-surface-container"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-secondary hover:bg-surface-container transition-colors"
           >
-            <span className="material-symbols-outlined text-xl">close</span>
+            <X className="h-5 w-5" strokeWidth={2} />
           </button>
         </div>
 

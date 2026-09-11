@@ -1,4 +1,4 @@
-﻿# Agent Operating Manual — DOL IELTS LMS
+# Agent Operating Manual — DOL IELTS LMS
 
 This document is the **single operational source of truth** for all autonomous AI agents and engineers working in this repository.
 
@@ -65,3 +65,5 @@ pnpm build
    - All feature hooks must provide instant fallback data defaults so pages render immediately without spinner hangs during offline/mock modes.
 4. **Barrel Exports**:
    - Every shared component and feature component must export via `index.tsx`.
+5. **SVG Icon Standard (`lucide-react`)**:
+   - Never use `<span className="material-symbols-outlined">`. Always import vector SVG components from `lucide-react` with `strokeWidth={1.75}` (idle) and `strokeWidth={2.2}` (active).

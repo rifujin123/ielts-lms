@@ -1,11 +1,28 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
+import {
+  LayoutDashboard,
+  BookOpen,
+  CalendarDays,
+  FileQuestion,
+  Languages,
+  PenLine,
+  Route,
+  Headphones,
+  Award,
+  Library,
+  Video,
+  Info,
+  Headset,
+  ExternalLink,
+  type LucideIcon,
+} from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface NavItemDef {
   label: string
   to: string
-  icon: string
+  icon: LucideIcon
   badge?: string
 }
 
@@ -18,28 +35,28 @@ const navGroups: NavGroupDef[] = [
   {
     title: 'TỔNG QUAN',
     items: [
-      { label: 'Overview', to: '/dashboard', icon: 'dashboard' },
-      { label: 'Syllabus & Bài học', to: '/homework', icon: 'menu_book' },
-      { label: 'Điểm danh & Buổi học', to: '/attendance', icon: 'calendar_month' },
+      { label: 'Overview', to: '/dashboard', icon: LayoutDashboard },
+      { label: 'Syllabus & Bài học', to: '/homework', icon: BookOpen },
+      { label: 'Điểm danh & Buổi học', to: '/attendance', icon: CalendarDays },
     ],
   },
   {
     title: 'BÀI TẬP TRONG KHOÁ',
     items: [
-      { label: 'Online tests', to: '/tests', icon: 'quiz' },
-      { label: 'Vocabulary', to: '/vocabulary', icon: 'translate' },
-      { label: 'Exercises', to: '/exercises', icon: 'edit_note' },
-      { label: 'Roadmap cá nhân hóa', to: '/roadmap/personal', icon: 'alt_route' },
-      { label: 'Luyện tập tương tác', to: '/practice', icon: 'headphones' },
+      { label: 'Online tests', to: '/tests', icon: FileQuestion },
+      { label: 'Vocabulary', to: '/vocabulary', icon: Languages },
+      { label: 'Exercises', to: '/exercises', icon: PenLine },
+      { label: 'Roadmap cá nhân hóa', to: '/roadmap/personal', icon: Route },
+      { label: 'Luyện tập tương tác', to: '/practice', icon: Headphones },
     ],
   },
   {
     title: 'THỐNG KÊ & THÔNG TIN',
     items: [
-      { label: 'Final Test', to: '/final-test', icon: 'assignment_turned_in' },
-      { label: 'Tài liệu & Sách', to: '/materials', icon: 'library_books' },
-      { label: 'Lớp học trực tuyến', to: '/classroom', icon: 'school' },
-      { label: 'Thông tin khóa học', to: '/', icon: 'info' },
+      { label: 'Final Test', to: '/final-test', icon: Award },
+      { label: 'Tài liệu & Sách', to: '/materials', icon: Library },
+      { label: 'Lớp học trực tuyến', to: '/classroom', icon: Video },
+      { label: 'Thông tin khóa học', to: '/', icon: Info },
     ],
   },
 ]
@@ -80,26 +97,28 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, onItemClick }) => {
                   )
                 }
               >
-                {({ isActive }) => (
-                  <>
-                    <span
-                      className={cn(
-                        'material-symbols-outlined text-[20px] transition-transform duration-200',
-                        isActive
-                          ? 'text-slate-900 scale-110'
-                          : 'text-secondary group-hover:text-on-surface',
+                {({ isActive }) => {
+                  const Icon = item.icon
+                  return (
+                    <>
+                      <Icon
+                        className={cn(
+                          'h-[18px] w-[18px] shrink-0 transition-transform duration-200',
+                          isActive
+                            ? 'text-slate-900 scale-110'
+                            : 'text-secondary group-hover:text-on-surface',
+                        )}
+                        strokeWidth={isActive ? 2.2 : 1.75}
+                      />
+                      <span className="truncate flex-1 text-[13px]">{item.label}</span>
+                      {item.badge && (
+                        <span className="rounded-full bg-primary-container px-2 py-0.5 text-[10px] font-bold text-on-primary-container animate-pop-in">
+                          {item.badge}
+                        </span>
                       )}
-                    >
-                      {item.icon}
-                    </span>
-                    <span className="truncate flex-1 text-[13px]">{item.label}</span>
-                    {item.badge && (
-                      <span className="rounded-full bg-primary-container px-2 py-0.5 text-[10px] font-bold text-on-primary-container animate-pop-in">
-                        {item.badge}
-                      </span>
-                    )}
-                  </>
-                )}
+                    </>
+                  )
+                }}
               </NavLink>
             ))}
           </div>
@@ -110,7 +129,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, onItemClick }) => {
       <div className="mt-auto px-3 pt-6">
         <div className="rounded-xl border border-outline-variant bg-surface-container-low p-3.5">
           <div className="flex items-center gap-2 text-label-md font-semibold text-on-surface">
-            <span className="material-symbols-outlined text-primary text-lg">support_agent</span>
+            <Headset className="h-4 w-4 text-primary shrink-0" strokeWidth={2} />
             Hỗ trợ học vụ
           </div>
           <p className="mt-1 text-body-sm text-secondary leading-snug">
@@ -123,7 +142,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, onItemClick }) => {
             className="mt-2.5 inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-surface-container-lowest border border-outline-variant py-1.5 text-label-sm font-semibold text-on-surface hover:bg-surface-container"
           >
             Nhóm Zalo lớp
-            <span className="material-symbols-outlined text-sm">open_in_new</span>
+            <ExternalLink className="h-3.5 w-3.5 shrink-0" strokeWidth={2} />
           </a>
         </div>
       </div>
