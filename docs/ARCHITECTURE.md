@@ -772,3 +772,59 @@ Whenever an engineer or AI agent introduces a reusable component, hook, or layou
   - 3D tactile button motion budget: `border-b-4 active:border-b-0 active:translate-y-1` (150ms `ease-out`).
   - Native Web Audio oscillators safely muted/unmuted with global toggle state persisted.
   - Keyboard listeners (<kbd>1–4</kbd> and <kbd>Enter</kbd>) must automatically detach upon unmount.
+
+### 15. Teacher Vocabulary Sets & Word List Study Module
+
+- **Asset Name & File Path**:
+  - `VocabularyDetailPage` (`src/features/vocabulary/VocabularyDetailPage.tsx`)
+  - `VocabularyWordCard` (`src/features/vocabulary/components/VocabularyWordCard.tsx`)
+  - `FlashcardModal` (`src/features/vocabulary/components/FlashcardModal.tsx`)
+  - `vocabularyService` (`src/services/vocabularyService.ts`)
+- **Purpose & UX Intent**:
+  - **Curated Teacher Word Lists**: Enables students to view and interact with the exact academic IELTS vocabulary words assigned for each course unit/topic.
+  - **IELTS Academic Card Display**: Displays headword, IPA phonetics, native British pronunciation via Web Speech API, Vietnamese definition, concise English definition, real exam example sentence with underlined target keyword (`underline underline-offset-4 decoration-primary decoration-2`), and academic collocations/synonyms.
+  - **Tactile Mastery & Starred Tracking**: Direct 1-tap toggles for "Đã thuộc" via Brain icon button (`<Brain />` in green when mastered, outline when unmastered) and "Lưu ý" (Starred) that update progress counters in real time and persist to browser `localStorage` (`ielts_vocab_progress_${setId}`).
+  - **Fast Recall 3D Flip Flashcard Drilling**: Modal study view with hardware-accelerated 3D flip card animation (`perspective: 1200px`, `transform-style: preserve-3d`, `rotateY(180deg)`), ergonomic floating side chevrons, auto-play audio toggle, and keyboard controls (<kbd>Space</kbd> to flip, <kbd>←</kbd> / <kbd>→</kbd> to navigate, <kbd>M</kbd> to toggle mastered, <kbd>S</kbd> to toggle note, <kbd>Esc</kbd> to close).
+- **Usage Example**:
+  ```tsx
+  import { VocabularyWordCard } from '@/features/vocabulary/components/VocabularyWordCard'
+  import { FlashcardModal } from '@/features/vocabulary/components/FlashcardModal'
+
+  <VocabularyWordCard
+    word={word}
+    onToggleMaster={(id) => handleToggleMaster(id)}
+    onToggleStar={(id) => handleToggleStar(id)}
+  />
+
+  <FlashcardModal
+    words={words}
+    isOpen={isFlashcardOpen}
+    onClose={() => setIsFlashcardOpen(false)}
+    onToggleMaster={handleToggleMaster}
+    onToggleStar={handleToggleStar}
+  />
+  ```
+- **Constraints & Invariants**:
+  - Strict 0px layout shift between front and back 3D card faces with equal `min-h-[360px]` and matching padding.
+  - Web Speech API synthesizes audio without external third-party network dependencies; audio button clicks suppress flip event via `e.stopPropagation()`.
+  - Smooth 450ms cubic-bezier transition budget (`cubic-bezier(0.4, 0, 0.2, 1)`) for 3D flip without layout jumping.
+  - Keyboard listeners automatically clean up on modal dismiss.
+  - Ready for backend API handoff via explicit `// 🔌 WIRE:` tags in `vocabularyService.ts`.
+
+### 16. Mobile Responsive Navigation Drawer (MobileSidebar)
+
+- **Asset Name & File Path**: `MobileSidebar` (`src/shared/components/MobileSidebar/index.tsx`)
+- **Purpose & UX Intent**:
+  - Full-featured mobile navigation drawer with hardware-accelerated slide-over motion.
+  - Features a smooth backdrop fade (`transition-opacity duration-300 ease-out`), GPU-accelerated panel slide (`transition-transform duration-300 ease-out`), body scroll locking (`document.body.style.overflow = 'hidden'`), route-change auto-dismissal, and <kbd>Escape</kbd> keyboard listener.
+- **Usage Example**:
+  ```tsx
+  import { MobileSidebar } from '@/shared/components/MobileSidebar'
+
+  // Mounted globally in AppLayout:
+  ;<MobileSidebar />
+  ```
+- **Constraints & Invariants**:
+  - Motion Budget: 300ms `ease-out` slide and fade.
+  - Uses `invisible delay-300` on exit to allow exit transitions to play completely before removing pointer/focus visibility.
+  - Body overflow restored on unmount/close to eliminate sticky body scroll bugs.

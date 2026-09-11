@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import { X, Flame, Heart, Volume2, VolumeX } from 'lucide-react'
-import { soundEffects } from '../utils/soundEffects'
+import { X, Flame, Heart } from 'lucide-react'
 
 interface ExerciseTopBarProps {
   currentQuestionIndex: number
@@ -18,16 +17,9 @@ export const ExerciseTopBar: React.FC<ExerciseTopBarProps> = ({
   onExit,
 }) => {
   const [showExitConfirm, setShowExitConfirm] = useState<boolean>(false)
-  const [isMuted, setIsMuted] = useState<boolean>(soundEffects.getMuted())
 
   // Calculate percentage: for question 1, small start progress, up to 100%
   const progressPct = totalQuestions > 0 ? (currentQuestionIndex / totalQuestions) * 100 : 0
-
-  const handleToggleSound = () => {
-    const nextState = !isMuted
-    setIsMuted(nextState)
-    soundEffects.setMuted(nextState)
-  }
 
   return (
     <>
@@ -82,18 +74,7 @@ export const ExerciseTopBar: React.FC<ExerciseTopBarProps> = ({
               className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-rose-50 border border-rose-200 text-xs font-bold text-rose-600"
             >
               <Heart className="h-4 w-4 fill-rose-500 text-rose-500" strokeWidth={2} />
-              <span className="font-mono">{livesCount}</span>
             </div>
-
-            {/* Sound Mute Toggle */}
-            <button
-              type="button"
-              onClick={handleToggleSound}
-              title={isMuted ? 'Bật âm thanh' : 'Tắt âm thanh'}
-              className="btn-interactive flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors"
-            >
-              {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
-            </button>
           </div>
         </div>
       </header>

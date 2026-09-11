@@ -118,6 +118,7 @@ export default {
         'label-lg': ['14px', { lineHeight: '20px', letterSpacing: '0.01em', fontWeight: '600' }],
         'label-md': ['12px', { lineHeight: '16px', letterSpacing: '0.02em', fontWeight: '600' }],
         'label-sm': ['11px', { lineHeight: '14px', letterSpacing: '0.04em', fontWeight: '700' }],
+        'label-xs': ['10.5px', { lineHeight: '14px', letterSpacing: '0.02em', fontWeight: '500' }],
         'metric-band': [
           '36px',
           { lineHeight: '40px', letterSpacing: '-0.03em', fontWeight: '800' },

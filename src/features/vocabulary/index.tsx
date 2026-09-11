@@ -124,7 +124,11 @@ export const VocabularyPage: React.FC = () => {
                   )}
                 </div>
 
-                <h3 className="mt-3 text-headline-sm font-bold text-on-surface">{vocab.title}</h3>
+                <Link to={`/vocabulary/${vocab.id}`} className="block">
+                  <h3 className="mt-3 text-headline-sm font-bold text-on-surface hover:text-primary transition-colors">
+                    {vocab.title}
+                  </h3>
+                </Link>
 
                 {/* Progress bar */}
                 <div className="mt-4">
@@ -147,13 +151,13 @@ export const VocabularyPage: React.FC = () => {
                 <span className="text-[11px] text-secondary">
                   {vocab.lastStudied ? `Học gần nhất: ${vocab.lastStudied}` : 'Chưa bắt đầu'}
                 </span>
-                <button
-                  type="button"
+                <Link
+                  to={`/vocabulary/${vocab.id}`}
                   className="btn-interactive inline-flex items-center gap-1.5 rounded-lg bg-primary/10 px-4 py-2 text-label-sm font-bold text-primary hover:bg-primary/20 transition-colors"
                 >
                   <Layers className="h-4 w-4" strokeWidth={2} />
                   Học ngay
-                </button>
+                </Link>
               </div>
             </div>
           )
@@ -173,4 +177,5 @@ export const VocabularyPage: React.FC = () => {
   )
 }
 
+export { VocabularyDetailPage } from './VocabularyDetailPage'
 export default VocabularyPage

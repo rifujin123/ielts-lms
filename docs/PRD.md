@@ -84,14 +84,17 @@ The source of truth for every screen's visual design is a set of **16 Stitch des
 | EX-04 | As a student, I want to start an exercise with one click                                                             |
 | EX-05 | As a student, I want to see a message when I have no exercises yet                                                   |
 
-### 4.5 Vocabulary (Screens 04, 11)
+### 4.5 Vocabulary (Screens 04, 11) — See detailed [PRD_TEACHER_VOCABULARY.md](PRD_TEACHER_VOCABULARY.md)
 
-| ID    | Story                                                                     |
-| ----- | ------------------------------------------------------------------------- |
-| VO-01 | As a student, I want to see all vocabulary sets assigned in my course     |
-| VO-02 | As a student, I want to see which sets I have already studied             |
-| VO-03 | As a student, I want to start studying a vocabulary set immediately       |
-| VO-04 | As a student, I want to see a message when I haven't started any sets yet |
+| ID    | Story                                                                                                           |
+| ----- | --------------------------------------------------------------------------------------------------------------- |
+| VO-01 | As a student, I want to see all vocabulary sets assigned in my course with topic tags and progress overview     |
+| VO-02 | As a student, I want to open a vocabulary set to view the full curated word list assigned by the teacher        |
+| VO-03 | As a student, I want to see IPA phonetics, word type, Band level, Vietnamese definition, and IELTS collocations |
+| VO-04 | As a student, I want to listen to native audio pronunciation for each word via Web Speech API                   |
+| VO-05 | As a student, I want to read IELTS contextual example sentences with the target vocabulary highlighted          |
+| VO-06 | As a student, I want to mark words as "Đã thuộc" (Mastered) or "Lưu ý" (Starred) to track my progress           |
+| VO-07 | As a student, I want to switch to Flashcard flip mode with keyboard shortcuts for rapid memory drilling         |
 
 ### 4.6 Learning Materials (Screens 05, 15)
 
@@ -266,3 +269,4 @@ The single source of truth for all visual design is:
 - **Tech stack decision log**: `docs/SPEC.md`
 - **Architecture reference**: `docs/ARCHITECTURE.md`
 - **IELTS CBT Exam Runner PRD**: [`docs/PRD_IELTS_CBT_EXAM.md`](PRD_IELTS_CBT_EXAM.md)
+- **IELTS Mobile Exam Runner PRD**: [`docs/PRD_MOBILE_EXAM_RUNNER.md`](PRD_MOBILE_EXAM_RUNNER.md)

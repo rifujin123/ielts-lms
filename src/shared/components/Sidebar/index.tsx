@@ -46,7 +46,7 @@ const navGroups: NavGroupDef[] = [
     items: [
       { label: 'Online tests', to: '/tests', icon: FileCheck },
       { label: 'Vocabulary', to: '/vocabulary', icon: Languages },
-      { label: 'Topics', to: '/topics', icon: Film, badge: 'Mới' },
+      { label: 'Topics', to: '/topics', icon: Film },
       { label: 'Exercises', to: '/exercises', icon: PenLine },
       { label: 'Roadmap cá nhân hóa', to: '/roadmap/personal', icon: Route },
       { label: 'Luyện tập tương tác', to: '/practice', icon: PlayCircle },

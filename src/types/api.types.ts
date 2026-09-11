@@ -143,6 +143,27 @@ export interface VocabularySet {
   tags: string[]
 }
 
+export interface VocabularyWord {
+  id: string
+  setId: string
+  word: string
+  phonetic: string
+  partOfSpeech: 'noun' | 'verb' | 'adjective' | 'adverb' | 'phrase' | 'idiom'
+  vietnameseMeaning: string
+  englishDefinition?: string
+  exampleSentence: string
+  highlightWord?: string
+  collocations: string[]
+  bandTarget?: string
+  isMastered: boolean
+  isStarred: boolean
+}
+
+export interface VocabularySetDetail extends VocabularySet {
+  description?: string
+  words: VocabularyWord[]
+}
+
 // ── Online Test ───────────────────────────────────────────────────
 
 export type TestType = 'mock' | 'mini' | 'full'

@@ -14,6 +14,7 @@ const RoadmapPage = lazy(() => import('@/features/roadmap'))
 const PersonalRoadmapPage = lazy(() => import('@/features/roadmap/PersonalRoadmapPage'))
 const ExercisesPage = lazy(() => import('@/features/exercises'))
 const VocabularyPage = lazy(() => import('@/features/vocabulary'))
+const VocabularyDetailPage = lazy(() => import('@/features/vocabulary/VocabularyDetailPage'))
 const MaterialsPage = lazy(() => import('@/features/materials'))
 const BooksPage = lazy(() => import('@/features/materials/BooksPage'))
 const HomeworkPage = lazy(() => import('@/features/homework'))
@@ -55,6 +56,7 @@ export default function App() {
 
                 {/* ── Vocabulary ── screens 04, 11 */}
                 <Route path="vocabulary" element={<VocabularyPage />} />
+                <Route path="vocabulary/:setId" element={<VocabularyDetailPage />} />
 
                 {/* ── Materials ── screens 05, 15 */}
                 <Route path="materials" element={<MaterialsPage />} />
