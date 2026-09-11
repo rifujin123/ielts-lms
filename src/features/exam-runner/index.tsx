@@ -7,7 +7,6 @@ import {
   PenTool,
   Mic,
   Clock,
-  Send,
   Award,
   CheckCircle2,
   ShieldAlert,
@@ -16,16 +15,12 @@ import {
   RotateCcw,
   Eye,
 } from 'lucide-react'
-import { Group, Panel, Separator } from 'react-resizable-panels'
-import { GripVertical } from 'lucide-react'
 import { useFullExamStore } from './store/fullExamStore'
 import { useIeltsExamStore } from './store/ieltsExamStore'
 import { ListeningRunner } from './components/ListeningRunner'
+import { ReadingRunner } from './components/ReadingRunner'
 import { WritingRunner } from './components/WritingRunner'
 import { SpeakingRunner } from './components/SpeakingRunner'
-import { ReadingPassageView } from './components/ReadingPassageView'
-import { QuestionCard } from './components/QuestionCard'
-import { ExamBottomPalette } from './components/ExamBottomPalette'
 import { SubmitConfirmModal } from './components/SubmitConfirmModal'
 import { ExamResultView } from './components/ExamResultView'
 import { TeacherRubricModal } from './components/TeacherRubricModal'
@@ -138,17 +133,46 @@ export const ExamRunnerPage: React.FC = () => {
     return { label: '0', isDone: false }
   }
 
-  const currentPassage = readingStore.manifest.passages.find(
-    (p) => p.id === readingStore.activePassageId,
-  )
-  const [startQ, endQ] = currentPassage ? currentPassage.questionRange : [1, 13]
-  const currentQuestions = readingStore.manifest.questions.filter(
-    (q) => q.id >= startQ && q.id <= endQ,
-  )
+  // Dynamically detect skills configured in this mock test manifest
+  const availableSkills = (
+    [
+      {
+        key: 'LISTENING' as const,
+        label: 'Listening',
+        icon: Headphones,
+        isAvailable: !!manifest.skills.listening,
+      },
+      {
+        key: 'READING' as const,
+        label: 'Reading',
+        icon: BookOpen,
+        isAvailable: !!manifest.skills.reading,
+      },
+      {
+        key: 'WRITING' as const,
+        label: 'Writing',
+        icon: PenTool,
+        isAvailable: !!manifest.skills.writing,
+      },
+      {
+        key: 'SPEAKING' as const,
+        label: 'Speaking',
+        icon: Mic,
+        isAvailable: !!manifest.skills.speaking,
+      },
+    ] as const
+  ).filter((s) => s.isAvailable)
+
+  // Ensure activeSkill points to an available skill
+  useEffect(() => {
+    if (availableSkills.length > 0 && !availableSkills.some((s) => s.key === activeSkill)) {
+      setActiveSkill(availableSkills[0].key)
+    }
+  }, [availableSkills, activeSkill, setActiveSkill])
 
   return (
     <div className="flex h-screen w-screen flex-col overflow-hidden bg-slate-100 select-none">
-      {/* ── Top Universal 4-Skill Header ───────────────────────────── */}
+      {/* ── Top Universal Header ───────────────────────────────────── */}
       <header className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-slate-200 bg-white px-4 shadow-xs">
         {/* ── Left: Exit & Branding ─────────────────────────────────── */}
         <div className="flex items-center gap-3">
@@ -178,48 +202,52 @@ export const ExamRunnerPage: React.FC = () => {
           </div>
         </div>
 
-        {/* ── Center: 4-Skill Switcher Tabs ─────────────────────────── */}
+        {/* ── Center: Dynamic Skill Switcher Tabs (Only renders skills configured in this test) ── */}
         <div className="flex items-center justify-center">
-          <div className="flex items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200 shadow-2xs">
-            {(
-              [
-                { key: 'LISTENING', label: 'Listening', icon: Headphones },
-                { key: 'READING', label: 'Reading', icon: BookOpen },
-                { key: 'WRITING', label: 'Writing', icon: PenTool },
-                { key: 'SPEAKING', label: 'Speaking', icon: Mic },
-              ] as const
-            ).map(({ key, label, icon: Icon }) => {
-              const isActive = activeSkill === key
-              const { label: compLabel, isDone } = getSkillCompletion(key)
+          {availableSkills.length > 1 ? (
+            <div className="flex items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200 shadow-2xs">
+              {availableSkills.map(({ key, label, icon: Icon }) => {
+                const isActive = activeSkill === key
+                const { label: compLabel, isDone } = getSkillCompletion(key)
 
-              return (
-                <button
-                  key={key}
-                  type="button"
-                  onClick={() => setActiveSkill(key)}
-                  className={`btn-interactive flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
-                    isActive
-                      ? 'bg-slate-900 text-white shadow-xs'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
-                  }`}
-                >
-                  <Icon className="h-3.5 w-3.5" />
-                  <span>{label}</span>
-                  <span
-                    className={`rounded-full px-1.5 py-0.2 text-[10px] ${
-                      isDone
-                        ? 'bg-emerald-500 text-white'
-                        : isActive
-                          ? 'bg-white/20 text-white'
-                          : 'bg-slate-200 text-slate-700'
+                return (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => setActiveSkill(key)}
+                    className={`btn-interactive flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
+                      isActive
+                        ? 'bg-slate-900 text-white shadow-xs'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
                     }`}
                   >
-                    {compLabel}
-                  </span>
-                </button>
-              )
-            })}
-          </div>
+                    <Icon className="h-3.5 w-3.5" />
+                    <span>{label}</span>
+                    <span
+                      className={`rounded-full px-1.5 py-0.2 text-[10px] ${
+                        isDone
+                          ? 'bg-emerald-500 text-white'
+                          : isActive
+                            ? 'bg-white/20 text-white'
+                            : 'bg-slate-200 text-slate-700'
+                      }`}
+                    >
+                      {compLabel}
+                    </span>
+                  </button>
+                )
+              })}
+            </div>
+          ) : availableSkills.length === 1 ? (
+            /* Single Skill Exam Badge */
+            <div className="flex items-center gap-2 rounded-xl bg-slate-100 px-3.5 py-1.5 border border-slate-200 text-xs font-bold text-slate-800">
+              {React.createElement(availableSkills[0].icon, { className: 'h-4 w-4 text-red-600' })}
+              <span>{availableSkills[0].label} Test</span>
+              <span className="rounded-full bg-slate-200 px-2 py-0.5 text-[10px] text-slate-700">
+                {getSkillCompletion(availableSkills[0].key).label}
+              </span>
+            </div>
+          ) : null}
         </div>
 
         {/* ── Right: Mode Badge, Timer & Submit Actions ─────────────── */}
@@ -237,9 +265,11 @@ export const ExamRunnerPage: React.FC = () => {
             }
             className={`hidden sm:flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 text-xs font-bold select-none border cursor-default transition-all ${
               examMode === 'STRICT'
-                ? tabSwitchCount > 0
-                  ? 'border-amber-300 bg-amber-50 text-amber-900 ring-1 ring-amber-300 shadow-2xs'
-                  : 'border-red-200 bg-red-50 text-red-700 shadow-2xs'
+                ? tabSwitchCount >= 3
+                  ? 'border-rose-200 bg-rose-50 text-rose-800 shadow-2xs'
+                  : tabSwitchCount > 0
+                    ? 'border-amber-200 bg-amber-50/80 text-amber-900 shadow-2xs'
+                    : 'border-slate-200 bg-slate-50 text-slate-700 shadow-2xs'
                 : 'border-emerald-200 bg-emerald-50 text-emerald-700 shadow-2xs'
             }`}
           >
@@ -247,20 +277,24 @@ export const ExamRunnerPage: React.FC = () => {
               <>
                 <ShieldAlert
                   className={`h-3.5 w-3.5 shrink-0 ${
-                    tabSwitchCount > 0 ? 'text-amber-600' : 'text-red-600'
+                    tabSwitchCount >= 3
+                      ? 'text-rose-600'
+                      : tabSwitchCount > 0
+                        ? 'text-amber-600'
+                        : 'text-slate-500'
                   }`}
                 />
                 <span>Strict</span>
                 {tabSwitchCount > 0 && !isSubmitted && (
                   <span
                     title={`Cảnh báo: Đã phát hiện ${tabSwitchCount}/3 lần chuyển tab`}
-                    className={`inline-flex items-center gap-0.5 rounded-md px-1.5 py-0.2 text-[10px] font-extrabold animate-pulse ${
+                    className={`inline-flex items-center gap-0.5 rounded-md px-1.5 py-0.5 text-[10px] font-bold ${
                       tabSwitchCount >= 3
-                        ? 'bg-red-600 text-white'
-                        : 'bg-amber-200/90 text-amber-950'
+                        ? 'bg-rose-100 text-rose-700 border border-rose-200'
+                        : 'bg-amber-100 text-amber-800 border border-amber-200'
                     }`}
                   >
-                    <span>⚠️</span>
+                    <span>{tabSwitchCount >= 3 ? '⛔' : '⚠️'}</span>
                     <span>{tabSwitchCount}/3</span>
                   </span>
                 )}
@@ -274,27 +308,16 @@ export const ExamRunnerPage: React.FC = () => {
           </div>
 
           <div
-            className={`flex items-center gap-2 rounded-xl px-3.5 py-1.5 font-mono text-sm font-bold tracking-tight shadow-xs ${
-              isUrgent && !isSubmitted
-                ? 'animate-pulse bg-red-50 text-red-600 border border-red-200'
-                : 'bg-slate-100 text-slate-800 border border-slate-200'
+            className={`flex items-center gap-1.5 font-mono text-sm font-bold tracking-tight px-1 ${
+              isUrgent && !isSubmitted ? 'animate-pulse text-red-600' : 'text-slate-700'
             }`}
           >
             <Clock className="h-4 w-4 text-slate-500" />
             <span>{isSubmitted ? 'Đã thu bài' : formattedTime}</span>
           </div>
 
-          {/* Submit & Review Actions */}
-          {!isSubmitted ? (
-            <button
-              type="button"
-              onClick={() => setIsSubmitModalOpen(true)}
-              className="btn-interactive inline-flex items-center gap-1.5 rounded-xl bg-red-600 px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-red-700 active:scale-95 transition-all"
-            >
-              <Send className="h-3.5 w-3.5" />
-              <span>Nộp bài Full Test</span>
-            </button>
-          ) : (
+          {/* Post-Submission Review Actions */}
+          {isSubmitted && (
             <div className="flex items-center gap-2">
               <button
                 type="button"
@@ -356,12 +379,27 @@ export const ExamRunnerPage: React.FC = () => {
                   const readingBand = readingStore.scoreResult?.bandScore ?? 8.0
                   const writingBand = mockTeacherAssessment.writingTask2.overallTask2
                   const speakingBand = mockTeacherAssessment.speaking.overallSpeaking
-                  const overallBand = calculateIeltsOverall(
-                    listeningBand,
-                    readingBand,
-                    writingBand,
-                    speakingBand,
-                  )
+
+                  // Dynamic Overall Band from configured skills
+                  const activeBands: number[] = []
+                  if (manifest.skills.listening) activeBands.push(listeningBand)
+                  if (manifest.skills.reading) activeBands.push(readingBand)
+                  if (manifest.skills.writing) activeBands.push(writingBand)
+                  if (manifest.skills.speaking) activeBands.push(speakingBand)
+
+                  let overallBand = 0
+                  if (activeBands.length === 4) {
+                    overallBand = calculateIeltsOverall(
+                      listeningBand,
+                      readingBand,
+                      writingBand,
+                      speakingBand,
+                    )
+                  } else if (activeBands.length > 0) {
+                    const avg = activeBands.reduce((a, b) => a + b, 0) / activeBands.length
+                    const dec = avg - Math.floor(avg)
+                    overallBand = Math.floor(avg) + (dec >= 0.75 ? 1.0 : dec >= 0.25 ? 0.5 : 0)
+                  }
 
                   return (
                     <>
@@ -374,91 +412,109 @@ export const ExamRunnerPage: React.FC = () => {
                           {overallBand.toFixed(1)}
                         </div>
                         <div className="text-xs text-slate-300">
-                          Áp dụng quy tắc làm tròn .25 / .75 chuẩn quốc tế
+                          {activeBands.length === 4
+                            ? 'Áp dụng quy tắc làm tròn .25 / .75 chuẩn quốc tế (4 kỹ năng)'
+                            : `Quy chuẩn làm tròn từ ${activeBands.length} kỹ năng được cấu hình trong bài test`}
                         </div>
                       </div>
 
-                      {/* 4 Skill Cards Grid */}
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-left mb-6">
-                        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                          <div className="text-xs font-bold text-slate-500 flex items-center gap-1">
-                            <Headphones className="h-3.5 w-3.5 text-blue-600" />
-                            Listening
-                          </div>
-                          <div className="text-2xl font-bold text-slate-900 my-1">
-                            {listeningBand.toFixed(1)}
-                          </div>
-                          <div className="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
-                            <CheckCircle2 className="h-3 w-3" /> Đã chấm tự động
-                          </div>
-                        </div>
-
-                        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                          <div className="text-xs font-bold text-slate-500 flex items-center gap-1">
-                            <BookOpen className="h-3.5 w-3.5 text-emerald-600" />
-                            Reading
-                          </div>
-                          <div className="text-2xl font-bold text-slate-900 my-1">
-                            {readingBand.toFixed(1)}
-                          </div>
-                          <div className="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
-                            <CheckCircle2 className="h-3 w-3" />{' '}
-                            {readingStore.scoreResult?.correctCount || 34}/40 câu đúng
-                          </div>
-                        </div>
-
-                        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                          <div className="text-xs font-bold text-slate-500 flex items-center gap-1">
-                            <PenTool className="h-3.5 w-3.5 text-purple-600" />
-                            Writing
-                          </div>
-                          <div className="text-2xl font-bold text-slate-900 my-1">
-                            {writingBand.toFixed(1)}*
-                          </div>
-                          <div className="text-[11px] text-amber-600 font-semibold">
-                            Chờ GV chấm (SLA 48h)
-                          </div>
-                        </div>
-
-                        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                          <div className="text-xs font-bold text-slate-500 flex items-center gap-1">
-                            <Mic className="h-3.5 w-3.5 text-red-600" />
-                            Speaking
-                          </div>
-                          <div className="text-2xl font-bold text-slate-900 my-1">
-                            {speakingBand.toFixed(1)}*
-                          </div>
-                          <div className="text-[11px] text-amber-600 font-semibold">
-                            Chờ GV chấm (SLA 48h)
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* 48h SLA Banner & Teacher Rubric Trigger */}
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-amber-200 bg-amber-50/70 p-4 text-left mb-6">
-                        <div className="flex items-center gap-3">
-                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-800">
-                            <Clock className="h-5 w-5" />
-                          </div>
-                          <div>
-                            <div className="text-xs font-bold text-amber-900">
-                              Bài làm Writing & Speaking đang được chuyển cho Giáo viên chấm
+                      {/* Configured Skill Cards Grid */}
+                      <div
+                        className={`grid gap-3 text-left mb-6 ${
+                          activeBands.length <= 2
+                            ? 'grid-cols-1 sm:grid-cols-2'
+                            : 'grid-cols-2 sm:grid-cols-4'
+                        }`}
+                      >
+                        {manifest.skills.listening && (
+                          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                            <div className="text-xs font-bold text-slate-500 flex items-center gap-1">
+                              <Headphones className="h-3.5 w-3.5 text-blue-600" />
+                              Listening
                             </div>
-                            <div className="text-[11px] text-amber-700">
-                              Cam kết trả lời nhận xét chi tiết và 4 tiêu chí chấm điểm trong vòng
-                              48 giờ.
+                            <div className="text-2xl font-bold text-slate-900 my-1">
+                              {listeningBand.toFixed(1)}
+                            </div>
+                            <div className="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
+                              <CheckCircle2 className="h-3 w-3" /> Đã chấm tự động
                             </div>
                           </div>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => setIsRubricModalOpen(true)}
-                          className="btn-interactive shrink-0 inline-flex items-center gap-1.5 rounded-xl bg-amber-800 px-3.5 py-2 text-xs font-bold text-white hover:bg-amber-900 shadow-xs"
-                        >
-                          <FileCheck className="h-3.5 w-3.5" />
-                          <span>Xem phiếu chấm mẫu</span>
-                        </button>
+                        )}
+
+                        {manifest.skills.reading && (
+                          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                            <div className="text-xs font-bold text-slate-500 flex items-center gap-1">
+                              <BookOpen className="h-3.5 w-3.5 text-emerald-600" />
+                              Reading
+                            </div>
+                            <div className="text-2xl font-bold text-slate-900 my-1">
+                              {readingBand.toFixed(1)}
+                            </div>
+                            <div className="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
+                              <CheckCircle2 className="h-3 w-3" />{' '}
+                              {readingStore.scoreResult?.correctCount || 34}/40 câu đúng
+                            </div>
+                          </div>
+                        )}
+
+                        {manifest.skills.writing && (
+                          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                            <div className="text-xs font-bold text-slate-500 flex items-center gap-1">
+                              <PenTool className="h-3.5 w-3.5 text-purple-600" />
+                              Writing
+                            </div>
+                            <div className="text-2xl font-bold text-slate-900 my-1">
+                              {writingBand.toFixed(1)}*
+                            </div>
+                            <div className="text-[11px] text-amber-600 font-semibold">
+                              Chờ GV chấm (SLA 48h)
+                            </div>
+                          </div>
+                        )}
+
+                        {manifest.skills.speaking && (
+                          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                            <div className="text-xs font-bold text-slate-500 flex items-center gap-1">
+                              <Mic className="h-3.5 w-3.5 text-red-600" />
+                              Speaking
+                            </div>
+                            <div className="text-2xl font-bold text-slate-900 my-1">
+                              {speakingBand.toFixed(1)}*
+                            </div>
+                            <div className="text-[11px] text-amber-600 font-semibold">
+                              Chờ GV chấm (SLA 48h)
+                            </div>
+                          </div>
+                        )}
                       </div>
+
+                      {/* 48h SLA Banner & Teacher Rubric Trigger (only if writing or speaking is present) */}
+                      {(manifest.skills.writing || manifest.skills.speaking) && (
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-amber-200 bg-amber-50/70 p-4 text-left mb-6">
+                          <div className="flex items-center gap-3">
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-800">
+                              <Clock className="h-5 w-5" />
+                            </div>
+                            <div>
+                              <div className="text-xs font-bold text-amber-900">
+                                Bài làm Writing & Speaking đang được chuyển cho Giáo viên chấm
+                              </div>
+                              <div className="text-[11px] text-amber-700">
+                                Cam kết trả lời nhận xét chi tiết và 4 tiêu chí chấm điểm trong vòng
+                                48 giờ.
+                              </div>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setIsRubricModalOpen(true)}
+                            className="btn-interactive shrink-0 inline-flex items-center gap-1.5 rounded-xl bg-amber-800 px-3.5 py-2 text-xs font-bold text-white hover:bg-amber-900 shadow-xs"
+                          >
+                            <FileCheck className="h-3.5 w-3.5" />
+                            <span>Xem phiếu chấm mẫu</span>
+                          </button>
+                        </div>
+                      )}
                     </>
                   )
                 })()}
@@ -537,56 +593,15 @@ export const ExamRunnerPage: React.FC = () => {
 
             {/* 1. LISTENING WORKSPACE */}
             {activeSkill === 'LISTENING' && manifest.skills.listening && (
-              <ListeningRunner skillData={manifest.skills.listening} />
+              <ListeningRunner
+                skillData={manifest.skills.listening}
+                onSubmit={() => setIsSubmitModalOpen(true)}
+              />
             )}
 
-            {/* 2. READING WORKSPACE (Dual-Pane Resizable with Highlighting & Palette) */}
-            {activeSkill === 'READING' && (
-              <div className="flex h-full flex-col overflow-hidden">
-                <div className="flex-1 overflow-hidden">
-                  <Group orientation="horizontal" id="ielts-reading-split-main" className="h-full">
-                    {/* Left: Reading Passage with Highlighter */}
-                    <Panel defaultSize="48%" minSize="30%" className="h-full">
-                      <ReadingPassageView />
-                    </Panel>
-
-                    <Separator className="group relative flex w-2.5 items-center justify-center bg-slate-200/80 hover:bg-red-500/20 transition-colors cursor-col-resize select-none">
-                      <div className="flex h-8 w-1.5 items-center justify-center rounded-full bg-slate-400 group-hover:bg-red-600 transition-colors">
-                        <GripVertical className="h-3 w-3 text-white opacity-0 group-hover:opacity-100" />
-                      </div>
-                    </Separator>
-
-                    {/* Right: Question Cards */}
-                    <Panel
-                      defaultSize="52%"
-                      minSize="35%"
-                      className="h-full overflow-y-auto bg-slate-100/70 p-6 md:p-8 custom-scrollbar"
-                    >
-                      <div className="mx-auto max-w-3xl space-y-5">
-                        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs">
-                          <span className="text-[11px] font-bold uppercase tracking-wider text-red-600">
-                            Questions {startQ} – {endQ}
-                          </span>
-                          <h3 className="text-base font-bold text-slate-900 mt-1">
-                            {currentPassage?.title}
-                          </h3>
-                          <p className="text-xs text-slate-500 mt-1">
-                            Đọc kỹ đoạn văn ở khung bên trái và chọn đáp án tương ứng bên dưới.
-                          </p>
-                        </div>
-
-                        <div className="space-y-4">
-                          {currentQuestions.map((q) => (
-                            <QuestionCard key={q.id} question={q} />
-                          ))}
-                        </div>
-                      </div>
-                    </Panel>
-                  </Group>
-                </div>
-                {/* 40-Question Palette at bottom */}
-                <ExamBottomPalette />
-              </div>
+            {/* 2. READING WORKSPACE */}
+            {activeSkill === 'READING' && manifest.skills.reading && (
+              <ReadingRunner skillData={manifest.skills.reading} />
             )}
 
             {/* 3. WRITING WORKSPACE */}

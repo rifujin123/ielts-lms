@@ -1,0 +1,5 @@
+export * from './MultipleChoiceQuestion'
+export * from './CompletionQuestion'
+export * from './TableCompletionQuestion'
+export * from './MatchingQuestion'
+export * from './UniversalQuestionRenderer'

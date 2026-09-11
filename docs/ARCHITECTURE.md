@@ -635,3 +635,97 @@ Whenever an engineer or AI agent introduces a reusable component, hook, or layou
   import { ieltsExamService } from '@/features/exam-runner/services/ieltsExamService'
   const manifest = await ieltsExamService.getExamManifest(examId)
   ```
+
+### 11. IELTS Listening Runner (Bottom Red-Line Audio & DOL CBT Layout)
+
+- **Asset Name & File Path**: `ListeningRunner` (`src/features/exam-runner/components/ListeningRunner.tsx`)
+- **Purpose & UX Intent**: 1:1 replica of the DOL IELTS CBT listening test interface. All audio controls and indicators are integrated into the bottom navigation bar, leaving the top questions area clean and unencumbered. Features **immediate audio auto-play** upon test or section access with no manual start button required. Audio progress is displayed as a **thin red progress line across the top edge of the footer** with a **sliding red capsule pill** showing the exact live timestamp (e.g. `07:27`, `08:53`). Audio volume control is positioned compactly in the bottom bar alongside section controls.
+  - Footer Top Edge: Full-width red audio progress line with a floating timestamp pill.
+  - Row 1: Centered question jump pills `(1) (2) ... (10)` for rapid question scrolling (collapsible).
+  - Row 2: Collapse chevron (`^` / `v`), section counter (`Section 1 | Đã làm 0 / 10`), integrated volume control, 4 Section pills with mini progress bars (active section in red/pink), and red primary button (`Section 2 →` or `Nộp bài`).
+- **Usage Example**:
+  ```tsx
+  import { ListeningRunner } from '@/features/exam-runner/components/ListeningRunner'
+  ;<ListeningRunner
+    skillData={manifest.skills.listening!}
+    onSubmit={() => setIsSubmitModalOpen(true)}
+  />
+  ```
+- **Constraints & Invariants**:
+  - Root container: `flex h-full flex-col overflow-hidden bg-slate-100`.
+  - Top header audio bar is removed; the questions workspace occupies full viewport height above the footer.
+  - Audio plays automatically via HTML5 `<audio autoPlay>` with silent autoplay fallback and continuous real-time progress simulation.
+  - Bottom bar is pinned via `sticky bottom-0 z-30 shrink-0 border-t border-slate-200 bg-white shadow-lg`.
+  - Timestamp is rendered solely within the floating red pill on the red progress line (0px layout shift).
+  - Final section displays a prominent red "Nộp bài" button wired to `onSubmit` (or `submitFullExam`).
+  - Multiple choice questions display each answer option on its own dedicated row with a circular radio button indicator (`role="radio"`), eliminating heavy pill wrappers.
+  - Question jump pills scroll directly into view via `document.getElementById('listening-question-${id}').scrollIntoView({ behavior: 'smooth', block: 'center' })`.
+
+### 12. Modular Skill Runners & Dynamic Question Components
+
+- **Asset Name & File Path**:
+  - `ReadingRunner` (`src/features/exam-runner/components/ReadingRunner.tsx`)
+  - `ListeningSectionView` (`src/features/exam-runner/components/ListeningSectionView.tsx`)
+  - `UniversalQuestionRenderer` & Question Type Renderers (`src/features/exam-runner/components/question-renderers/index.ts`)
+- **Purpose & UX Intent**:
+  - **Skill-level Decoupling**: Breaks down the monolithic exam workspace into independent, standalone skill runners (`ListeningRunner`, `ReadingRunner`, `WritingRunner`, `SpeakingRunner`).
+  - **Dynamic Mock Test Configuration**: Supports any arbitrary combination of skills configured by teachers (e.g., a single skill test, a 2-skill test with only Listening and Reading, or a 4-skill full test). Top header switcher tabs dynamically adjust to show only the active skills in `manifest.skills`.
+  - **Reading Passage Switcher Tabs**: `ReadingRunner` includes a dedicated top tab bar (`Passage 1 | Passage 2 | Passage 3`) styled identically to the main skill switcher with completion pill counts (`0/13`, `13/13`) and auto-reset scroll on passage change. Bottom palette (`ExamBottomPalette`) focuses cleanly on the active passage questions rather than cramming all 40 questions at once.
+  - **Section & Question-level Modularization**: Inside each section (e.g. Listening Section 1–4), teachers can mix and match any question format without layout breakages:
+    - `MultipleChoiceQuestion`: 1-row-per-option radio buttons with `text-blue-600 font-mono text-sm` numbering.
+    - `CompletionQuestion`: Inline form, note, and sentence completion with auto-sized inputs.
+    - `TableCompletionQuestion`: Academic IELTS table completion with multi-column support (`Column 1 | Column 2 | Blank _____`) and responsive table cells.
+    - `MatchingQuestion`: Dropdown select matching for headings, features, and map labeling.
+- **Usage Example**:
+  ```tsx
+  import { UniversalQuestionRenderer } from '@/features/exam-runner/components/question-renderers'
+
+  ;<UniversalQuestionRenderer
+    question={q}
+    value={currentAns}
+    onChange={(val) => setAnswer(q.id, val)}
+    isSubmitted={isSubmitted}
+    sectionInstruction={sectionInstruction}
+  />
+  ```
+- **Constraints & Invariants**:
+  - Zero pixel shift when switching active/inactive radio states.
+  - All question numberings adhere to `<span className="font-bold text-blue-600 font-mono text-sm">{q.id}.</span>`.
+  - Question renderers are pure presentation components decoupled from global store dependencies; they receive `value`, `onChange`, and `isSubmitted` via props.
+
+### 13. Video Listening Topics & YouTube Dictation Studio
+
+- **Asset Name & File Path**:
+  - `TopicsPage` (`src/features/topics/index.tsx`)
+  - `DictationPage` (`src/features/dictation/index.tsx`)
+  - `DictationHeader` (`src/features/dictation/components/DictationHeader.tsx`)
+  - `VideoPlayerColumn` (`src/features/dictation/components/VideoPlayerColumn.tsx`)
+  - `DictationPracticeColumn` (`src/features/dictation/components/DictationPracticeColumn.tsx`)
+  - `TranscriptColumn` (`src/features/dictation/components/TranscriptColumn.tsx`)
+  - `DictionaryModal` (`src/features/dictation/components/DictionaryModal.tsx`)
+  - `VocabNotebookModal` (`src/features/dictation/components/VocabNotebookModal.tsx`)
+- **Purpose & UX Intent**:
+  - **Topics Discovery Hub (`/topics`)**: Multi-row catalog for video listening practice structured into distinct category rows (4 categories × 3 cards = 12 lessons: `Movie Short Clip`, `Daily Conversation`, `IPA & Phát âm`, `US-UK Songs`). Each video features a 16:9 YouTube thumbnail, hover play overlay, duration/sentence/level badges, and instant CTA `[ 🎧 Luyện Dictation ]`. Provides dynamic category pill filters and full-text keyword search across titles and descriptions.
+  - **Parroto-Style 3-Column Adaptive Dictation (`/topics/dictation/:lessonId`)**: Replicates interactive YouTube dictation with 3 distinct columns: Media (YouTube video sync), Dictation Practice (Type what you hear), and Transcript list with progress tracking.
+  - **Streamlined Unified Header (`DictationHeader`)**: Focuses cleanly on lesson context with back navigation to `/topics`, current lesson title/category, and a dedicated high-contrast **Sổ từ vựng** (Vocabulary notebook) button pushed to the far right. Redundant lesson selector dropdown and custom video import controls are eliminated.
+  - **Centered Difficulty Tabs (`DictationPracticeColumn`)**: Features centered `Easy`, `Normal`, `Hard` difficulty switcher tabs aligned in the middle of the practice column without colored circle emojis, maintaining consistent design tokens and 0px layout shift.
+  - **Column Visibility Toggles**: Provides top-level `Hide media` and `Hide transcript` toggle buttons that dynamically resize the remaining columns without breaking layout (expanding to 2 columns or 100% centered Focus Mode).
+  - **3 Difficulty Levels**:
+    - `Easy`: Hides ~30% of content words, keeps grammatical stop words, provides tokenized input blanks with length hints and auto-advancing cursor upon correct spelling.
+    - `Normal`: Hides ~65% of words in the sentence with realtime validation and hint support.
+    - `Hard`: 100% hidden transcript with freeform `textarea` dictation.
+  - **Instant Dictionary & Vocabulary Notebook**: Students can click on any word in the transcript or dictation area to open a dictionary popover featuring IPA phonetics, parts of speech, English & Vietnamese definitions, Web Speech API audio pronunciation, and one-click saving to `localStorage` vocabulary flashcards notebook.
+- **Usage Example**:
+  ```tsx
+  import { TopicsPage } from '@/features/topics'
+  import { DictationPage } from '@/features/dictation'
+
+  // Route registration in router:
+  <Route path="topics" element={<TopicsPage />} />
+  <Route path="topics/dictation/:lessonId" element={<DictationPage />} />
+  ```
+- **Constraints & Invariants**:
+  - Semantic design tokens only (`bg-surface-container-lowest`, `border-outline-variant`, `text-primary`, `bg-tertiary`).
+  - Zero layout shift during play/pause or column collapse/expand.
+  - Keyboard shortcuts: <kbd>Tab</kbd> for play/pause segment, <kbd>R</kbd> for replay, <kbd>Enter</kbd> for answer submission.
+  - YouTube player synchronization strictly constrained to segment `start` and `end` times with optional auto-looping.

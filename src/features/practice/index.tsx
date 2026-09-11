@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { X, Play, Pause, CheckCircle2 } from 'lucide-react'
+import { X, Play, Pause } from 'lucide-react'
 
 /**
  * PracticePage — Interactive Practice Player (screen 10).
@@ -79,14 +79,6 @@ export const PracticePage: React.FC = () => {
               A+
             </button>
           </div>
-
-          <Link
-            to="/exam"
-            className="btn-interactive inline-flex items-center gap-1.5 rounded-lg bg-red-600 px-4 py-2 text-label-sm font-bold text-white hover:bg-red-700 shadow-xs transition-colors"
-          >
-            <CheckCircle2 className="h-4 w-4" strokeWidth={2} />
-            Thi Full CBT (40 câu)
-          </Link>
         </div>
       </div>
 

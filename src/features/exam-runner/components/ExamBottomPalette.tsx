@@ -1,6 +1,14 @@
-import React from 'react'
-import { ChevronLeft, ChevronRight, Flag } from 'lucide-react'
+import React, { useState } from 'react'
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronDown,
+  ArrowRight,
+  BookOpen,
+  CheckCircle2,
+} from 'lucide-react'
 import { useIeltsExamStore } from '../store/ieltsExamStore'
+import { useFullExamStore } from '../store/fullExamStore'
 
 export const ExamBottomPalette: React.FC = () => {
   const {
@@ -11,30 +19,24 @@ export const ExamBottomPalette: React.FC = () => {
     setActiveQuestion,
     answers,
     flaggedQuestions,
-    toggleFlag,
+    submitExam,
   } = useIeltsExamStore()
 
-  const isCurrentFlagged = !!flaggedQuestions[activeQuestionId]
+  const { isSubmitted, submitFullExam } = useFullExamStore()
+  const [showQuestionPills, setShowQuestionPills] = useState<boolean>(true)
 
-  // Count answered questions
-  const answeredCount = Object.values(answers).filter(
-    (val) => typeof val === 'string' && val.trim() !== '',
-  ).length
+  const currentPassage =
+    manifest.passages.find((p) => p.id === activePassageId) || manifest.passages[0]
+  const [startQ, endQ] = currentPassage.questionRange
+  const questionsInCurrentPassage = manifest.questions.filter((q) => q.id >= startQ && q.id <= endQ)
 
-  // Navigate to previous/next question
-  const handlePrev = () => {
-    if (activeQuestionId > 1) {
-      const nextId = activeQuestionId - 1
-      setActiveQuestion(nextId)
-      scrollToQuestion(nextId)
-    }
-  }
+  const isLastQuestionOfPassage = activeQuestionId === endQ
 
-  const handleNext = () => {
-    if (activeQuestionId < manifest.totalQuestions) {
-      const nextId = activeQuestionId + 1
-      setActiveQuestion(nextId)
-      scrollToQuestion(nextId)
+  // Count answered questions in current passage
+  let answeredInCurrent = 0
+  for (let i = startQ; i <= endQ; i++) {
+    if (typeof answers[i] === 'string' && answers[i].trim() !== '') {
+      answeredInCurrent++
     }
   }
 
@@ -45,126 +47,207 @@ export const ExamBottomPalette: React.FC = () => {
     }
   }
 
-  const handleSelectQuestion = (id: number, passageId: 1 | 2 | 3) => {
-    if (passageId !== activePassageId) {
-      setActivePassage(passageId)
-    }
+  const handleSelectQuestion = (id: number) => {
     setActiveQuestion(id)
-    setTimeout(() => scrollToQuestion(id), 50)
+    scrollToQuestion(id)
+  }
+
+  const handlePassageSwitch = (passageId: 1 | 2 | 3) => {
+    setActivePassage(passageId)
+    const targetPassage = manifest.passages.find((p) => p.id === passageId)
+    if (targetPassage) {
+      setActiveQuestion(targetPassage.questionRange[0])
+    }
+    const qPanel = document.getElementById('reading-questions-panel')
+    if (qPanel) qPanel.scrollTop = 0
+  }
+
+  const handlePrev = () => {
+    if (activeQuestionId > 1) {
+      const prevId = activeQuestionId - 1
+      const targetPassage = manifest.passages.find(
+        (p) => prevId >= p.questionRange[0] && prevId <= p.questionRange[1],
+      )
+      if (targetPassage && targetPassage.id !== activePassageId) {
+        setActivePassage(targetPassage.id)
+      }
+      setActiveQuestion(prevId)
+      setTimeout(() => scrollToQuestion(prevId), 50)
+    }
+  }
+
+  const handleNext = () => {
+    if (activeQuestionId < manifest.totalQuestions) {
+      const nextId = activeQuestionId + 1
+      const targetPassage = manifest.passages.find(
+        (p) => nextId >= p.questionRange[0] && nextId <= p.questionRange[1],
+      )
+      if (targetPassage && targetPassage.id !== activePassageId) {
+        setActivePassage(targetPassage.id)
+      }
+      setActiveQuestion(nextId)
+      setTimeout(() => scrollToQuestion(nextId), 50)
+    }
+  }
+
+  const handleNextPassage = () => {
+    if (activePassageId < 3) {
+      handlePassageSwitch((activePassageId + 1) as 1 | 2 | 3)
+    }
   }
 
   return (
-    <footer className="sticky bottom-0 z-30 flex flex-col md:flex-row items-center justify-between gap-3 border-t border-slate-200 bg-white px-4 py-2.5 shadow-lg">
-      {/* ── Left Status & Review Checkbox ─────────────────────────── */}
-      <div className="flex items-center gap-4">
-        <button
-          type="button"
-          onClick={() => toggleFlag(activeQuestionId)}
-          className={`btn-interactive flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all border ${
-            isCurrentFlagged
-              ? 'border-slate-900 bg-slate-900 text-white shadow-xs'
-              : 'border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-          }`}
-        >
-          <Flag
-            className={`h-3.5 w-3.5 ${isCurrentFlagged ? 'fill-white text-white' : 'text-slate-400'}`}
-            strokeWidth={2}
-          />
-          <span>
-            {isCurrentFlagged
-              ? `Đang gắn cờ câu ${activeQuestionId}`
-              : `Gắn cờ xem lại câu ${activeQuestionId}`}
-          </span>
-        </button>
+    <footer className="sticky bottom-0 z-30 shrink-0 border-t border-slate-200 bg-white shadow-lg select-none">
+      {/* ── Row 1: Centered Question Jump Pills (Collapsible) ────────── */}
+      {showQuestionPills && (
+        <div className="flex items-center justify-center gap-1.5 border-b border-slate-100 py-2 px-4 overflow-x-auto custom-scrollbar">
+          {questionsInCurrentPassage.map((q) => {
+            const isAnswered = typeof answers[q.id] === 'string' && answers[q.id].trim() !== ''
+            const isFlagged = !!flaggedQuestions[q.id]
+            const isActive = activeQuestionId === q.id
 
-        <div className="hidden sm:flex items-center gap-2 text-xs font-medium text-slate-500">
-          <span>Tiến độ:</span>
-          <span className="font-bold text-slate-900">
-            {answeredCount} / {manifest.totalQuestions}
-          </span>
-          <span className="text-slate-300">•</span>
-          <span>Đang làm:</span>
-          <span className="font-bold text-red-600">Câu {activeQuestionId}</span>
+            return (
+              <button
+                key={q.id}
+                type="button"
+                onClick={() => handleSelectQuestion(q.id)}
+                title={`Câu ${q.id} - ${isAnswered ? 'Đã làm' : 'Chưa làm'}${isFlagged ? ' (Gắn cờ)' : ''}`}
+                className={`btn-interactive relative flex h-7 min-w-8 items-center justify-center rounded-xl px-2 text-xs font-bold transition-all border border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50 ${
+                  isActive ? 'ring-2 ring-red-600 border-red-500 text-red-700' : ''
+                } ${
+                  isAnswered
+                    ? 'text-slate-900 underline decoration-2 underline-offset-4 decoration-slate-900'
+                    : 'text-slate-700'
+                }`}
+              >
+                <span>{q.id}</span>
+                {isFlagged && (
+                  <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-amber-500 ring-1 ring-white" />
+                )}
+              </button>
+            )
+          })}
         </div>
-      </div>
+      )}
 
-      {/* ── Center: Question Matrix (1 to 40) ──────────────────────── */}
-      <div className="flex flex-1 max-w-2xl items-center justify-center gap-1.5 overflow-x-auto py-1 custom-scrollbar">
-        {manifest.passages.map((p) => {
-          const [start, end] = p.questionRange
-          const questionsInPassage = manifest.questions.filter((q) => q.id >= start && q.id <= end)
-
-          return (
-            <div
-              key={p.id}
-              className={`flex items-center gap-1 px-1.5 py-1 rounded-lg ${
-                activePassageId === p.id ? 'bg-slate-100/80 ring-1 ring-slate-200' : ''
+      {/* ── Row 2: Main Bottom Action Bar with 3 Passage Switcher Pills ── */}
+      <div className="flex items-center justify-between gap-3 px-4 sm:px-6 py-2.5">
+        {/* Left: Collapse Toggle + Passage Count Info */}
+        <div className="flex items-center gap-3 shrink-0">
+          <button
+            type="button"
+            onClick={() => setShowQuestionPills(!showQuestionPills)}
+            title={showQuestionPills ? 'Thu gọn hàng câu hỏi' : 'Hiện hàng câu hỏi'}
+            className="btn-interactive flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 shadow-2xs"
+          >
+            <ChevronDown
+              className={`h-4 w-4 transition-transform duration-200 ${
+                showQuestionPills ? '' : 'rotate-180'
               }`}
+            />
+          </button>
+
+          <div className="hidden sm:flex flex-col">
+            <span className="text-xs font-bold text-slate-900 leading-tight">
+              Passage {activePassageId}
+            </span>
+            <span className="text-[11px] text-slate-500 font-medium">
+              Đã làm {answeredInCurrent} / {endQ - startQ + 1}
+            </span>
+          </div>
+        </div>
+
+        {/* Center: 3 Passage Switcher Pills (Pass 1, Pass 2, Pass 3) ───── */}
+        <div className="flex items-center gap-2 overflow-x-auto py-1 custom-scrollbar">
+          {manifest.passages.map((p) => {
+            const isActive = activePassageId === p.id
+            const [pStart, pEnd] = p.questionRange
+            let count = 0
+            for (let i = pStart; i <= pEnd; i++) {
+              if (typeof answers[i] === 'string' && answers[i].trim() !== '') {
+                count++
+              }
+            }
+            const total = pEnd - pStart + 1
+
+            return (
+              <button
+                key={p.id}
+                type="button"
+                onClick={() => handlePassageSwitch(p.id)}
+                className={`btn-interactive flex shrink-0 items-center gap-2 rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all border ${
+                  isActive
+                    ? 'border-red-200 bg-red-50/80 text-red-600 shadow-2xs'
+                    : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
+                }`}
+              >
+                <BookOpen className="h-3.5 w-3.5" />
+                <span>Passage {p.id}</span>
+                <span
+                  className={isActive ? 'text-red-300 font-normal' : 'text-slate-300 font-normal'}
+                >
+                  |
+                </span>
+                <span
+                  className={`text-[11px] font-mono ${
+                    isActive ? 'text-red-600 font-bold' : 'text-slate-500 font-medium'
+                  }`}
+                >
+                  {count}/{total}
+                </span>
+              </button>
+            )
+          })}
+        </div>
+
+        {/* Right: Question Prev/Next & Dynamic Next Passage Button ────────────── */}
+        <div className="flex items-center gap-2 shrink-0">
+          <button
+            type="button"
+            onClick={handlePrev}
+            disabled={activeQuestionId <= 1}
+            className="btn-interactive flex h-9 items-center gap-1 rounded-xl border border-slate-200 bg-white px-2.5 sm:px-3 text-xs font-bold text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed shadow-2xs"
+          >
+            <ChevronLeft className="h-4 w-4" />
+            <span className="hidden sm:inline">Trước</span>
+          </button>
+
+          {isLastQuestionOfPassage ? (
+            activePassageId < 3 ? (
+              <button
+                type="button"
+                onClick={handleNextPassage}
+                className="btn-interactive flex h-9 items-center gap-1.5 rounded-xl bg-red-600 px-3.5 sm:px-4 text-xs font-bold text-white hover:bg-red-700 shadow-xs active:scale-95 transition-all"
+              >
+                <span>Passage {activePassageId + 1}</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  submitExam()
+                  submitFullExam()
+                }}
+                disabled={isSubmitted}
+                className="btn-interactive flex h-9 items-center gap-1.5 rounded-xl bg-red-600 px-4 sm:px-5 text-xs font-bold text-white hover:bg-red-700 disabled:opacity-50 shadow-xs active:scale-95 transition-all"
+              >
+                <span>Nộp bài</span>
+                <CheckCircle2 className="h-3.5 w-3.5" />
+              </button>
+            )
+          ) : (
+            <button
+              type="button"
+              onClick={handleNext}
+              disabled={activeQuestionId >= manifest.totalQuestions}
+              className="btn-interactive flex h-9 items-center gap-1 rounded-xl border border-slate-200 bg-white px-2.5 sm:px-3 text-xs font-bold text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed shadow-2xs"
             >
-              <span className="text-[10px] font-bold text-slate-400 mr-1 hidden xl:inline">
-                P{p.id}:
-              </span>
-              {questionsInPassage.map((q) => {
-                const isAnswered = typeof answers[q.id] === 'string' && answers[q.id].trim() !== ''
-                const isFlagged = !!flaggedQuestions[q.id]
-                const isActive = activeQuestionId === q.id
-
-                return (
-                  <button
-                    key={q.id}
-                    type="button"
-                    onClick={() => handleSelectQuestion(q.id, p.id)}
-                    title={`Câu ${q.id} - ${isAnswered ? 'Đã làm' : 'Chưa làm'}${isFlagged ? ' (Có gắn cờ)' : ''}`}
-                    className={`btn-interactive relative flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-xs font-bold transition-all ${
-                      isActive ? 'border-2 border-red-600 ring-2 ring-red-600/20' : 'border'
-                    } ${
-                      isAnswered
-                        ? 'border-slate-900 bg-slate-900 text-white'
-                        : 'border-slate-300 bg-white text-slate-700 hover:border-slate-400 hover:bg-slate-50'
-                    }`}
-                  >
-                    <span>{q.id}</span>
-                    {isFlagged && (
-                      <span
-                        title="Đã gắn cờ xem lại"
-                        className={`absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5 items-center justify-center rounded-full ring-1 ${
-                          isAnswered ? 'bg-white ring-slate-900' : 'bg-slate-900 ring-white'
-                        }`}
-                      >
-                        <span
-                          className={`h-1 w-1 rounded-full ${isAnswered ? 'bg-slate-900' : 'bg-white'}`}
-                        />
-                      </span>
-                    )}
-                  </button>
-                )
-              })}
-            </div>
-          )
-        })}
-      </div>
-
-      {/* ── Right: Previous & Next Buttons ────────────────────────── */}
-      <div className="flex items-center gap-2">
-        <button
-          type="button"
-          onClick={handlePrev}
-          disabled={activeQuestionId <= 1}
-          className="btn-interactive flex h-9 items-center gap-1 rounded-lg border border-slate-200 bg-slate-50 px-3 text-xs font-bold text-slate-700 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed"
-        >
-          <ChevronLeft className="h-4 w-4" />
-          <span className="hidden sm:inline">Câu trước</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={handleNext}
-          disabled={activeQuestionId >= manifest.totalQuestions}
-          className="btn-interactive flex h-9 items-center gap-1 rounded-lg bg-slate-900 px-3 text-xs font-bold text-white hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed shadow-xs"
-        >
-          <span className="hidden sm:inline">Câu sau</span>
-          <ChevronRight className="h-4 w-4" />
-        </button>
+              <span className="hidden sm:inline">Sau</span>
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          )}
+        </div>
       </div>
     </footer>
   )

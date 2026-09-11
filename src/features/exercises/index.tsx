@@ -17,6 +17,7 @@ import {
 import { exerciseService } from '@/services/exerciseService'
 import type { ExerciseSkill, ExerciseStatus } from '@/types/api.types'
 import { exercisesMock } from '@/mocks/exercises.mock'
+import { toast } from '@/shared/components/Toast/toastStore'
 
 /**
  * ExercisesPage — Practice Exercises List (screens 01, 09).
@@ -176,21 +177,33 @@ export const ExercisesPage: React.FC = () => {
 
             <div className="flex items-center gap-3 self-end sm:self-center">
               {item.status === 'completed' ? (
-                <Link
-                  to="/practice"
+                <button
+                  type="button"
+                  onClick={() => {
+                    toast.info('Giao diện bài tập đang được thiết kế', {
+                      description:
+                        'Phần bài tập luyện tập (Exercises) sẽ được phát triển theo giao diện riêng biệt, không dùng chung với phòng thi CBT.',
+                    })
+                  }}
                   className="btn-interactive inline-flex items-center gap-1.5 rounded-lg border border-outline-variant bg-surface-container-low px-4 py-2 text-label-sm font-semibold text-secondary hover:bg-surface-container transition-colors"
                 >
                   <Eye className="h-4 w-4" strokeWidth={2} />
                   Xem lại kết quả
-                </Link>
+                </button>
               ) : (
-                <Link
-                  to="/practice"
+                <button
+                  type="button"
+                  onClick={() => {
+                    toast.info('Giao diện bài tập đang được thiết kế', {
+                      description:
+                        'Phần bài tập luyện tập (Exercises) sẽ được phát triển theo giao diện riêng biệt, không dùng chung với phòng thi CBT.',
+                    })
+                  }}
                   className="btn-interactive inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-label-sm font-semibold text-on-primary hover:bg-primary-hover transition-colors shadow-xs"
                 >
                   <Play className="h-4 w-4" strokeWidth={2} />
                   Bắt đầu làm bài
-                </Link>
+                </button>
               )}
             </div>
           </div>

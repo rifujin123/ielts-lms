@@ -397,11 +397,10 @@ export const cambridgeFull4SkillMock: FullIeltsExamManifest = {
           questions: [
             {
               id: 31,
-              type: 'NOTE_COMPLETION',
-              instruction:
-                'Complete the lecture notes. Write NO MORE THAN TWO WORDS for each answer.',
+              type: 'TABLE_COMPLETION',
+              instruction: 'Complete the table below. Write NO MORE THAN TWO WORDS.',
               prompt:
-                'The oceans absorb roughly 30 percent of human-produced ___________ gas annually.',
+                'Open Ocean Surface | Absorbs 30% of emissions | Annual uptake: ___________ gas',
               correctAnswer: 'carbon dioxide',
               explanation:
                 'Lecture notes that marine waters sequester huge amounts of anthropogenic carbon dioxide.',
@@ -409,20 +408,20 @@ export const cambridgeFull4SkillMock: FullIeltsExamManifest = {
             },
             {
               id: 32,
-              type: 'NOTE_COMPLETION',
-              instruction: 'Write NO MORE THAN TWO WORDS for each answer.',
+              type: 'TABLE_COMPLETION',
+              instruction: 'Complete the table below. Write NO MORE THAN TWO WORDS.',
               prompt:
-                'When CO2 reacts with seawater, it generates carbonic acid, releasing ___________ ions.',
+                'Chemical Dissociation | Seawater + CO2 reaction | Releases free ___________ ions',
               correctAnswer: 'hydrogen',
               explanation: 'Carbonic acid dissociates to release free hydrogen ions, lowering pH.',
               referenceLocation: 'Audio: 26:55',
             },
             {
               id: 33,
-              type: 'NOTE_COMPLETION',
-              instruction: 'Write NO MORE THAN TWO WORDS for each answer.',
+              type: 'TABLE_COMPLETION',
+              instruction: 'Complete the table below. Write NO MORE THAN TWO WORDS.',
               prompt:
-                'Since the industrial revolution, surface ocean pH has dropped by ___________ units.',
+                'Global pH Shift | Industrial era comparison | Overall drop of ___________ units',
               correctAnswer: '0.1',
               explanation:
                 'A 0.1 decrease in pH represents an approximate 30% increase in acidity.',
@@ -430,33 +429,57 @@ export const cambridgeFull4SkillMock: FullIeltsExamManifest = {
             },
             {
               id: 34,
-              type: 'NOTE_COMPLETION',
-              instruction: 'Write NO MORE THAN TWO WORDS for each answer.',
-              prompt:
-                'Shell-building calcifiers struggle to synthesize calcium ___________ for their shells.',
-              correctAnswer: 'carbonate',
+              type: 'MULTIPLE_CHOICE',
+              instruction: 'Choose the correct letter, A, B or C.',
+              prompt: 'Why are shell-building calcifiers severely impacted by ocean acidification?',
+              options: [
+                {
+                  key: 'A',
+                  text: 'They cannot extract sufficient calcium carbonate from acidified seawater',
+                },
+                {
+                  key: 'B',
+                  text: 'High ocean temperatures completely dissolve their existing shells in days',
+                },
+                { key: 'C', text: 'Predatory starfish multiply rapidly in acidic coastal water' },
+              ],
+              correctAnswer: 'A',
               explanation:
                 'Acidity depletes the saturation state of carbonate ions needed for calcium carbonate.',
               referenceLocation: 'Audio: 28:15',
             },
             {
               id: 35,
-              type: 'NOTE_COMPLETION',
-              instruction: 'Write NO MORE THAN TWO WORDS for each answer.',
+              type: 'MULTIPLE_CHOICE',
+              instruction: 'Choose the correct letter, A, B or C.',
               prompt:
-                'Pteropods, tiny sea snails known as sea ___________, are vital food for wild salmon.',
-              correctAnswer: 'butterflies',
-              explanation: 'Professor explains pteropods are nicknamed sea butterflies.',
+                'What primary role do pteropods (sea butterflies) play in the Arctic food chain?',
+              options: [
+                { key: 'A', text: 'They filter toxic bacteria out of cold ocean currents' },
+                { key: 'B', text: 'They constitute essential prey for wild salmon and whales' },
+                { key: 'C', text: 'They accelerate the growth of surrounding kelp forests' },
+              ],
+              correctAnswer: 'B',
+              explanation:
+                'Professor explains pteropods are nicknamed sea butterflies and feed wild salmon.',
               referenceLocation: 'Audio: 28:50',
             },
             {
               id: 36,
-              type: 'NOTE_COMPLETION',
-              instruction: 'Write NO MORE THAN TWO WORDS for each answer.',
-              prompt:
-                'Corals expel their photosynthetic symbiotic algae, causing severe coral ___________.',
-              correctAnswer: 'bleaching',
-              explanation: 'Thermal stress combined with acidity triggers coral bleaching.',
+              type: 'MULTIPLE_CHOICE',
+              instruction: 'Choose the correct letter, A, B or C.',
+              prompt: 'What causes severe coral bleaching according to the lecture?',
+              options: [
+                { key: 'A', text: 'Direct exposure to ultraviolet radiation during low tides' },
+                {
+                  key: 'B',
+                  text: 'Expulsion of symbiotic algae driven by heat stress and acidity',
+                },
+                { key: 'C', text: 'Overgrowth of invasive brown algae smothering coral polyps' },
+              ],
+              correctAnswer: 'B',
+              explanation:
+                'Thermal stress combined with acidity triggers expulsion of algae and bleaching.',
               referenceLocation: 'Audio: 29:30',
             },
             {

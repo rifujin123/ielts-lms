@@ -23,6 +23,8 @@ const ClassroomPage = lazy(() => import('@/features/classroom'))
 const AttendancePage = lazy(() => import('@/features/classroom/AttendancePage'))
 const PracticePage = lazy(() => import('@/features/practice'))
 const ExamRunnerPage = lazy(() => import('@/features/exam-runner'))
+const DictationPage = lazy(() => import('@/features/dictation'))
+const TopicsPage = lazy(() => import('@/features/topics'))
 
 /**
  * App — root router tree.
@@ -73,6 +75,13 @@ export default function App() {
 
                 {/* ── Interactive Practice Player ── screen 10 */}
                 <Route path="practice" element={<PracticePage />} />
+
+                {/* ── Topics & Video Dictation (Movie Short Clips) ── */}
+                <Route path="topics" element={<TopicsPage />} />
+                <Route path="topics/dictation/:lessonId" element={<DictationPage />} />
+                <Route path="topics/dictation" element={<DictationPage />} />
+                <Route path="dictation" element={<DictationPage />} />
+                <Route path="dictation/:lessonId" element={<DictationPage />} />
 
                 {/* ── Computer-Based Exam Runner (CBT) ── */}
                 <Route path="exam" element={<ExamRunnerPage />} />
