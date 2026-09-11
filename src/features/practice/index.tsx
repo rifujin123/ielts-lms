@@ -80,13 +80,13 @@ export const PracticePage: React.FC = () => {
             </button>
           </div>
 
-          <button
-            type="button"
-            className="btn-interactive inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-label-sm font-semibold text-on-primary hover:bg-primary-hover shadow-xs"
+          <Link
+            to="/exam"
+            className="btn-interactive inline-flex items-center gap-1.5 rounded-lg bg-red-600 px-4 py-2 text-label-sm font-bold text-white hover:bg-red-700 shadow-xs transition-colors"
           >
             <CheckCircle2 className="h-4 w-4" strokeWidth={2} />
-            Nộp bài
-          </button>
+            Thi Full CBT (40 câu)
+          </Link>
         </div>
       </div>
 

@@ -120,20 +120,20 @@ export const TestsPage: React.FC = () => {
 
             <div className="flex items-center gap-3 self-end sm:self-center">
               {test.status === 'completed' ? (
-                <button
-                  type="button"
-                  className="btn-interactive inline-flex items-center gap-1.5 rounded-lg border border-outline-variant bg-surface-container-low px-4 py-2 text-label-sm font-semibold text-secondary hover:bg-surface-container"
+                <Link
+                  to={`/exam/${test.id}`}
+                  className="btn-interactive inline-flex items-center gap-1.5 rounded-lg border border-outline-variant bg-surface-container-low px-4 py-2 text-label-sm font-semibold text-secondary hover:bg-surface-container transition-colors"
                 >
                   <Eye className="h-4 w-4" strokeWidth={2} />
-                  Xem bảng điểm
-                </button>
+                  Xem kết quả & Dẫn chứng
+                </Link>
               ) : (
                 <Link
-                  to="/practice"
+                  to={`/exam/${test.id}`}
                   className="btn-interactive inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-label-sm font-semibold text-on-primary hover:bg-primary-hover transition-colors shadow-xs"
                 >
                   <Play className="h-4 w-4" strokeWidth={2} />
-                  Bắt đầu làm bài
+                  Vào thi CBT trực tuyến
                 </Link>
               )}
             </div>

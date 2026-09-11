@@ -22,6 +22,7 @@ const TestsPage = lazy(() => import('@/features/tests'))
 const ClassroomPage = lazy(() => import('@/features/classroom'))
 const AttendancePage = lazy(() => import('@/features/classroom/AttendancePage'))
 const PracticePage = lazy(() => import('@/features/practice'))
+const ExamRunnerPage = lazy(() => import('@/features/exam-runner'))
 
 /**
  * App — root router tree.
@@ -72,6 +73,10 @@ export default function App() {
 
                 {/* ── Interactive Practice Player ── screen 10 */}
                 <Route path="practice" element={<PracticePage />} />
+
+                {/* ── Computer-Based Exam Runner (CBT) ── */}
+                <Route path="exam" element={<ExamRunnerPage />} />
+                <Route path="exam/:testId" element={<ExamRunnerPage />} />
               </Route>
             </Routes>
           </Suspense>

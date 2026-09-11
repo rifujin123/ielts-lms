@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 import { Header } from '@/shared/components/Header'
 import { Sidebar } from '@/shared/components/Sidebar'
 import { MobileSidebar } from '@/shared/components/MobileSidebar'
@@ -8,6 +8,23 @@ import { FeatureErrorBoundary } from '@/shared/components/ErrorBoundary'
 import { ToastContainer } from '@/shared/components/Toast'
 
 export const AppLayout: React.FC = () => {
+  const location = useLocation()
+  const isExamMode = location.pathname.startsWith('/exam')
+
+  if (isExamMode) {
+    return (
+      <div className="flex h-screen w-screen flex-col overflow-hidden bg-slate-100 font-body text-slate-900">
+        <FeatureErrorBoundary>
+          <Suspense fallback={<PageLoader />}>
+            <Outlet />
+          </Suspense>
+        </FeatureErrorBoundary>
+        {/* Global Toast Container for Animated Notifications */}
+        <ToastContainer />
+      </div>
+    )
+  }
+
   return (
     <div className="flex min-h-screen flex-col bg-background font-body text-on-surface">
       {/* Sticky Top Header */}

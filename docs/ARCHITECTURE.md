@@ -529,3 +529,56 @@ const mutation = useMutation({
   },
 })
 ```
+
+---
+
+## 📦 Reusable Asset Registry & Protocol
+
+Whenever an engineer or AI agent introduces a reusable component, hook, or layout, it MUST be registered here to prevent redundant implementations.
+
+### 1. IELTS CBT Computer-Based Testing Runner
+
+- **Asset Name & File Path**: `ExamRunnerPage` (`src/features/exam-runner/index.tsx`)
+- **Purpose & UX Intent**: Standard Cambridge/IDP computer-based exam testing environment. Provides a 0px-shift dual-pane resizable layout (reading passage on left, questions on right), question palette matrix at bottom, real-time timer countdown, text highlighting popover, auto-save to `localStorage`, and automated Band Score evaluation with review explanations.
+- **Usage Example**:
+  ```tsx
+  import { ExamRunnerPage } from '@/features/exam-runner'
+  ;<Route path="exam/:testId" element={<ExamRunnerPage />} />
+  ```
+- **Constraints & Invariants**: Full-viewport layout without LMS sidebar/header; handles touch & desktop resize via `react-resizable-panels`; persists answers across reloads.
+
+### 2. Reading Passage Viewer with Highlighting
+
+- **Asset Name & File Path**: `ReadingPassageView` (`src/features/exam-runner/components/ReadingPassageView.tsx`)
+- **Purpose & UX Intent**: Renders IELTS reading passages with font scaling (`sm`, `base`, `lg`) and text selection listener for instant highlighting (yellow/emerald) and annotation tracking.
+- **Usage Example**:
+  ```tsx
+  import { ReadingPassageView } from '@/features/exam-runner/components/ReadingPassageView'
+  ;<ReadingPassageView />
+  ```
+
+### 3. Universal IELTS Question Card Renderer
+
+- **Asset Name & File Path**: `QuestionCard` (`src/features/exam-runner/components/QuestionCard.tsx`)
+- **Purpose & UX Intent**: Polymorphic renderer supporting `TRUE_FALSE_NOT_GIVEN`, `YES_NO_NOT_GIVEN`, `MULTIPLE_CHOICE`, `SENTENCE_COMPLETION`, `SUMMARY_COMPLETION`, and `MATCHING_HEADINGS`. Shows answer state, active highlight, flag toggle, and post-submission explanations.
+- **Constraints & Invariants**: 0px layout shift on selection; identical border widths on active/inactive states.
+
+### 4. CBT Question Palette Navigation Matrix
+
+- **Asset Name & File Path**: `ExamBottomPalette` (`src/features/exam-runner/components/ExamBottomPalette.tsx`)
+- **Purpose & UX Intent**: Sticky bottom matrix showing questions 1–40 grouped by passage with state indicators (Unanswered, Answered, Review/Flagged) and previous/next navigation.
+- **Usage Example**:
+  ```tsx
+  import { ExamBottomPalette } from '@/features/exam-runner/components/ExamBottomPalette'
+  ;<ExamBottomPalette />
+  ```
+
+### 5. IELTS Exam Session Store
+
+- **Asset Name & File Path**: `useIeltsExamStore` (`src/features/exam-runner/store/ieltsExamStore.ts`)
+- **Purpose & UX Intent**: Zustand store with auto-save persistence for answers, flags, elapsed timer, text highlights, and automated Cambridge IELTS Academic Reading Band Score calculation (0.0–9.0).
+- **Usage Example**:
+  ```tsx
+  import { useIeltsExamStore } from '@/features/exam-runner/store/ieltsExamStore'
+  const { answers, setAnswer, submitExam, scoreResult } = useIeltsExamStore()
+  ```
