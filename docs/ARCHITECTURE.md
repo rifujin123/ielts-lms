@@ -843,7 +843,11 @@ Whenever an engineer or AI agent introduces a reusable component, hook, or layou
   - **Listening**: Mobile sticky top audio player keeping track time and controls visible above the keyboard, combined with safe-zone `scrollIntoView({ behavior: 'smooth', block: 'center' })` auto-centering on input focus.
   - **Writing**: Expandable Task 1 accordion prompt/chart drawer, full-screen focus writing mode, debounced 3-second auto-save to localStorage, and dynamic floating word counter pinned above the mobile virtual keyboard via `window.visualViewport`.
   - **Speaking**: 2-stage pre-permission microphone onboarding modal preventing Safari iOS permanent lockout, responsive SVG circular countdown timer for Part 2 prep, and real-time audio waveform visualizers.
-  - **Navigation**: Universal horizontal swipe ribbon with color status badges (emerald answered, amber flagged, slate unanswered) preserving strict 0px layout shift.
+  - **Navigation**:
+    - **Header & Bottom Steppers**: On mobile `< 768px`, displays a single active pill (`Reading (0/40)`, `Passage 1`, `Section 1`, `Task 1`, `Part 1`) flanked by two 50% half-inset circular chevron buttons (`h-7 w-7`, `-left-3.5` / `-right-3.5`), saving valuable horizontal screen real estate while maintaining 0px shift.
+    - **Desktop**: Retains full horizontal tab bars inside centered `rounded-xl bg-slate-100 p-1 border border-slate-200 shadow-2xs` containers with absolute mathematical centering (`md:absolute md:left-1/2 md:-translate-x-1/2 md:top-1/2 md:-translate-y-1/2`).
+    - **Audio Volume**: Hidden on mobile (`hidden sm:flex`), allowing users to rely naturally on their device's physical volume rocker buttons.
+  - Universal horizontal swipe ribbon with color status badges (emerald answered, amber flagged, slate unanswered) preserving strict 0px layout shift.
 - **Usage Example**:
   ```tsx
   import { ReadingRunner } from '@/features/exam-runner/components/ReadingRunner'
