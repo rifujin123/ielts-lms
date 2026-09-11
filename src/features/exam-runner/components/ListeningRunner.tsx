@@ -246,14 +246,14 @@ export const ListeningRunner: React.FC<ListeningRunnerProps> = ({ skillData, onS
         )}
 
         {/* Row B: Main DOL Bottom Action Bar */}
-        <div className="flex items-center justify-between gap-3 px-4 sm:px-6 py-3">
+        <div className="relative flex items-center justify-between gap-3 px-4 sm:px-6 py-3">
           {/* Left: Collapse Icon + Section Count + Audio Volume */}
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex flex-1 items-center justify-start gap-3 min-w-0">
             <button
               type="button"
               onClick={() => setShowQuestionPills(!showQuestionPills)}
               title={showQuestionPills ? 'Thu gọn hàng câu hỏi' : 'Hiện hàng câu hỏi'}
-              className="btn-interactive flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 shadow-2xs"
+              className="btn-interactive flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 shadow-2xs"
             >
               <ChevronDown
                 className={`h-4 w-4 transition-transform duration-200 ${
@@ -262,7 +262,7 @@ export const ListeningRunner: React.FC<ListeningRunnerProps> = ({ skillData, onS
               />
             </button>
 
-            <div className="hidden sm:flex flex-col">
+            <div className="hidden sm:flex flex-col shrink-0">
               <span className="text-xs font-bold text-slate-900 leading-tight">
                 Section {currentSection.sectionNumber}
               </span>
@@ -272,7 +272,7 @@ export const ListeningRunner: React.FC<ListeningRunnerProps> = ({ skillData, onS
             </div>
 
             {/* Audio Volume Control */}
-            <div className="flex items-center gap-1.5 pl-2 border-l border-slate-200">
+            <div className="flex items-center gap-1.5 pl-2 border-l border-slate-200 shrink-0">
               <button
                 type="button"
                 onClick={() => setIsMuted(!isMuted)}
@@ -305,63 +305,60 @@ export const ListeningRunner: React.FC<ListeningRunnerProps> = ({ skillData, onS
           </div>
 
           {/* Center: 4 Section Pills with Mini Progress Bars */}
-          <div className="flex items-center gap-2 overflow-x-auto py-1 custom-scrollbar">
-            {skillData.sections.map((sec, idx) => {
-              const isActive = activeSectionIndex === idx
-              const [s, e] = sec.questionRange
-              let count = 0
-              for (let i = s; i <= e; i++) {
-                if (listeningAnswers[i] && listeningAnswers[i].trim() !== '') {
-                  count++
+          <div className="flex items-center justify-center min-w-0 px-1 md:absolute md:left-1/2 md:-translate-x-1/2 md:top-1/2 md:-translate-y-1/2">
+            <div className="flex items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200 shadow-2xs overflow-x-auto custom-scrollbar">
+              {skillData.sections.map((sec, idx) => {
+                const isActive = activeSectionIndex === idx
+                const [s, e] = sec.questionRange
+                let count = 0
+                for (let i = s; i <= e; i++) {
+                  if (listeningAnswers[i] && listeningAnswers[i].trim() !== '') {
+                    count++
+                  }
                 }
-              }
-              const total = e - s + 1
-              const pct = total > 0 ? (count / total) * 100 : 0
+                const total = e - s + 1
+                const pct = total > 0 ? (count / total) * 100 : 0
 
-              return (
-                <button
-                  key={sec.sectionNumber}
-                  type="button"
-                  onClick={() => setActiveSectionIndex(idx)}
-                  className={`btn-interactive flex shrink-0 items-center gap-2 rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all border ${
-                    isActive
-                      ? 'border-red-200 bg-red-50/80 text-red-600 shadow-2xs'
-                      : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
-                  }`}
-                >
-                  <span>Section {sec.sectionNumber}</span>
-                  <span
-                    className={isActive ? 'text-red-300 font-normal' : 'text-slate-300 font-normal'}
-                  >
-                    |
-                  </span>
-                  <span
-                    className={`text-[11px] font-mono ${
-                      isActive ? 'text-red-600 font-bold' : 'text-slate-500 font-medium'
+                return (
+                  <button
+                    key={sec.sectionNumber}
+                    type="button"
+                    onClick={() => setActiveSectionIndex(idx)}
+                    className={`btn-interactive flex shrink-0 items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-bold transition-all border ${
+                      isActive
+                        ? 'border-slate-900 bg-slate-900 text-white shadow-xs'
+                        : 'border-transparent text-slate-600 hover:text-slate-900 hover:bg-white/60'
                     }`}
                   >
-                    {count}/{total}
-                  </span>
-                  {/* Mini Progress Bar Line */}
-                  <div
-                    className={`h-1 w-8 rounded-full overflow-hidden ${
-                      isActive ? 'bg-red-200' : 'bg-slate-200'
-                    }`}
-                  >
-                    <div
-                      className={`h-full transition-all duration-300 ${
-                        isActive ? 'bg-red-600' : 'bg-slate-400'
+                    <span>Section {sec.sectionNumber}</span>
+                    <span
+                      className={`rounded-full px-1.5 py-0.2 text-[10px] ${
+                        isActive ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'
                       }`}
-                      style={{ width: `${pct}%` }}
-                    />
-                  </div>
-                </button>
-              )
-            })}
+                    >
+                      {count}/{total}
+                    </span>
+                    {/* Mini Progress Bar Line */}
+                    <div
+                      className={`h-1 w-7 rounded-full overflow-hidden ${
+                        isActive ? 'bg-white/30' : 'bg-slate-200'
+                      }`}
+                    >
+                      <div
+                        className={`h-full transition-all duration-300 ${
+                          isActive ? 'bg-emerald-400' : 'bg-slate-400'
+                        }`}
+                        style={{ width: `${pct}%` }}
+                      />
+                    </div>
+                  </button>
+                )
+              })}
+            </div>
           </div>
 
           {/* Right: Red Primary Next Button */}
-          <div className="shrink-0">
+          <div className="flex flex-1 items-center justify-end min-w-0">
             {activeSectionIndex < skillData.sections.length - 1 ? (
               <button
                 type="button"

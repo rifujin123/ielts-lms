@@ -533,10 +533,10 @@ export const SpeakingRunner: React.FC<SpeakingRunnerProps> = ({ skillData }) => 
 
       {/* ── Signature DOL Bottom Navigation Bar (Matches Listening & Reading Pattern) ── */}
       <footer className="sticky bottom-0 z-30 shrink-0 border-t border-slate-200 bg-white shadow-lg select-none">
-        <div className="flex items-center justify-between gap-3 px-4 sm:px-6 py-2.5">
+        <div className="relative flex items-center justify-between gap-3 px-4 sm:px-6 py-2.5">
           {/* Left: Current Part Info & Recording Status */}
-          <div className="flex items-center gap-3 shrink-0">
-            <div className="hidden sm:flex flex-col">
+          <div className="flex flex-1 items-center justify-start gap-3 min-w-0">
+            <div className="hidden sm:flex flex-col shrink-0">
               <span className="text-xs font-bold text-slate-900 leading-tight">
                 Speaking Part {activePart}
               </span>
@@ -546,7 +546,7 @@ export const SpeakingRunner: React.FC<SpeakingRunnerProps> = ({ skillData }) => 
             </div>
 
             <div
-              className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold border transition-colors ${
+              className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold border transition-colors shrink-0 ${
                 existingRecording
                   ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                   : 'bg-slate-50 text-slate-600 border-slate-200'
@@ -562,48 +562,45 @@ export const SpeakingRunner: React.FC<SpeakingRunnerProps> = ({ skillData }) => 
           </div>
 
           {/* Center: 3 Part Switcher Pills (Part 1, Part 2, Part 3) ──── */}
-          <div className="flex items-center gap-2 overflow-x-auto py-1 custom-scrollbar">
-            {[1, 2, 3].map((partNum) => {
-              const isActive = activePart === partNum
-              const hasRecorded = !!speakingRecordings[partNum]
+          <div className="flex items-center justify-center min-w-0 px-1 md:absolute md:left-1/2 md:-translate-x-1/2 md:top-1/2 md:-translate-y-1/2">
+            <div className="flex items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200 shadow-2xs overflow-x-auto custom-scrollbar">
+              {[1, 2, 3].map((partNum) => {
+                const isActive = activePart === partNum
+                const hasRecorded = !!speakingRecordings[partNum]
 
-              return (
-                <button
-                  key={partNum}
-                  type="button"
-                  onClick={() => setActivePart(partNum as 1 | 2 | 3)}
-                  className={`btn-interactive flex shrink-0 items-center gap-2 rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all border ${
-                    isActive
-                      ? 'border-red-200 bg-red-50/80 text-red-600 shadow-2xs'
-                      : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
-                  }`}
-                >
-                  <Mic className="h-3.5 w-3.5" />
-                  <span>Part {partNum}</span>
-                  <span
-                    className={isActive ? 'text-red-300 font-normal' : 'text-slate-300 font-normal'}
-                  >
-                    |
-                  </span>
-                  <span
-                    className={`text-[11px] font-mono ${
-                      hasRecorded
-                        ? 'text-emerald-600 font-bold'
-                        : isActive
-                          ? 'text-red-600 font-bold'
-                          : 'text-slate-500 font-medium'
+                return (
+                  <button
+                    key={partNum}
+                    type="button"
+                    onClick={() => setActivePart(partNum as 1 | 2 | 3)}
+                    className={`btn-interactive flex shrink-0 items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-bold transition-all border ${
+                      isActive
+                        ? 'border-slate-900 bg-slate-900 text-white shadow-xs'
+                        : 'border-transparent text-slate-600 hover:text-slate-900 hover:bg-white/60'
                     }`}
                   >
-                    {hasRecorded ? 'Đã thu' : 'Chưa thu'}
-                  </span>
-                  {hasRecorded && <CheckCircle2 className="h-3 w-3 text-emerald-500" />}
-                </button>
-              )
-            })}
+                    <Mic className="h-3.5 w-3.5" />
+                    <span>Part {partNum}</span>
+                    <span
+                      className={`rounded-full px-1.5 py-0.2 text-[10px] ${
+                        hasRecorded
+                          ? 'bg-emerald-500 text-white'
+                          : isActive
+                            ? 'bg-white/20 text-white'
+                            : 'bg-slate-200 text-slate-700'
+                      }`}
+                    >
+                      {hasRecorded ? 'Đã thu' : 'Chưa thu'}
+                    </span>
+                    {hasRecorded && <CheckCircle2 className="h-3 w-3 text-emerald-400" />}
+                  </button>
+                )
+              })}
+            </div>
           </div>
 
           {/* Right: Prev/Next Part Navigation Buttons ───────────────── */}
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex flex-1 items-center justify-end gap-2 min-w-0">
             <button
               type="button"
               onClick={() => setActivePart((activePart - 1) as 1 | 2 | 3)}

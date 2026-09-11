@@ -194,19 +194,19 @@ export const ExamRunnerPage: React.FC = () => {
   return (
     <div className="flex h-screen w-screen flex-col overflow-hidden bg-slate-100 select-none">
       {/* ── Top Universal Header ───────────────────────────────────── */}
-      <header className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-slate-200 bg-white px-3 sm:px-4 shadow-xs">
+      <header className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-slate-200 bg-white px-3 sm:px-4 shadow-xs relative">
         {/* ── Left: Exit & Branding ─────────────────────────────────── */}
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        <div className="flex flex-1 items-center justify-start gap-2 sm:gap-3 min-w-0">
           <button
             type="button"
             onClick={() => navigate('/tests')}
             title="Thoát phòng thi"
-            className="btn-interactive flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-colors"
+            className="btn-interactive flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-colors"
           >
             <ArrowLeft className="h-5 w-5" strokeWidth={2} />
           </button>
 
-          <div className="flex items-center gap-2 sm:gap-2.5">
+          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
             <img
               src="/branding.png"
               alt="IELTS Hồ Thành"
@@ -224,7 +224,7 @@ export const ExamRunnerPage: React.FC = () => {
         </div>
 
         {/* ── Center: Dynamic Skill Switcher ────────────────────────── */}
-        <div className="flex items-center justify-center min-w-0 px-1">
+        <div className="flex items-center justify-center min-w-0 px-1 md:absolute md:left-1/2 md:-translate-x-1/2 md:top-1/2 md:-translate-y-1/2">
           {availableSkills.length > 1 ? (
             <>
               {/* Mobile (< md): Single Active Skill with Half-Inset Circular Chevrons (50% in, 50% out) */}
@@ -330,7 +330,7 @@ export const ExamRunnerPage: React.FC = () => {
         </div>
 
         {/* ── Right: Mode Badge, Timer & Submit Actions ─────────────── */}
-        <div className="flex items-center gap-2.5">
+        <div className="flex flex-1 items-center justify-end gap-2.5 min-w-0">
           {/* Read-only Badge: Shows 'Strict' or 'Practice' */}
           <div
             title={

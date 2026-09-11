@@ -133,14 +133,14 @@ export const ExamBottomPalette: React.FC = () => {
       )}
 
       {/* ── Row 2: Main Bottom Action Bar with 3 Passage Switcher Pills ── */}
-      <div className="flex items-center justify-between gap-3 px-4 sm:px-6 py-2.5">
+      <div className="relative flex items-center justify-between gap-3 px-4 sm:px-6 py-2.5">
         {/* Left: Collapse Toggle + Passage Count Info */}
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="flex flex-1 items-center justify-start gap-3 min-w-0">
           <button
             type="button"
             onClick={() => setShowQuestionPills(!showQuestionPills)}
             title={showQuestionPills ? 'Thu gọn hàng câu hỏi' : 'Hiện hàng câu hỏi'}
-            className="btn-interactive flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 shadow-2xs"
+            className="btn-interactive flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 shadow-2xs"
           >
             <ChevronDown
               className={`h-4 w-4 transition-transform duration-200 ${
@@ -149,7 +149,7 @@ export const ExamBottomPalette: React.FC = () => {
             />
           </button>
 
-          <div className="hidden sm:flex flex-col">
+          <div className="hidden sm:flex flex-col shrink-0">
             <span className="text-xs font-bold text-slate-900 leading-tight">
               Passage {activePassageId}
             </span>
@@ -160,50 +160,47 @@ export const ExamBottomPalette: React.FC = () => {
         </div>
 
         {/* Center: 3 Passage Switcher Pills (Pass 1, Pass 2, Pass 3) ───── */}
-        <div className="flex items-center gap-2 overflow-x-auto py-1 custom-scrollbar">
-          {manifest.passages.map((p) => {
-            const isActive = activePassageId === p.id
-            const [pStart, pEnd] = p.questionRange
-            let count = 0
-            for (let i = pStart; i <= pEnd; i++) {
-              if (typeof answers[i] === 'string' && answers[i].trim() !== '') {
-                count++
+        <div className="flex items-center justify-center min-w-0 px-1 md:absolute md:left-1/2 md:-translate-x-1/2 md:top-1/2 md:-translate-y-1/2">
+          <div className="flex items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200 shadow-2xs overflow-x-auto custom-scrollbar">
+            {manifest.passages.map((p) => {
+              const isActive = activePassageId === p.id
+              const [pStart, pEnd] = p.questionRange
+              let count = 0
+              for (let i = pStart; i <= pEnd; i++) {
+                if (typeof answers[i] === 'string' && answers[i].trim() !== '') {
+                  count++
+                }
               }
-            }
-            const total = pEnd - pStart + 1
+              const total = pEnd - pStart + 1
 
-            return (
-              <button
-                key={p.id}
-                type="button"
-                onClick={() => handlePassageSwitch(p.id)}
-                className={`btn-interactive flex shrink-0 items-center gap-2 rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all border ${
-                  isActive
-                    ? 'border-red-200 bg-red-50/80 text-red-600 shadow-2xs'
-                    : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
-                }`}
-              >
-                <BookOpen className="h-3.5 w-3.5" />
-                <span>Passage {p.id}</span>
-                <span
-                  className={isActive ? 'text-red-300 font-normal' : 'text-slate-300 font-normal'}
-                >
-                  |
-                </span>
-                <span
-                  className={`text-[11px] font-mono ${
-                    isActive ? 'text-red-600 font-bold' : 'text-slate-500 font-medium'
+              return (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => handlePassageSwitch(p.id)}
+                  className={`btn-interactive flex shrink-0 items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-bold transition-all border ${
+                    isActive
+                      ? 'border-slate-900 bg-slate-900 text-white shadow-xs'
+                      : 'border-transparent text-slate-600 hover:text-slate-900 hover:bg-white/60'
                   }`}
                 >
-                  {count}/{total}
-                </span>
-              </button>
-            )
-          })}
+                  <BookOpen className="h-3.5 w-3.5" />
+                  <span>Passage {p.id}</span>
+                  <span
+                    className={`rounded-full px-1.5 py-0.2 text-[10px] ${
+                      isActive ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'
+                    }`}
+                  >
+                    {count}/{total}
+                  </span>
+                </button>
+              )
+            })}
+          </div>
         </div>
 
         {/* Right: Question Prev/Next & Dynamic Next Passage Button ────────────── */}
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex flex-1 items-center justify-end gap-2 min-w-0">
           <button
             type="button"
             onClick={handlePrev}
