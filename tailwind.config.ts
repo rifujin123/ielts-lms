@@ -8,7 +8,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        // ── Primary (DOL Crimson Red) ───────────────────────────────
+        // ── Primary (IELTS Hồ Thành Crimson Red) ───────────────────────
         primary: 'var(--color-primary)',
         'primary-hover': 'var(--color-primary-hover)',
         'on-primary': 'var(--color-on-primary)',

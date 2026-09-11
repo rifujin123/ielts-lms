@@ -7,7 +7,7 @@
 // ── Student ──────────────────────────────────────────────────────
 
 export interface Student {
-  id: string // e.g. 'DOL-8829'
+  id: string // e.g. 'HT-8829'
   name: string
   initials: string
   role: string

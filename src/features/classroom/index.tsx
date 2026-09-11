@@ -37,7 +37,7 @@ export const ClassroomPage: React.FC = () => {
             <span className="font-semibold text-on-surface">Phòng học trực tuyến</span>
           </nav>
           <h1 className="mt-1 text-headline-lg font-bold text-on-surface">
-            Lớp học trực tuyến DOL
+            Lớp học trực tuyến IELTS Hồ Thành
           </h1>
           <p className="text-body-sm text-secondary">
             Tham gia lớp học tương tác trực tuyến qua Zoom bảo mật với giảng viên chuyên môn.

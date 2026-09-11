@@ -1,6 +1,6 @@
 /**
  * ============================================================
- * DOL IELTS LMS — Design Tokens (Single Source of Truth)
+ * IELTS Hồ Thành LMS — Design Tokens (Single Source of Truth)
  * ============================================================
  * All design tokens extracted from stitch-assets/style2.css.
  * This file feeds into tailwind.config.ts via CSS var references.
@@ -10,7 +10,7 @@
  */
 
 :root {
-  /* ── Primary Brand (DOL Crimson Red) ──────────────────────── */
+  /* ── Primary Brand (IELTS Hồ Thành Crimson Red) ─────────────── */
   --color-primary: #dc2626;
   --color-primary-hover: #b91c1c;
   --color-on-primary: #ffffff;

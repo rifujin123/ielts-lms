@@ -42,7 +42,7 @@ export const MaterialsPage: React.FC = () => {
           </nav>
           <h1 className="mt-1 text-headline-lg font-bold text-on-surface">Giáo trình & Tài liệu</h1>
           <p className="text-body-sm text-secondary">
-            Tài liệu độc quyền từ DOL English, được phân loại theo từng kỹ năng và giai đoạn học.
+            Tài liệu độc quyền từ IELTS Hồ Thành, được phân loại theo từng kỹ năng và giai đoạn học.
           </p>
         </div>
 
@@ -121,7 +121,7 @@ export const MaterialsPage: React.FC = () => {
 
               <div className="mt-6 flex items-center justify-between border-t border-white/15 pt-4">
                 <span className="text-body-sm font-medium text-white/85 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
-                  Bản quyền DOL English
+                  Bản quyền IELTS Hồ Thành
                 </span>
                 <Link
                   to="/materials/books"

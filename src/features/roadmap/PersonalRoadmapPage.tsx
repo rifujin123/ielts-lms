@@ -50,7 +50,8 @@ export const PersonalRoadmapPage: React.FC = () => {
           </nav>
           <h1 className="mt-1 text-headline-lg font-bold text-on-surface">Roadmap cá nhân hóa</h1>
           <p className="text-body-sm text-secondary">
-            Được giảng viên và thuật toán AI DOL tùy chỉnh dựa trên điểm yếu kỹ năng của bạn.
+            Được giảng viên và thuật toán AI IELTS Hồ Thành tùy chỉnh dựa trên điểm yếu kỹ năng của
+            bạn.
           </p>
         </div>
 

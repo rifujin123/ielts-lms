@@ -1,4 +1,4 @@
-# Agent Operating Manual — DOL IELTS LMS
+# Agent Operating Manual — IELTS Hồ Thành LMS
 
 This document is the **single operational source of truth** for all autonomous AI agents and engineers working in this repository.
 

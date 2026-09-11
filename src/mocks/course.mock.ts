@@ -15,9 +15,9 @@ export const courseInfoMock: CourseInfo = {
   endDate: '2026-11-20',
   classTime: '20:00 - 22:00',
   zoomLink: 'https://zoom.us/j/8829012389',
-  zoomRoom: 'Phòng 802-DOL',
-  zaloGroupName: 'DOL IELTS 6.5 - K26 Online',
-  zaloGroupLink: 'https://zalo.me/g/dol-ielts-65',
+  zoomRoom: 'Phòng 802-HT',
+  zaloGroupName: 'IELTS Hồ Thành 6.5 - K26 Online',
+  zaloGroupLink: 'https://zalo.me/g/ielts-hothanh-65',
   totalExercises: 48,
   totalAssignments: 16,
   semester: 'Học kỳ Thu 2026',
@@ -61,7 +61,7 @@ export const courseInfoMock: CourseInfo = {
     },
   ],
   objectiveDescription:
-    'Khóa học trang bị cho học viên phương pháp Tư duy Tuyến tính (Linearthinking) độc quyền từ DOL, tập trung giải quyết triệt để vấn đề dịch từng từ khi đọc, thiếu liên kết khi viết, và bí ý tưởng khi nói. Mục tiêu chuẩn đầu ra tối thiểu 6.5+ Overall.',
+    'Khóa học trang bị cho học viên phương pháp tư duy học thuật độc quyền từ IELTS Hồ Thành, tập trung giải quyết triệt để vấn đề dịch từng từ khi đọc, thiếu liên kết khi viết, và bí ý tưởng khi nói. Mục tiêu chuẩn đầu ra tối thiểu 6.5+ Overall.',
   objectiveHighlights: [
     { text: 'Nắm vững kỹ thuật đọc cấu trúc hóa văn bản và skimming tư duy theo Linearthinking' },
     { text: 'Xây dựng dàn bài Task 2 mạch lạc, tránh lạc đề và dùng từ vựng học thuật chuẩn xác' },

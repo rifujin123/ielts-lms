@@ -3,7 +3,7 @@ import type { CourseBook } from '@/types/api.types'
 export const booksMock: CourseBook[] = [
   {
     id: 'BOOK-01',
-    title: 'DOL IELTS Reading 6.5+ Linearthinking Method',
+    title: 'IELTS Hồ Thành Reading 6.5+ Master Method',
     subtitle: 'Giáo trình cốt lõi kỹ năng Đọc hiểu tuyến tính',
     type: 'main',
     coverColor: '#dc2626',
@@ -76,7 +76,7 @@ export const booksMock: CourseBook[] = [
   },
   {
     id: 'BOOK-02',
-    title: 'DOL Academic Writing Task 2 - Coherence & Cohesion',
+    title: 'IELTS Hồ Thành Academic Writing Task 2 - Coherence & Cohesion',
     subtitle: 'Cẩm nang tư duy lập luận và phát triển đoạn văn',
     type: 'supplementary',
     coverColor: '#16a34a',

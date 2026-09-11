@@ -1,11 +1,11 @@
 ---
-title: 'Architecture Reference — DOL IELTS LMS'
+title: 'Architecture Reference — IELTS Hồ Thành LMS'
 created: 2026-09-11
 updated: 2026-09-11
 adopted_by: SPEC.md
 ---
 
-# Architecture Reference — DOL IELTS LMS Student Portal
+# Architecture Reference — IELTS Hồ Thành LMS Student Portal
 
 > This document is an **adopted companion** to `SPEC.md`. It captures every technology and pattern decision made during the architecture grilling session (Rounds 1–3). It is the single source of truth for **how** the system is built. `SPEC.md` and `PRD.md` govern **what** is built.
 

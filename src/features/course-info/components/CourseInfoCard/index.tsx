@@ -108,7 +108,7 @@ export const CourseInfoCard: React.FC<CourseInfoCardProps> = ({ data }) => {
             <span className="text-label-sm uppercase tracking-wider">Trạng thái học viên</span>
           </div>
           <p className="mt-1 text-body-md font-semibold text-tertiary">Chính khóa (Đạt yêu cầu)</p>
-          <span className="text-[11px] text-secondary">Mã HV: DOL-8829</span>
+          <span className="text-[11px] text-secondary">Mã HV: HT-8829</span>
         </div>
       </div>
     </div>

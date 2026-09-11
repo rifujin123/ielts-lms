@@ -68,7 +68,7 @@ export const CourseInfoPage: React.FC = () => {
             Tải cẩm nang PDF
           </button>
           <a
-            href="https://zalo.me/g/dol-ielts-65"
+            href="https://zalo.me/g/ielts-hothanh-65"
             target="_blank"
             rel="noopener noreferrer"
             className="btn-interactive inline-flex items-center gap-2 rounded-lg border border-outline-variant bg-surface-container-lowest px-3.5 py-2 text-label-sm font-semibold text-on-surface hover:bg-surface-container shadow-xs"
@@ -84,7 +84,7 @@ export const CourseInfoPage: React.FC = () => {
         <div className="relative z-10 max-w-2xl">
           <div className="inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1 text-label-sm font-semibold backdrop-blur-xs">
             <CheckCircle2 className="h-4 w-4" strokeWidth={2} />
-            Khóa học chính khóa DOL English
+            Khóa học chính khóa IELTS Hồ Thành
           </div>
           <h1 className="mt-3 text-headline-lg sm:text-display-hero text-white font-extrabold tracking-tight">
             {courseInfo.level}
@@ -115,9 +115,9 @@ export const CourseInfoPage: React.FC = () => {
         {/* Decorative background watermark */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -bottom-10 -right-10 select-none text-[180px] font-black leading-none text-white/10"
+          className="pointer-events-none absolute -bottom-8 -right-6 select-none text-[80px] sm:text-[120px] font-black leading-none text-white/10"
         >
-          DOL
+          HỒ THÀNH
         </div>
       </div>
 
@@ -154,7 +154,7 @@ export const CourseInfoPage: React.FC = () => {
 
       {/* ── Footer note ─────────────────────────────────────────── */}
       <div className="mt-4 flex flex-wrap items-center justify-between border-t border-outline-variant pt-4 text-body-sm text-secondary">
-        <div>DOL English © 2026 — Hệ thống Quản trị Học tập Học viên</div>
+        <div>IELTS Hồ Thành © 2026 — Hệ thống Quản trị Học tập Học viên</div>
         <div className="flex items-center gap-4">
           <a href="#" className="hover:text-primary transition-colors">
             Chính sách bảo mật

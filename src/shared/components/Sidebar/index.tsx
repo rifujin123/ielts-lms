@@ -133,10 +133,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, onItemClick }) => {
             Hỗ trợ học vụ
           </div>
           <p className="mt-1 text-body-sm text-secondary leading-snug">
-            Cần hỗ trợ về lịch học hoặc bài tập? Liên hệ ban học vụ DOL.
+            Cần hỗ trợ về lịch học hoặc bài tập? Liên hệ ban học vụ IELTS Hồ Thành.
           </p>
           <a
-            href="https://zalo.me/g/dol-ielts-65"
+            href="https://zalo.me/g/ielts-hothanh-65"
             target="_blank"
             rel="noopener noreferrer"
             className="mt-2.5 inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-surface-container-lowest border border-outline-variant py-1.5 text-label-sm font-semibold text-on-surface hover:bg-surface-container"

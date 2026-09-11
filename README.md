@@ -1,6 +1,6 @@
-# DOL IELTS LMS — Student Portal
+# IELTS Hồ Thành LMS — Student Portal
 
-> React TypeScript student portal for DOL English IELTS Learning Management System. Rebuilt from scratch using modern stack with 16 Stitch design screens as the visual source of truth.
+> React TypeScript student portal for IELTS Hồ Thành Learning Management System. Rebuilt from scratch using modern stack with 16 Stitch design screens as the visual source of truth.
 
 ---
 

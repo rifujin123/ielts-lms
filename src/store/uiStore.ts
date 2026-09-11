@@ -52,7 +52,7 @@ export const useUIStore = create<UIState>((set) => ({
 
   // ── Current user (mock default — wire to auth on login) ───────
   currentUser: {
-    id: 'DOL-8829',
+    id: 'HT-8829',
     name: 'Trần Thảo',
     initials: 'TT',
     role: 'Học viên chính khóa',

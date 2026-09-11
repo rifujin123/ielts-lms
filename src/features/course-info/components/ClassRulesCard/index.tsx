@@ -44,8 +44,8 @@ export const ClassRulesCard: React.FC<ClassRulesCardProps> = ({ rules }) => {
         <div className="text-body-sm leading-relaxed">
           <span className="font-bold">Lưu ý quan trọng: </span>
           Học viên vắng mặt quá 3 buổi học không phép trong một giai đoạn sẽ không đủ điều kiện tham
-          gia kỳ thi Final Test cuối khóa và không được cấp chứng nhận hoàn thành khóa học từ DOL
-          English.
+          gia kỳ thi Final Test cuối khóa và không được cấp chứng nhận hoàn thành khóa học từ IELTS
+          Hồ Thành.
         </div>
       </div>
     </div>
