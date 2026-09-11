@@ -122,11 +122,9 @@ export const DashboardPage: React.FC = () => {
               >
                 <div>
                   <div className="flex items-center justify-between">
-                    <span className="animate-pop-in rounded-md bg-red-100 px-2.5 py-0.5 text-label-sm font-bold text-primary">
-                      {course.level}
-                    </span>
-                    <span className="animate-pop-in inline-flex items-center gap-1.5 text-label-sm font-semibold text-tertiary">
-                      <span className="h-2 w-2 rounded-full bg-tertiary" />
+                    <span className="badge-score animate-pop-in">{course.level}</span>
+                    <span className="badge-minimal animate-pop-in">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
                       Đang diễn ra
                     </span>
                   </div>

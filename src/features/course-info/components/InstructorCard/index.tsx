@@ -14,8 +14,8 @@ export const InstructorCard: React.FC<InstructorCardProps> = ({ instructor }) =>
           <span className="text-label-sm font-bold uppercase tracking-wider text-secondary">
             Giảng viên phụ trách
           </span>
-          <span className="animate-pop-in inline-flex items-center gap-1 rounded-full bg-tertiary-container px-2 py-0.5 text-[11px] font-semibold text-on-tertiary-container shadow-xs">
-            <span className="h-1.5 w-1.5 rounded-full bg-tertiary" />
+          <span className="badge-minimal animate-pop-in">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
             Online
           </span>
         </div>
@@ -27,13 +27,9 @@ export const InstructorCard: React.FC<InstructorCardProps> = ({ instructor }) =>
           <div>
             <h3 className="text-headline-sm font-bold text-on-surface">{instructor.name}</h3>
             <p className="text-body-sm text-secondary">{instructor.title}</p>
-            <div className="mt-1 flex flex-wrap gap-1">
-              <span className="animate-pop-in rounded bg-red-100 px-2 py-0.5 text-[11px] font-bold text-primary">
-                {instructor.ieltsScore}
-              </span>
-              <span className="rounded bg-surface-container-high px-2 py-0.5 text-[11px] font-medium text-secondary">
-                Linearthinking
-              </span>
+            <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+              <span className="badge-score animate-pop-in">{instructor.ieltsScore}</span>
+              <span className="badge-tag">Linearthinking</span>
             </div>
           </div>
         </div>

@@ -4,11 +4,11 @@ import {
   LayoutDashboard,
   BookOpen,
   CalendarDays,
-  FileQuestion,
+  FileCheck,
   Languages,
   PenLine,
   Route,
-  Headphones,
+  PlayCircle,
   Award,
   Library,
   Video,
@@ -43,11 +43,11 @@ const navGroups: NavGroupDef[] = [
   {
     title: 'BÀI TẬP TRONG KHOÁ',
     items: [
-      { label: 'Online tests', to: '/tests', icon: FileQuestion },
+      { label: 'Online tests', to: '/tests', icon: FileCheck },
       { label: 'Vocabulary', to: '/vocabulary', icon: Languages },
       { label: 'Exercises', to: '/exercises', icon: PenLine },
       { label: 'Roadmap cá nhân hóa', to: '/roadmap/personal', icon: Route },
-      { label: 'Luyện tập tương tác', to: '/practice', icon: Headphones },
+      { label: 'Luyện tập tương tác', to: '/practice', icon: PlayCircle },
     ],
   },
   {
@@ -112,7 +112,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, onItemClick }) => {
                       />
                       <span className="truncate flex-1 text-[13px]">{item.label}</span>
                       {item.badge && (
-                        <span className="rounded-full bg-primary-container px-2 py-0.5 text-[10px] font-bold text-on-primary-container animate-pop-in">
+                        <span className="rounded-full bg-slate-900 px-2 py-0.5 text-[10px] font-bold text-white shadow-xs animate-pop-in">
                           {item.badge}
                         </span>
                       )}

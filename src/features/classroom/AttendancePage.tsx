@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { ChevronRight, Download, Check } from 'lucide-react'
+import { ChevronRight, Download } from 'lucide-react'
 import { attendanceService } from '@/services/attendanceService'
 import { attendanceMock } from '@/mocks/attendance.mock'
 
@@ -117,12 +117,13 @@ export const AttendancePage: React.FC = () => {
                   </td>
                   <td className="px-5 py-4">
                     {session.status === 'attended' ? (
-                      <span className="animate-pop-in inline-flex items-center gap-1 rounded-full bg-tertiary-container px-2.5 py-0.5 text-[11px] font-bold text-on-tertiary-container">
-                        <Check className="h-3 w-3" strokeWidth={2.5} />
+                      <span className="badge-minimal animate-pop-in">
+                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
                         Có mặt
                       </span>
                     ) : (
-                      <span className="animate-pop-in inline-flex items-center gap-1 rounded-full bg-surface-container-high px-2.5 py-0.5 text-[11px] font-medium text-secondary">
+                      <span className="badge-minimal animate-pop-in">
+                        <span className="h-1.5 w-1.5 rounded-full bg-slate-400" />
                         Sắp tới
                       </span>
                     )}

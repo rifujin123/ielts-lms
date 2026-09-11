@@ -96,17 +96,20 @@ export const RoadmapPage: React.FC = () => {
                   {phase.sessions}
                 </span>
                 {phase.status === 'completed' && (
-                  <span className="animate-pop-in rounded-full bg-tertiary-container px-2.5 py-0.5 text-label-sm font-semibold text-on-tertiary-container">
+                  <span className="badge-minimal animate-pop-in">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
                     Hoàn thành
                   </span>
                 )}
                 {phase.status === 'active' && (
-                  <span className="animate-pop-in rounded-full bg-primary-container px-2.5 py-0.5 text-label-sm font-semibold text-on-primary-container">
+                  <span className="badge-minimal animate-pop-in">
+                    <span className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
                     Đang học
                   </span>
                 )}
                 {phase.status === 'upcoming' && (
-                  <span className="animate-pop-in rounded-full bg-surface-container-high px-2.5 py-0.5 text-label-sm font-semibold text-secondary">
+                  <span className="badge-minimal animate-pop-in">
+                    <span className="h-1.5 w-1.5 rounded-full bg-slate-400" />
                     Sắp tới
                   </span>
                 )}
@@ -127,14 +130,20 @@ export const RoadmapPage: React.FC = () => {
         ))}
       </div>
 
-      {/* Recommended Topics from items */}
-      <div className="animate-fade-in-up stagger-4 rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 shadow-xs">
-        <h3 className="text-headline-sm font-bold text-on-surface">Nhiệm vụ trọng tâm hiện tại</h3>
-        <p className="text-body-sm text-secondary">
-          Các bài tập và nội dung quan trọng được khuyến nghị hoàn thành trong tuần này:
-        </p>
+      {/* ── Active Phase Tasks List ──────────────────────────────── */}
+      <div className="rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 shadow-xs">
+        <div className="flex items-center justify-between">
+          <div>
+            <span className="text-label-sm font-bold uppercase text-secondary">
+              HỌC PHẦN HIỆN TẠI
+            </span>
+            <h2 className="text-headline-sm font-bold text-on-surface">
+              Giai đoạn 2: Luyện kỹ năng chuyên sâu
+            </h2>
+          </div>
+        </div>
 
-        <div className="mt-4 flex flex-col gap-3">
+        <div className="mt-6 flex flex-col gap-3">
           {(items ?? []).map((item) => (
             <div
               key={item.id}
@@ -154,9 +163,7 @@ export const RoadmapPage: React.FC = () => {
 
               <div className="flex items-center gap-3">
                 <span className="text-body-sm text-secondary">~{item.estimatedMinutes} phút</span>
-                <span className="animate-pop-in rounded bg-surface-container-high px-2 py-0.5 text-[11px] font-semibold text-on-surface">
-                  {item.type}
-                </span>
+                <span className="badge-tag animate-pop-in">{item.type}</span>
               </div>
             </div>
           ))}

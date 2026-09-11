@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { useDebounce } from 'use-debounce'
-import { ChevronRight, Search, Check, GraduationCap, SearchX } from 'lucide-react'
+import { ChevronRight, Search, CheckCircle2, Target, SearchX } from 'lucide-react'
 import { roadmapService } from '@/services/roadmapService'
 import { roadmapMock } from '@/mocks/roadmap.mock'
 
@@ -98,24 +98,22 @@ export const PersonalRoadmapPage: React.FC = () => {
           >
             <div className="flex items-start gap-4">
               <div
-                className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${
+                className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-slate-200/80 shadow-xs ${
                   task.status === 'completed'
-                    ? 'bg-tertiary-container text-tertiary'
-                    : 'bg-primary-container text-primary'
+                    ? 'bg-slate-100 text-emerald-600'
+                    : 'bg-slate-100 text-slate-700'
                 }`}
               >
                 {task.status === 'completed' ? (
-                  <Check className="h-5 w-5" strokeWidth={2.5} />
+                  <CheckCircle2 className="h-5 w-5" strokeWidth={2} />
                 ) : (
-                  <GraduationCap className="h-5 w-5" strokeWidth={2} />
+                  <Target className="h-5 w-5 text-primary" strokeWidth={2} />
                 )}
               </div>
 
               <div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="animate-pop-in rounded bg-surface-container-high px-2 py-0.5 text-[11px] font-bold text-secondary uppercase">
-                    {task.type}
-                  </span>
+                  <span className="badge-tag animate-pop-in">{task.type}</span>
                   <span className="text-[11px] font-semibold text-secondary">
                     Độ khó: {task.difficulty}
                   </span>

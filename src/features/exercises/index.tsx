@@ -12,7 +12,7 @@ import {
   Award,
   Eye,
   Play,
-  CheckCircle2,
+  SearchX,
 } from 'lucide-react'
 import { exerciseService } from '@/services/exerciseService'
 import type { ExerciseSkill, ExerciseStatus } from '@/types/api.types'
@@ -153,12 +153,11 @@ export const ExercisesPage: React.FC = () => {
 
               <div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="animate-pop-in rounded bg-surface-container px-2 py-0.5 text-[11px] font-bold text-secondary uppercase">
-                    {item.skill}
-                  </span>
+                  <span className="badge-tag animate-pop-in">{item.skill}</span>
                   <span className="text-[11px] text-secondary">{item.questionCount} câu hỏi</span>
                   {item.dueDate && (
-                    <span className="text-[11px] font-medium text-amber-700">
+                    <span className="badge-minimal">
+                      <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
                       Hạn nộp: {item.dueDate}
                     </span>
                   )}
@@ -167,7 +166,7 @@ export const ExercisesPage: React.FC = () => {
                 <h3 className="mt-1 text-headline-sm font-bold text-on-surface">{item.title}</h3>
 
                 {item.score !== undefined && (
-                  <div className="mt-1 inline-flex items-center gap-1 text-label-sm font-bold text-tertiary">
+                  <div className="mt-1 inline-flex items-center gap-1.5 text-label-sm font-bold text-tertiary">
                     <Award className="h-4 w-4" strokeWidth={2} />
                     Điểm số: {item.score} / 9.0
                   </div>
@@ -199,7 +198,7 @@ export const ExercisesPage: React.FC = () => {
 
         {(exercises ?? []).length === 0 && (
           <div className="animate-fade-in-up flex min-h-[300px] flex-col items-center justify-center rounded-2xl border border-dashed border-outline-variant bg-surface-container-lowest p-8 text-center">
-            <CheckCircle2 className="h-12 w-12 text-secondary/60" strokeWidth={1.5} />
+            <SearchX className="h-12 w-12 text-secondary/60" strokeWidth={1.5} />
             <h3 className="mt-3 text-headline-sm font-bold text-on-surface">
               Không có bài tập nào
             </h3>

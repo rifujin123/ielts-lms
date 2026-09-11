@@ -3,7 +3,6 @@ import {
   Video,
   Calendar,
   Clock,
-  Laptop,
   MessageSquare,
   ExternalLink,
   ClipboardList,
@@ -21,8 +20,8 @@ export const CourseInfoCard: React.FC<CourseInfoCardProps> = ({ data }) => {
     <div className="card-interactive rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 shadow-xs">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
         <div>
-          <span className="animate-pop-in inline-flex items-center gap-1.5 rounded-full bg-tertiary-container px-3 py-1 text-label-sm font-semibold text-on-tertiary-container shadow-xs">
-            <span className="h-2 w-2 rounded-full bg-tertiary"></span>
+          <span className="badge-minimal animate-pop-in">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
             Đang hoạt động
           </span>
           <h2 className="mt-2 text-headline-md font-bold text-on-surface">{data.name}</h2>
@@ -65,7 +64,7 @@ export const CourseInfoCard: React.FC<CourseInfoCardProps> = ({ data }) => {
 
         <div className="rounded-xl border border-outline-variant bg-surface-container-low p-3.5 transition-colors hover:bg-surface-container">
           <div className="flex items-center gap-2 text-secondary">
-            <Laptop className="h-4 w-4" strokeWidth={1.75} />
+            <Video className="h-4 w-4" strokeWidth={1.75} />
             <span className="text-label-sm uppercase tracking-wider">Phòng học Zoom</span>
           </div>
           <p className="mt-1 text-body-md font-semibold text-primary">{data.zoomRoom}</p>

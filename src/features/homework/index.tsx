@@ -113,12 +113,13 @@ export const HomeworkPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <div className="flex items-center gap-2">
-                    <span className="animate-pop-in rounded bg-surface-container px-2 py-0.5 text-[11px] font-bold text-secondary uppercase">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="badge-tag animate-pop-in">
                       {hw.practiceCount} bài thực hành
                     </span>
                     {hw.dueDate && (
-                      <span className="text-[11px] font-medium text-amber-700">
+                      <span className="badge-minimal">
+                        <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
                         Hạn nộp: {hw.dueDate}
                       </span>
                     )}

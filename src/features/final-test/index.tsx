@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { ChevronRight, Hourglass, FileText, Info, CheckCircle2 } from 'lucide-react'
+import { ChevronRight, Play, Info, CheckCircle2 } from 'lucide-react'
 import { homeworkService } from '@/services/homeworkService'
 import { finalTestMock } from '@/mocks/homework.mock'
 
@@ -21,7 +21,7 @@ export const FinalTestPage: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-6">
-      {/* ── Header ─────────────────────────────────────────────── */}
+      {/* ── Page Header ─────────────────────────────────────────── */}
       <div>
         <nav
           aria-label="Breadcrumb"
@@ -31,10 +31,10 @@ export const FinalTestPage: React.FC = () => {
             Khóa học
           </Link>
           <ChevronRight className="h-4 w-4 text-secondary/70" strokeWidth={2} />
-          <span className="font-semibold text-on-surface">Kỳ thi cuối khóa</span>
+          <span className="font-semibold text-on-surface">Final Test</span>
         </nav>
         <h1 className="mt-1 text-headline-lg font-bold text-on-surface">
-          Kỳ thi Final Test tốt nghiệp
+          Kỳ thi cuối khóa (Final Mock Exam)
         </h1>
         <p className="text-body-sm text-secondary">
           Bài kiểm tra mô phỏng 100% định dạng đề thi thật IELTS trên máy tính chuẩn IDP/BC.
@@ -45,8 +45,8 @@ export const FinalTestPage: React.FC = () => {
       <div className="animate-fade-in-up stagger-1 card-interactive rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 shadow-xs">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <span className="animate-pop-in inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1 text-label-sm font-semibold text-amber-900">
-              <Hourglass className="h-3.5 w-3.5" strokeWidth={2} />
+            <span className="badge-minimal animate-pop-in">
+              <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
               Chưa thi
             </span>
             <h2 className="mt-3 text-headline-md font-bold text-on-surface">{finalTest?.title}</h2>
@@ -59,7 +59,7 @@ export const FinalTestPage: React.FC = () => {
             to="/practice"
             className="btn-interactive inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-label-md font-semibold text-on-primary hover:bg-primary-hover shadow-xs"
           >
-            <FileText className="h-4 w-4" strokeWidth={2} />
+            <Play className="h-4 w-4" strokeWidth={2} />
             Vào phòng thi thử
           </Link>
         </div>

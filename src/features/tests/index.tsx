@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { ChevronRight, Timer, Gauge, FileQuestion, Award, Eye, Play } from 'lucide-react'
+import { ChevronRight, Timer, Gauge, ClipboardCheck, Award, Eye, Play } from 'lucide-react'
 import { testService } from '@/services/testService'
 import type { TestType } from '@/types/api.types'
 import { testsMock } from '@/mocks/tests.mock'
@@ -39,19 +39,17 @@ export const TestsPage: React.FC = () => {
               Khóa học
             </Link>
             <ChevronRight className="h-4 w-4 text-secondary/70" strokeWidth={2} />
-            <span className="font-semibold text-on-surface">Bài thi trực tuyến</span>
+            <span className="font-semibold text-on-surface">Kiểm tra trực tuyến</span>
           </nav>
-          <h1 className="mt-1 text-headline-lg font-bold text-on-surface">
-            Hệ thống bài thi trực tuyến
-          </h1>
+          <h1 className="mt-1 text-headline-lg font-bold text-on-surface">Bài test & Thi thử</h1>
           <p className="text-body-sm text-secondary">
-            Mô phỏng áp lực phòng thi thực tế với hệ thống tính giờ và chấm điểm tự động.
+            Tổng hợp các bài Full Test, Mini Test và Mock test theo chuẩn Cambridge IELTS.
           </p>
         </div>
 
-        {/* Type tabs */}
+        {/* Filter buttons */}
         <div className="flex items-center gap-2 rounded-xl bg-surface-container-low p-1 border border-outline-variant">
-          {(['all', 'mini', 'mock', 'full'] as const).map((type) => (
+          {(['all', 'full', 'mini', 'mock'] as const).map((type) => (
             <button
               key={type}
               onClick={() => setTestType(type)}
@@ -61,25 +59,26 @@ export const TestsPage: React.FC = () => {
                   : 'text-secondary hover:text-on-surface'
               }`}
             >
-              {type === 'all' && 'Tất cả'}
+              {type === 'all' && 'Tất cả bài test'}
+              {type === 'full' && 'Full Test'}
               {type === 'mini' && 'Mini Test'}
               {type === 'mock' && 'Skill Mock'}
-              {type === 'full' && 'Full Test'}
             </button>
           ))}
         </div>
       </div>
 
-      {/* ── Tests List ──────────────────────────────────────────── */}
-      <div className="grid grid-cols-1 gap-4">
+      {/* ── Test Cards List ─────────────────────────────────────── */}
+      <div className="flex flex-col gap-4">
         {filteredTests.map((test, idx) => (
           <div
             key={test.id}
-            className={`animate-fade-in-up stagger-${(idx % 5) + 1} card-interactive flex flex-col justify-between gap-4 rounded-2xl border border-outline-variant bg-surface-container-lowest p-5 shadow-xs transition-colors sm:flex-row sm:items-center`}
+            className={`animate-fade-in-up stagger-${(idx % 4) + 1} card-interactive flex flex-col justify-between gap-4 rounded-2xl border border-outline-variant bg-surface-container-lowest p-5 shadow-xs sm:flex-row sm:items-center`}
           >
             <div className="flex items-start gap-4">
+              {/* Type icon avatar */}
               <div
-                className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl font-bold shadow-xs ${
+                className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl shadow-xs ${
                   test.type === 'full'
                     ? 'bg-red-100 text-primary'
                     : test.type === 'mini'
@@ -92,19 +91,18 @@ export const TestsPage: React.FC = () => {
                 ) : test.type === 'mini' ? (
                   <Gauge className="h-6 w-6" strokeWidth={2} />
                 ) : (
-                  <FileQuestion className="h-6 w-6" strokeWidth={2} />
+                  <ClipboardCheck className="h-6 w-6" strokeWidth={2} />
                 )}
               </div>
 
               <div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="animate-pop-in rounded bg-surface-container px-2 py-0.5 text-[11px] font-bold text-secondary uppercase">
-                    {test.type}
-                  </span>
+                  <span className="badge-tag animate-pop-in">{test.type}</span>
                   <span className="text-[11px] text-secondary">
                     Thời gian làm bài: {test.duration} phút
                   </span>
-                  <span className="animate-pop-in rounded bg-primary-container/60 px-2 py-0.5 text-[11px] font-semibold text-primary">
+                  <span className="badge-minimal">
+                    <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
                     {test.skill}
                   </span>
                 </div>

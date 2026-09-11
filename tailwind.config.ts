@@ -137,6 +137,10 @@ export default {
         'margin-desktop': '2rem',
       },
 
+      boxShadow: {
+        xs: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+      },
+
       keyframes: {
         'accordion-down': {
           from: { height: '0' },

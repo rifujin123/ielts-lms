@@ -57,8 +57,8 @@ export const ClassroomPage: React.FC = () => {
       <div className="animate-fade-in-up stagger-1 card-interactive rounded-2xl border border-primary/30 bg-red-50/50 p-6 shadow-xs ring-1 ring-primary/10">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <span className="animate-pop-in inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1 text-label-sm font-semibold text-on-primary">
-              <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
+            <span className="badge-minimal animate-pop-in">
+              <span className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
               Buổi học kế tiếp
             </span>
             <h2 className="mt-3 text-headline-md font-bold text-on-surface">

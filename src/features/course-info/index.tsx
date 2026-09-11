@@ -4,7 +4,7 @@ import {
   AlertCircle,
   ChevronRight,
   Download,
-  Users,
+  MessageSquare,
   CheckCircle2,
   Clock,
   User,
@@ -73,7 +73,7 @@ export const CourseInfoPage: React.FC = () => {
             rel="noopener noreferrer"
             className="btn-interactive inline-flex items-center gap-2 rounded-lg border border-outline-variant bg-surface-container-lowest px-3.5 py-2 text-label-sm font-semibold text-on-surface hover:bg-surface-container shadow-xs"
           >
-            <Users className="h-4 w-4" strokeWidth={2} />
+            <MessageSquare className="h-4 w-4" strokeWidth={2} />
             Nhóm trao đổi
           </a>
         </div>
