@@ -445,5 +445,79 @@ VITE_API_URL=http://localhost:3000/api
 VITE_USE_MOCK=true
 ```
 
-`VITE_USE_MOCK=true` → all service calls return mock data (development default)
-`VITE_USE_MOCK=false` → all service calls hit `VITE_API_URL` (production / integration)
+- `VITE_USE_MOCK=true` → all service calls return mock data (development default)
+- `VITE_USE_MOCK=false` → all service calls hit `VITE_API_URL` (production / integration)
+
+---
+
+## 🔌 Frontend ↔ Backend (FE ↔ BE) Integration Guide
+
+This section is the authoritative specification for any AI agent or backend engineer connecting the frontend to live microservices.
+
+### 1. The Service → Hook → Component Architecture
+
+The application adheres strictly to a three-tier data flow:
+
+1. **Components (`src/features/*/index.tsx`)**: Pure presentation, user interaction, and layout. Never call `axios` or `fetch` directly.
+2. **Hooks (`useQuery` / `useMutation`)**: Declarative server state management, caching (`5m staleTime`), retry strategies, and optimistic updates.
+3. **Services (`src/services/*.ts`)**: Strongly typed data access layer with dynamic mock-to-live branching (`if (getMock()) return ...Mock`).
+
+### 2. Complete Integration Endpoint Catalog
+
+| Feature               | Service Function                           | Live HTTP Target                  | TypeScript Contract                    |
+| --------------------- | ------------------------------------------ | --------------------------------- | -------------------------------------- |
+| **Course Info**       | `courseService.getCourseInfo(id)`          | `GET /api/courses/:courseId/info` | `CourseInfo`                           |
+| **Dashboard**         | `courseService.getActiveCourses()`         | `GET /api/courses/active`         | `CourseCard[]`                         |
+| **Exercises**         | `exerciseService.getExercises(filters)`    | `GET /api/exercises`              | `Exercise[]`                           |
+| **Exercise Submit**   | `exerciseService.submitExercise(id, data)` | `POST /api/exercises/:id/submit`  | `{ success: boolean; score?: number }` |
+| **Attendance**        | `attendanceService.getAttendanceRecords()` | `GET /api/attendance`             | `AttendanceRecord[]`                   |
+| **Homework**          | `homeworkService.getHomeworkList()`        | `GET /api/homework`               | `HomeworkItem[]`                       |
+| **Final Test**        | `homeworkService.getFinalTestOverview()`   | `GET /api/final-test`             | `FinalTestOverview`                    |
+| **Materials / Books** | `materialService.getBooks()`               | `GET /api/materials/books`        | `CourseBook[]`                         |
+| **Roadmap**           | `roadmapService.getRoadmapPhases()`        | `GET /api/roadmap`                | `RoadmapPhase[]`                       |
+| **Tests**             | `testService.getTests()`                   | `GET /api/tests`                  | `TestItem[]`                           |
+| **Vocabulary**        | `vocabularyService.getVocabularyLists()`   | `GET /api/vocabulary`             | `VocabTopic[]`                         |
+
+### 3. Session & Auth Injection
+
+In `src/lib/axios.ts`:
+
+```ts
+// Request Interceptor:
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem('auth_token')
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  return config
+})
+
+// Response Interceptor (401 Handling):
+if (error.response?.status === 401) {
+  localStorage.removeItem('auth_token')
+  window.location.href = '/login'
+}
+```
+
+### 4. Toast Notifications & Error Suppression
+
+All HTTP errors automatically trigger animated top-right toasts via `src/lib/axios.ts`. To suppress the toast for custom error flows (e.g. inline field validation), pass:
+
+```ts
+await apiClient.post('/api/endpoint', payload, { skipErrorToast: true })
+```
+
+### 5. Mutation Cache Invalidation Pattern
+
+When writing mutation hooks, invalidate matching query keys:
+
+```ts
+const queryClient = useQueryClient()
+const mutation = useMutation({
+  mutationFn: (data: SubmissionPayload) => exerciseService.submitExercise(id, data),
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ['course-exercises'] })
+    toast.success('Nộp bài tập thành công!')
+  },
+})
+```

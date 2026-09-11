@@ -67,3 +67,87 @@ pnpm build
    - Every shared component and feature component must export via `index.tsx`.
 5. **SVG Icon Standard (`lucide-react`)**:
    - Never use `<span className="material-symbols-outlined">`. Always import vector SVG components from `lucide-react` with `strokeWidth={1.75}` (idle) and `strokeWidth={2.2}` (active).
+
+---
+
+## 🔌 Frontend ↔ Backend Wiring Protocol (FE ↔ BE)
+
+When an agent or engineer is tasked with connecting this frontend to the real backend API, follow this strict protocol:
+
+### 1. Environment Configuration
+
+Toggle out of mock mode in `.env`:
+
+```env
+# Point to the live backend API
+VITE_API_URL=https://api.yourdomain.com/api
+
+# Disable mock fallback to hit live endpoints
+VITE_USE_MOCK=false
+```
+
+_When `VITE_USE_MOCK=false`, every service in `src/services/` bypasses the `getMock()` branch and calls `apiClient`._
+
+### 2. Service Layer & `// 🔌 WIRE:` Endpoints
+
+All API calls are strictly encapsulated in `src/services/*.ts`. Never call `apiClient` directly from UI components or hooks. Search the codebase for `// 🔌 WIRE:` to inspect all 11 integration points:
+
+| Service                | Method                     | Backend Target                | Contract Type                          |
+| ---------------------- | -------------------------- | ----------------------------- | -------------------------------------- |
+| `courseService.ts`     | `getCourseInfo(courseId)`  | `GET /courses/:courseId/info` | `CourseInfo`                           |
+| `courseService.ts`     | `getActiveCourses()`       | `GET /courses/active`         | `CourseCard[]`                         |
+| `exerciseService.ts`   | `getExercises(filters)`    | `GET /exercises`              | `Exercise[]`                           |
+| `exerciseService.ts`   | `submitExercise(id, data)` | `POST /exercises/:id/submit`  | `{ success: boolean; score?: number }` |
+| `attendanceService.ts` | `getAttendanceRecords()`   | `GET /attendance`             | `AttendanceRecord[]`                   |
+| `homeworkService.ts`   | `getHomeworkList()`        | `GET /homework`               | `HomeworkItem[]`                       |
+| `homeworkService.ts`   | `getFinalTestOverview()`   | `GET /final-test`             | `FinalTestOverview`                    |
+| `materialService.ts`   | `getBooks()`               | `GET /materials/books`        | `CourseBook[]`                         |
+| `roadmapService.ts`    | `getRoadmapPhases()`       | `GET /roadmap`                | `RoadmapPhase[]`                       |
+| `testService.ts`       | `getTests()`               | `GET /tests`                  | `TestItem[]`                           |
+| `vocabularyService.ts` | `getVocabularyLists()`     | `GET /vocabulary`             | `VocabTopic[]`                         |
+
+### 3. Authentication Interceptor (`src/lib/axios.ts`)
+
+Inject the session token in the request interceptor:
+
+```ts
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem('auth_token') // or your cookie/token store
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  return config
+})
+```
+
+On `401 Unauthorized`, clear expired credentials and handle redirect/refresh:
+
+```ts
+if (error.response?.status === 401) {
+  localStorage.removeItem('auth_token')
+  window.location.href = '/login'
+}
+```
+
+### 4. Error Handling & Toast Integration
+
+- The global Axios interceptor in `src/lib/axios.ts` automatically converts HTTP errors (`400`, `401`, `403`, `404`, `429`, `500+`, network disconnects) into animated top-right toasts.
+- **Silent/Custom Handling**: If an endpoint requires custom inline error display without triggering a toast notification, pass `skipErrorToast: true`:
+  ```ts
+  const { data } = await apiClient.post('/api/endpoint', payload, { skipErrorToast: true })
+  ```
+
+### 5. TanStack Query Cache Invalidation
+
+Whenever you wire a POST/PUT/DELETE mutation:
+Always invalidate the relevant query keys using `queryClient.invalidateQueries({ queryKey: [...] })` so the UI cache synchronizes immediately without page refreshes.
+
+### 6. Verification Checklist
+
+Before completing a wiring task, run:
+
+```powershell
+pnpm type-check; pnpm lint; pnpm build
+```
+
+Verify that all backend response data conform 1:1 to `src/types/api.types.ts`.
