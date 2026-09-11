@@ -1,4 +1,5 @@
 import React from 'react'
+import { Scale, AlertTriangle } from 'lucide-react'
 import type { ClassRule } from '../../types'
 
 interface ClassRulesCardProps {
@@ -9,7 +10,7 @@ export const ClassRulesCard: React.FC<ClassRulesCardProps> = ({ rules }) => {
   return (
     <div className="rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 shadow-xs">
       <div className="flex items-center gap-2">
-        <span className="material-symbols-outlined text-primary text-2xl">gavel</span>
+        <Scale className="h-6 w-6 text-primary" strokeWidth={2} />
         <h3 className="text-headline-sm font-bold text-on-surface">
           Nội quy & Trách nhiệm lớp học
         </h3>
@@ -39,9 +40,7 @@ export const ClassRulesCard: React.FC<ClassRulesCardProps> = ({ rules }) => {
 
       {/* Amber warning banner */}
       <div className="mt-5 flex items-start gap-3 rounded-xl border border-amber-300 bg-amber-50 p-4 text-amber-900">
-        <span className="material-symbols-outlined text-amber-600 text-xl shrink-0 mt-0.5">
-          warning
-        </span>
+        <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" strokeWidth={2} />
         <div className="text-body-sm leading-relaxed">
           <span className="font-bold">Lưu ý quan trọng: </span>
           Học viên vắng mặt quá 3 buổi học không phép trong một giai đoạn sẽ không đủ điều kiện tham

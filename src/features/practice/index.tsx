@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { X, Play, Pause, Send } from 'lucide-react'
 
 /**
  * PracticePage — Interactive Practice Player (screen 10).
@@ -20,17 +21,17 @@ export const PracticePage: React.FC = () => {
   return (
     <div className="flex flex-col gap-4">
       {/* ── Top Player Control Bar ──────────────────────────────── */}
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-outline-variant bg-surface-container-lowest px-5 py-3 shadow-xs">
+      <div className="animate-fade-in-up stagger-1 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-outline-variant bg-surface-container-lowest px-5 py-3 shadow-xs">
         <div className="flex items-center gap-3">
           <Link
             to="/exercises"
             aria-label="Thoát phòng luyện tập"
-            className="flex h-9 w-9 items-center justify-center rounded-lg text-secondary hover:bg-surface-container hover:text-on-surface"
+            className="btn-interactive flex h-9 w-9 items-center justify-center rounded-lg text-secondary hover:bg-surface-container hover:text-on-surface transition-colors"
           >
-            <span className="material-symbols-outlined text-xl">close</span>
+            <X className="h-5 w-5" strokeWidth={2} />
           </Link>
           <div>
-            <span className="rounded bg-primary-container px-2 py-0.5 text-[10px] font-bold text-on-primary-container uppercase">
+            <span className="animate-pop-in rounded bg-primary-container px-2 py-0.5 text-[10px] font-bold text-on-primary-container uppercase">
               Reading Practice
             </span>
             <h2 className="text-label-lg font-bold text-on-surface">
@@ -47,11 +48,13 @@ export const PracticePage: React.FC = () => {
               type="button"
               onClick={() => setIsPlaying(!isPlaying)}
               aria-label={isPlaying ? 'Tạm dừng audio' : 'Phát audio'}
-              className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-on-primary"
+              className="btn-interactive flex h-7 w-7 items-center justify-center rounded-full bg-primary text-on-primary"
             >
-              <span className="material-symbols-outlined text-sm">
-                {isPlaying ? 'pause' : 'play_arrow'}
-              </span>
+              {isPlaying ? (
+                <Pause className="h-3.5 w-3.5" strokeWidth={2.5} />
+              ) : (
+                <Play className="h-3.5 w-3.5 ml-0.5" strokeWidth={2.5} />
+              )}
             </button>
             <span className="text-[11px] font-semibold text-secondary">04:12 / 12:45</span>
           </div>
@@ -62,7 +65,7 @@ export const PracticePage: React.FC = () => {
               type="button"
               onClick={() => setFontSize((s) => Math.max(13, s - 1))}
               aria-label="Giảm cỡ chữ"
-              className="px-2 py-0.5 text-body-sm font-bold text-secondary hover:text-on-surface"
+              className="btn-interactive px-2 py-0.5 text-body-sm font-bold text-secondary hover:text-on-surface"
             >
               A-
             </button>
@@ -71,7 +74,7 @@ export const PracticePage: React.FC = () => {
               type="button"
               onClick={() => setFontSize((s) => Math.min(20, s + 1))}
               aria-label="Tăng cỡ chữ"
-              className="px-2 py-0.5 text-body-sm font-bold text-secondary hover:text-on-surface"
+              className="btn-interactive px-2 py-0.5 text-body-sm font-bold text-secondary hover:text-on-surface"
             >
               A+
             </button>
@@ -79,9 +82,9 @@ export const PracticePage: React.FC = () => {
 
           <button
             type="button"
-            className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-label-sm font-semibold text-on-primary hover:bg-primary-hover shadow-xs"
+            className="btn-interactive inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-label-sm font-semibold text-on-primary hover:bg-primary-hover shadow-xs"
           >
-            <span className="material-symbols-outlined text-base">send</span>
+            <Send className="h-4 w-4" strokeWidth={2} />
             Nộp bài
           </button>
         </div>
@@ -90,7 +93,7 @@ export const PracticePage: React.FC = () => {
       {/* ── Split View Layout (Passage Left, Questions Right) ───── */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {/* Left pane: Reading Passage */}
-        <div className="custom-scrollbar flex max-h-[calc(100vh-170px)] flex-col rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 shadow-xs overflow-y-auto">
+        <div className="animate-fade-in-up stagger-2 custom-scrollbar flex max-h-[calc(100vh-170px)] flex-col rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 shadow-xs overflow-y-auto">
           <div className="flex items-center justify-between border-b border-outline-variant pb-3 mb-4">
             <span className="text-label-sm font-bold text-primary uppercase">
               Reading Passage 1
@@ -129,7 +132,7 @@ export const PracticePage: React.FC = () => {
         </div>
 
         {/* Right pane: Interactive Questions */}
-        <div className="custom-scrollbar flex max-h-[calc(100vh-170px)] flex-col gap-5 rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 shadow-xs overflow-y-auto">
+        <div className="animate-fade-in-up stagger-3 custom-scrollbar flex max-h-[calc(100vh-170px)] flex-col gap-5 rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 shadow-xs overflow-y-auto">
           <div className="border-b border-outline-variant pb-3">
             <span className="text-label-sm font-bold text-secondary uppercase">
               Questions 1–3: Multiple Choice

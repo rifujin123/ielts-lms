@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
+import { ChevronRight, Timer, Gauge, FileQuestion, Award, Eye, Play } from 'lucide-react'
 import { testService } from '@/services/testService'
 import type { TestType } from '@/types/api.types'
 import { testsMock } from '@/mocks/tests.mock'
@@ -37,7 +38,7 @@ export const TestsPage: React.FC = () => {
             <Link to="/" className="hover:text-on-surface">
               Khóa học
             </Link>
-            <span className="material-symbols-outlined text-sm">chevron_right</span>
+            <ChevronRight className="h-4 w-4 text-secondary/70" strokeWidth={2} />
             <span className="font-semibold text-on-surface">Bài thi trực tuyến</span>
           </nav>
           <h1 className="mt-1 text-headline-lg font-bold text-on-surface">
@@ -54,7 +55,7 @@ export const TestsPage: React.FC = () => {
             <button
               key={type}
               onClick={() => setTestType(type)}
-              className={`rounded-lg px-3 py-1.5 text-label-sm font-semibold transition-colors ${
+              className={`btn-interactive rounded-lg px-3 py-1.5 text-label-sm font-semibold transition-colors ${
                 testType === type
                   ? 'bg-surface-container-lowest text-primary shadow-xs'
                   : 'text-secondary hover:text-on-surface'
@@ -71,10 +72,10 @@ export const TestsPage: React.FC = () => {
 
       {/* ── Tests List ──────────────────────────────────────────── */}
       <div className="grid grid-cols-1 gap-4">
-        {filteredTests.map((test) => (
+        {filteredTests.map((test, idx) => (
           <div
             key={test.id}
-            className="flex flex-col justify-between gap-4 rounded-2xl border border-outline-variant bg-surface-container-lowest p-5 shadow-xs transition-colors hover:border-primary/40 sm:flex-row sm:items-center"
+            className={`animate-fade-in-up stagger-${(idx % 5) + 1} card-interactive flex flex-col justify-between gap-4 rounded-2xl border border-outline-variant bg-surface-container-lowest p-5 shadow-xs transition-colors sm:flex-row sm:items-center`}
           >
             <div className="flex items-start gap-4">
               <div
@@ -86,20 +87,24 @@ export const TestsPage: React.FC = () => {
                       : 'bg-emerald-100 text-tertiary'
                 }`}
               >
-                <span className="material-symbols-outlined text-2xl">
-                  {test.type === 'full' ? 'timer' : test.type === 'mini' ? 'speed' : 'quiz'}
-                </span>
+                {test.type === 'full' ? (
+                  <Timer className="h-6 w-6" strokeWidth={2} />
+                ) : test.type === 'mini' ? (
+                  <Gauge className="h-6 w-6" strokeWidth={2} />
+                ) : (
+                  <FileQuestion className="h-6 w-6" strokeWidth={2} />
+                )}
               </div>
 
               <div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="rounded bg-surface-container px-2 py-0.5 text-[11px] font-bold text-secondary uppercase">
+                  <span className="animate-pop-in rounded bg-surface-container px-2 py-0.5 text-[11px] font-bold text-secondary uppercase">
                     {test.type}
                   </span>
                   <span className="text-[11px] text-secondary">
                     Thời gian làm bài: {test.duration} phút
                   </span>
-                  <span className="rounded bg-primary-container/60 px-2 py-0.5 text-[11px] font-semibold text-primary">
+                  <span className="animate-pop-in rounded bg-primary-container/60 px-2 py-0.5 text-[11px] font-semibold text-primary">
                     {test.skill}
                   </span>
                 </div>
@@ -108,7 +113,7 @@ export const TestsPage: React.FC = () => {
 
                 {test.score !== undefined && (
                   <div className="mt-1 inline-flex items-center gap-1 text-label-sm font-bold text-tertiary">
-                    <span className="material-symbols-outlined text-sm">verified</span>
+                    <Award className="h-4 w-4" strokeWidth={2} />
                     Điểm thi: {test.score} / 9.0
                   </div>
                 )}
@@ -119,17 +124,17 @@ export const TestsPage: React.FC = () => {
               {test.status === 'completed' ? (
                 <button
                   type="button"
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-outline-variant bg-surface-container-low px-4 py-2 text-label-sm font-semibold text-secondary hover:bg-surface-container"
+                  className="btn-interactive inline-flex items-center gap-1.5 rounded-lg border border-outline-variant bg-surface-container-low px-4 py-2 text-label-sm font-semibold text-secondary hover:bg-surface-container"
                 >
-                  <span className="material-symbols-outlined text-base">visibility</span>
+                  <Eye className="h-4 w-4" strokeWidth={2} />
                   Xem bảng điểm
                 </button>
               ) : (
                 <Link
                   to="/practice"
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-label-sm font-semibold text-on-primary hover:bg-primary-hover transition-colors shadow-xs"
+                  className="btn-interactive inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-label-sm font-semibold text-on-primary hover:bg-primary-hover transition-colors shadow-xs"
                 >
-                  <span className="material-symbols-outlined text-base">play_arrow</span>
+                  <Play className="h-4 w-4" strokeWidth={2} />
                   Bắt đầu làm bài
                 </Link>
               )}

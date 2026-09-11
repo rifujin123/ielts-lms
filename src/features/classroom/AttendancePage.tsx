@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
+import { ChevronRight, Download, Check } from 'lucide-react'
 import { attendanceService } from '@/services/attendanceService'
 import { attendanceMock } from '@/mocks/attendance.mock'
 
@@ -33,7 +34,7 @@ export const AttendancePage: React.FC = () => {
             <Link to="/classroom" className="hover:text-on-surface">
               Lớp học
             </Link>
-            <span className="material-symbols-outlined text-sm">chevron_right</span>
+            <ChevronRight className="h-4 w-4 text-secondary/70" strokeWidth={2} />
             <span className="font-semibold text-on-surface">Sổ điểm danh</span>
           </nav>
           <h1 className="mt-1 text-headline-lg font-bold text-on-surface">
@@ -46,16 +47,16 @@ export const AttendancePage: React.FC = () => {
 
         <button
           type="button"
-          className="inline-flex items-center gap-2 rounded-lg border border-outline-variant bg-surface-container-lowest px-4 py-2 text-label-sm font-semibold text-on-surface hover:bg-surface-container shadow-xs"
+          className="btn-interactive inline-flex items-center gap-2 rounded-lg border border-outline-variant bg-surface-container-lowest px-4 py-2 text-label-sm font-semibold text-on-surface hover:bg-surface-container shadow-xs"
         >
-          <span className="material-symbols-outlined text-base">download</span>
+          <Download className="h-4 w-4 text-secondary" strokeWidth={2} />
           Xuất báo cáo điểm danh
         </button>
       </div>
 
       {/* ── Summary statistics ──────────────────────────────────── */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <div className="rounded-2xl border border-outline-variant bg-surface-container-lowest p-5 shadow-xs">
+        <div className="animate-fade-in-up stagger-1 card-interactive rounded-2xl border border-outline-variant bg-surface-container-lowest p-5 shadow-xs">
           <span className="text-label-sm font-semibold text-secondary uppercase">Đã tham gia</span>
           <p className="mt-1 text-headline-md font-bold text-tertiary">
             {attendedCount} / {total} Buổi
@@ -63,7 +64,7 @@ export const AttendancePage: React.FC = () => {
           <span className="text-[11px] text-secondary">Tỷ lệ chuyên cần đạt 100%</span>
         </div>
 
-        <div className="rounded-2xl border border-outline-variant bg-surface-container-lowest p-5 shadow-xs">
+        <div className="animate-fade-in-up stagger-2 card-interactive rounded-2xl border border-outline-variant bg-surface-container-lowest p-5 shadow-xs">
           <span className="text-label-sm font-semibold text-secondary uppercase">Số buổi vắng</span>
           <p className="mt-1 text-headline-md font-bold text-on-surface">0 Buổi</p>
           <span className="text-[11px] text-tertiary font-medium">
@@ -71,7 +72,7 @@ export const AttendancePage: React.FC = () => {
           </span>
         </div>
 
-        <div className="rounded-2xl border border-outline-variant bg-surface-container-lowest p-5 shadow-xs">
+        <div className="animate-fade-in-up stagger-3 card-interactive rounded-2xl border border-outline-variant bg-surface-container-lowest p-5 shadow-xs">
           <span className="text-label-sm font-semibold text-secondary uppercase">
             Buổi học sắp tới
           </span>
@@ -81,7 +82,7 @@ export const AttendancePage: React.FC = () => {
       </div>
 
       {/* ── Session History Table ───────────────────────────────── */}
-      <div className="overflow-hidden rounded-2xl border border-outline-variant bg-surface-container-lowest shadow-xs">
+      <div className="animate-fade-in-up stagger-4 overflow-hidden rounded-2xl border border-outline-variant bg-surface-container-lowest shadow-xs">
         <div className="border-b border-outline-variant p-4">
           <h3 className="text-headline-sm font-bold text-on-surface">Chi tiết từng buổi học</h3>
         </div>
@@ -116,12 +117,12 @@ export const AttendancePage: React.FC = () => {
                   </td>
                   <td className="px-5 py-4">
                     {session.status === 'attended' ? (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-tertiary-container px-2.5 py-0.5 text-[11px] font-bold text-on-tertiary-container">
-                        <span className="material-symbols-outlined text-xs">check</span>
+                      <span className="animate-pop-in inline-flex items-center gap-1 rounded-full bg-tertiary-container px-2.5 py-0.5 text-[11px] font-bold text-on-tertiary-container">
+                        <Check className="h-3 w-3" strokeWidth={2.5} />
                         Có mặt
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-surface-container-high px-2.5 py-0.5 text-[11px] font-medium text-secondary">
+                      <span className="animate-pop-in inline-flex items-center gap-1 rounded-full bg-surface-container-high px-2.5 py-0.5 text-[11px] font-medium text-secondary">
                         Sắp tới
                       </span>
                     )}
@@ -129,9 +130,9 @@ export const AttendancePage: React.FC = () => {
                   <td className="px-5 py-4 text-right">
                     <button
                       type="button"
-                      className="inline-flex items-center gap-1 text-label-sm font-semibold text-primary hover:underline"
+                      className="btn-interactive inline-flex items-center gap-1.5 text-label-sm font-semibold text-primary hover:underline"
                     >
-                      <span className="material-symbols-outlined text-sm">download</span>
+                      <Download className="h-3.5 w-3.5" strokeWidth={2} />
                       Tải slide
                     </button>
                   </td>

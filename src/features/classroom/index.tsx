@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
+import { ChevronRight, ClipboardCheck, Video, Flame, ShieldCheck, Check } from 'lucide-react'
 import { attendanceService } from '@/services/attendanceService'
 import { attendanceMock } from '@/mocks/attendance.mock'
 
@@ -32,7 +33,7 @@ export const ClassroomPage: React.FC = () => {
             <Link to="/" className="hover:text-on-surface">
               Khóa học
             </Link>
-            <span className="material-symbols-outlined text-sm">chevron_right</span>
+            <ChevronRight className="h-4 w-4 text-secondary/70" strokeWidth={2} />
             <span className="font-semibold text-on-surface">Phòng học trực tuyến</span>
           </nav>
           <h1 className="mt-1 text-headline-lg font-bold text-on-surface">
@@ -45,18 +46,18 @@ export const ClassroomPage: React.FC = () => {
 
         <Link
           to="/attendance"
-          className="inline-flex items-center gap-2 rounded-lg border border-outline-variant bg-surface-container-lowest px-4 py-2 text-label-sm font-semibold text-on-surface hover:bg-surface-container shadow-xs"
+          className="btn-interactive inline-flex items-center gap-2 rounded-lg border border-outline-variant bg-surface-container-lowest px-4 py-2 text-label-sm font-semibold text-on-surface hover:bg-surface-container shadow-xs"
         >
-          <span className="material-symbols-outlined text-base">fact_check</span>
+          <ClipboardCheck className="h-4 w-4 text-secondary" strokeWidth={2} />
           Xem sổ điểm danh
         </Link>
       </div>
 
       {/* ── Next Upcoming Class Banner ──────────────────────────── */}
-      <div className="rounded-2xl border border-primary/30 bg-red-50/50 p-6 shadow-xs ring-1 ring-primary/10">
+      <div className="animate-fade-in-up stagger-1 card-interactive rounded-2xl border border-primary/30 bg-red-50/50 p-6 shadow-xs ring-1 ring-primary/10">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1 text-label-sm font-semibold text-on-primary">
+            <span className="animate-pop-in inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1 text-label-sm font-semibold text-on-primary">
               <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
               Buổi học kế tiếp
             </span>
@@ -74,9 +75,9 @@ export const ClassroomPage: React.FC = () => {
             href="https://zoom.us/j/8829012389"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-label-md font-bold text-on-primary hover:bg-primary-hover transition-colors shadow-sm"
+            className="btn-interactive inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-label-md font-bold text-on-primary hover:bg-primary-hover transition-colors shadow-sm"
           >
-            <span className="material-symbols-outlined text-xl">videocam</span>
+            <Video className="h-5 w-5" strokeWidth={2} />
             Vào phòng Zoom ngay
           </a>
         </div>
@@ -84,12 +85,10 @@ export const ClassroomPage: React.FC = () => {
 
       {/* ── Streak & Rules Grid ─────────────────────────────────── */}
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <div className="flex flex-col justify-between rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 shadow-xs">
+        <div className="animate-fade-in-up stagger-2 card-interactive flex flex-col justify-between rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 shadow-xs">
           <div>
             <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-amber-500 text-2xl">
-                local_fire_department
-              </span>
+              <Flame className="h-6 w-6 text-amber-500" strokeWidth={2} />
               <h3 className="text-headline-sm font-bold text-on-surface">Chuỗi chuyên cần</h3>
             </div>
             <p className="mt-2 text-body-sm text-secondary">
@@ -99,9 +98,9 @@ export const ClassroomPage: React.FC = () => {
               {[1, 2, 3].map((num) => (
                 <div
                   key={num}
-                  className="flex h-10 w-10 items-center justify-center rounded-xl bg-tertiary-container font-bold text-tertiary"
+                  className="animate-pop-in flex h-10 w-10 items-center justify-center rounded-xl bg-tertiary-container font-bold text-tertiary"
                 >
-                  ✓
+                  <Check className="h-5 w-5" strokeWidth={2.5} />
                 </div>
               ))}
               {[4, 5, 6].map((num) => (
@@ -120,28 +119,22 @@ export const ClassroomPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 shadow-xs">
+        <div className="animate-fade-in-up stagger-3 card-interactive rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 shadow-xs">
           <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-primary text-2xl">rule</span>
+            <ShieldCheck className="h-6 w-6 text-primary" strokeWidth={2} />
             <h3 className="text-headline-sm font-bold text-on-surface">Quy chuẩn phòng học Zoom</h3>
           </div>
           <div className="mt-3 flex flex-col gap-2.5 text-body-sm text-secondary">
             <div className="flex items-start gap-2">
-              <span className="material-symbols-outlined text-tertiary text-lg shrink-0">
-                check
-              </span>
+              <Check className="h-4 w-4 text-tertiary shrink-0 mt-0.5" strokeWidth={2.5} />
               <span>Đổi tên hiển thị theo cú pháp: [Mã HV] - [Họ và tên]</span>
             </div>
             <div className="flex items-start gap-2">
-              <span className="material-symbols-outlined text-tertiary text-lg shrink-0">
-                check
-              </span>
+              <Check className="h-4 w-4 text-tertiary shrink-0 mt-0.5" strokeWidth={2.5} />
               <span>Bật webcam trong suốt buổi học để tương tác cùng giảng viên</span>
             </div>
             <div className="flex items-start gap-2">
-              <span className="material-symbols-outlined text-tertiary text-lg shrink-0">
-                check
-              </span>
+              <Check className="h-4 w-4 text-tertiary shrink-0 mt-0.5" strokeWidth={2.5} />
               <span>Mở sẵn tài liệu và vở ghi trước giờ học 5 phút</span>
             </div>
           </div>

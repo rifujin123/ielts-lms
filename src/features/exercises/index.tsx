@@ -2,6 +2,18 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { useDebounce } from 'use-debounce'
+import {
+  ChevronRight,
+  Search,
+  BookOpen,
+  PenLine,
+  Headphones,
+  Mic,
+  Award,
+  Eye,
+  Play,
+  CheckCircle2,
+} from 'lucide-react'
 import { exerciseService } from '@/services/exerciseService'
 import type { ExerciseSkill, ExerciseStatus } from '@/types/api.types'
 import { exercisesMock } from '@/mocks/exercises.mock'
@@ -52,7 +64,7 @@ export const ExercisesPage: React.FC = () => {
             <Link to="/" className="hover:text-on-surface">
               Khóa học
             </Link>
-            <span className="material-symbols-outlined text-sm">chevron_right</span>
+            <ChevronRight className="h-4 w-4 text-secondary/70" strokeWidth={2} />
             <span className="font-semibold text-on-surface">Bài tập luyện tập</span>
           </nav>
           <h1 className="mt-1 text-headline-lg font-bold text-on-surface">Kho bài tập luyện tập</h1>
@@ -64,9 +76,10 @@ export const ExercisesPage: React.FC = () => {
 
         {/* Search input with 300ms debounce */}
         <div className="relative w-full max-w-xs sm:w-64">
-          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-lg text-secondary">
-            search
-          </span>
+          <Search
+            className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-secondary"
+            strokeWidth={1.8}
+          />
           <input
             type="text"
             value={search}
@@ -78,14 +91,14 @@ export const ExercisesPage: React.FC = () => {
       </div>
 
       {/* ── Filter Bar ──────────────────────────────────────────── */}
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-outline-variant bg-surface-container-lowest p-4 shadow-xs">
+      <div className="animate-fade-in-up stagger-1 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-outline-variant bg-surface-container-lowest p-4 shadow-xs">
         {/* Skill tabs */}
         <div className="flex flex-wrap items-center gap-1.5">
           {skillOptions.map((opt) => (
             <button
               key={opt.value}
               onClick={() => setSkill(opt.value)}
-              className={`rounded-lg px-3 py-1.5 text-label-sm font-semibold transition-colors ${
+              className={`btn-interactive rounded-lg px-3 py-1.5 text-label-sm font-semibold transition-colors ${
                 skill === opt.value
                   ? 'bg-primary text-on-primary shadow-xs'
                   : 'bg-surface-container-low text-secondary hover:bg-surface-container hover:text-on-surface'
@@ -115,10 +128,10 @@ export const ExercisesPage: React.FC = () => {
 
       {/* ── Exercise Cards Grid ─────────────────────────────────── */}
       <div className="grid grid-cols-1 gap-4">
-        {(exercises ?? []).map((item) => (
+        {(exercises ?? []).map((item, idx) => (
           <div
             key={item.id}
-            className="flex flex-col justify-between gap-4 rounded-2xl border border-outline-variant bg-surface-container-lowest p-5 shadow-xs transition-colors hover:border-primary/40 sm:flex-row sm:items-center"
+            className={`animate-fade-in-up stagger-${(idx % 5) + 1} card-interactive flex flex-col justify-between gap-4 rounded-2xl border border-outline-variant bg-surface-container-lowest p-5 shadow-xs transition-colors hover:border-primary/40 sm:flex-row sm:items-center`}
           >
             <div className="flex items-start gap-4">
               <div
@@ -132,20 +145,15 @@ export const ExercisesPage: React.FC = () => {
                         : 'bg-amber-100 text-amber-700'
                 }`}
               >
-                <span className="material-symbols-outlined text-2xl">
-                  {item.skill === 'Reading'
-                    ? 'menu_book'
-                    : item.skill === 'Writing'
-                      ? 'edit_note'
-                      : item.skill === 'Listening'
-                        ? 'headphones'
-                        : 'record_voice_over'}
-                </span>
+                {item.skill === 'Reading' && <BookOpen className="h-6 w-6" strokeWidth={2} />}
+                {item.skill === 'Writing' && <PenLine className="h-6 w-6" strokeWidth={2} />}
+                {item.skill === 'Listening' && <Headphones className="h-6 w-6" strokeWidth={2} />}
+                {item.skill === 'Speaking' && <Mic className="h-6 w-6" strokeWidth={2} />}
               </div>
 
               <div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="rounded bg-surface-container px-2 py-0.5 text-[11px] font-bold text-secondary uppercase">
+                  <span className="animate-pop-in rounded bg-surface-container px-2 py-0.5 text-[11px] font-bold text-secondary uppercase">
                     {item.skill}
                   </span>
                   <span className="text-[11px] text-secondary">{item.questionCount} câu hỏi</span>
@@ -160,7 +168,7 @@ export const ExercisesPage: React.FC = () => {
 
                 {item.score !== undefined && (
                   <div className="mt-1 inline-flex items-center gap-1 text-label-sm font-bold text-tertiary">
-                    <span className="material-symbols-outlined text-sm">verified</span>
+                    <Award className="h-4 w-4" strokeWidth={2} />
                     Điểm số: {item.score} / 9.0
                   </div>
                 )}
@@ -171,17 +179,17 @@ export const ExercisesPage: React.FC = () => {
               {item.status === 'completed' ? (
                 <Link
                   to="/practice"
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-outline-variant bg-surface-container-low px-4 py-2 text-label-sm font-semibold text-secondary hover:bg-surface-container transition-colors"
+                  className="btn-interactive inline-flex items-center gap-1.5 rounded-lg border border-outline-variant bg-surface-container-low px-4 py-2 text-label-sm font-semibold text-secondary hover:bg-surface-container transition-colors"
                 >
-                  <span className="material-symbols-outlined text-base">visibility</span>
+                  <Eye className="h-4 w-4" strokeWidth={2} />
                   Xem lại kết quả
                 </Link>
               ) : (
                 <Link
                   to="/practice"
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-label-sm font-semibold text-on-primary hover:bg-primary-hover transition-colors shadow-xs"
+                  className="btn-interactive inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-label-sm font-semibold text-on-primary hover:bg-primary-hover transition-colors shadow-xs"
                 >
-                  <span className="material-symbols-outlined text-base">play_arrow</span>
+                  <Play className="h-4 w-4" strokeWidth={2} />
                   Bắt đầu làm bài
                 </Link>
               )}
@@ -190,10 +198,8 @@ export const ExercisesPage: React.FC = () => {
         ))}
 
         {(exercises ?? []).length === 0 && (
-          <div className="flex min-h-[300px] flex-col items-center justify-center rounded-2xl border border-dashed border-outline-variant bg-surface-container-lowest p-8 text-center">
-            <span className="material-symbols-outlined text-5xl text-secondary/60">
-              assignment_turned_in
-            </span>
+          <div className="animate-fade-in-up flex min-h-[300px] flex-col items-center justify-center rounded-2xl border border-dashed border-outline-variant bg-surface-container-lowest p-8 text-center">
+            <CheckCircle2 className="h-12 w-12 text-secondary/60" strokeWidth={1.5} />
             <h3 className="mt-3 text-headline-sm font-bold text-on-surface">
               Không có bài tập nào
             </h3>

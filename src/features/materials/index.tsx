@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
+import { ChevronRight, BookOpen, BookMarked } from 'lucide-react'
 import { materialService } from '@/services/materialService'
 import { booksMock } from '@/mocks/books.mock'
 
@@ -36,7 +37,7 @@ export const MaterialsPage: React.FC = () => {
             <Link to="/" className="hover:text-on-surface">
               Khóa học
             </Link>
-            <span className="material-symbols-outlined text-sm">chevron_right</span>
+            <ChevronRight className="h-4 w-4 text-secondary/70" strokeWidth={2} />
             <span className="font-semibold text-on-surface">Tài liệu học tập</span>
           </nav>
           <h1 className="mt-1 text-headline-lg font-bold text-on-surface">Giáo trình & Tài liệu</h1>
@@ -51,7 +52,7 @@ export const MaterialsPage: React.FC = () => {
             <button
               key={type}
               onClick={() => setFilterType(type)}
-              className={`rounded-lg px-3 py-1.5 text-label-sm font-semibold transition-colors ${
+              className={`btn-interactive rounded-lg px-3 py-1.5 text-label-sm font-semibold transition-colors ${
                 filterType === type
                   ? 'bg-surface-container-lowest text-primary shadow-xs'
                   : 'text-secondary hover:text-on-surface'
@@ -67,10 +68,10 @@ export const MaterialsPage: React.FC = () => {
 
       {/* ── Book Cards Grid ─────────────────────────────────────── */}
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        {filteredBooks.map((book) => (
+        {filteredBooks.map((book, idx) => (
           <div
             key={book.id}
-            className="flex flex-col justify-between rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 shadow-xs transition-colors hover:border-primary/40"
+            className={`animate-fade-in-up stagger-${(idx % 4) + 1} card-interactive flex flex-col justify-between rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 shadow-xs transition-colors`}
           >
             <div>
               <div className="flex items-start gap-4">
@@ -80,12 +81,12 @@ export const MaterialsPage: React.FC = () => {
                   style={{ backgroundColor: book.coverColor }}
                 >
                   <span className="text-[10px] font-black uppercase tracking-wider">DOL</span>
-                  <span className="material-symbols-outlined text-2xl my-1">menu_book</span>
+                  <BookOpen className="h-6 w-6 my-1" strokeWidth={2} />
                   <span className="text-[9px] font-bold leading-none">IELTS 6.5</span>
                 </div>
 
                 <div className="flex-1">
-                  <span className="rounded bg-surface-container px-2 py-0.5 text-[11px] font-bold text-secondary uppercase">
+                  <span className="animate-pop-in rounded bg-surface-container px-2 py-0.5 text-[11px] font-bold text-secondary uppercase">
                     {book.type === 'main' ? 'Giáo trình chính khóa' : 'Tài liệu bổ trợ'}
                   </span>
                   <h3 className="mt-1 text-headline-sm font-bold text-on-surface leading-snug">
@@ -124,9 +125,9 @@ export const MaterialsPage: React.FC = () => {
               <span className="text-body-sm font-medium text-secondary">Bản quyền DOL English</span>
               <Link
                 to="/materials/books"
-                className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-label-sm font-semibold text-on-primary hover:bg-primary-hover transition-colors shadow-xs"
+                className="btn-interactive inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-label-sm font-semibold text-on-primary hover:bg-primary-hover transition-colors shadow-xs"
               >
-                <span className="material-symbols-outlined text-base">auto_stories</span>
+                <BookMarked className="h-4 w-4" strokeWidth={2} />
                 Đọc giáo trình
               </Link>
             </div>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
+import { ChevronRight, CheckCircle2, Clock, Award, Upload } from 'lucide-react'
 import { homeworkService } from '@/services/homeworkService'
 import { homeworkMock } from '@/mocks/homework.mock'
 
@@ -50,7 +51,7 @@ export const HomeworkPage: React.FC = () => {
             <Link to="/" className="hover:text-on-surface">
               Khóa học
             </Link>
-            <span className="material-symbols-outlined text-sm">chevron_right</span>
+            <ChevronRight className="h-4 w-4 text-secondary/70" strokeWidth={2} />
             <span className="font-semibold text-on-surface">Bài tập về nhà</span>
           </nav>
           <h1 className="mt-1 text-headline-lg font-bold text-on-surface">
@@ -66,7 +67,7 @@ export const HomeworkPage: React.FC = () => {
           <button
             type="button"
             onClick={() => setActiveTab('homework')}
-            className={`rounded-lg px-4 py-1.5 text-label-sm font-semibold transition-colors ${
+            className={`btn-interactive rounded-lg px-4 py-1.5 text-label-sm font-semibold transition-colors ${
               activeTab === 'homework'
                 ? 'bg-surface-container-lowest text-primary shadow-xs'
                 : 'text-secondary hover:text-on-surface'
@@ -77,7 +78,7 @@ export const HomeworkPage: React.FC = () => {
           <button
             type="button"
             onClick={() => setActiveTab('syllabus')}
-            className={`rounded-lg px-4 py-1.5 text-label-sm font-semibold transition-colors ${
+            className={`btn-interactive rounded-lg px-4 py-1.5 text-label-sm font-semibold transition-colors ${
               activeTab === 'syllabus'
                 ? 'bg-surface-container-lowest text-primary shadow-xs'
                 : 'text-secondary hover:text-on-surface'
@@ -91,10 +92,10 @@ export const HomeworkPage: React.FC = () => {
       {/* ── Main Content Area ───────────────────────────────────── */}
       {activeTab === 'homework' ? (
         <div className="grid grid-cols-1 gap-4">
-          {(homeworkList ?? []).map((hw) => (
+          {(homeworkList ?? []).map((hw, idx) => (
             <div
               key={hw.id}
-              className="flex flex-col justify-between gap-4 rounded-2xl border border-outline-variant bg-surface-container-lowest p-5 shadow-xs sm:flex-row sm:items-center"
+              className={`animate-fade-in-up stagger-${(idx % 5) + 1} card-interactive flex flex-col justify-between gap-4 rounded-2xl border border-outline-variant bg-surface-container-lowest p-5 shadow-xs sm:flex-row sm:items-center`}
             >
               <div className="flex items-start gap-4">
                 <div
@@ -104,14 +105,16 @@ export const HomeworkPage: React.FC = () => {
                       : 'bg-primary-container text-primary'
                   }`}
                 >
-                  <span className="material-symbols-outlined text-2xl">
-                    {hw.status === 'submitted' ? 'task_alt' : 'pending_actions'}
-                  </span>
+                  {hw.status === 'submitted' ? (
+                    <CheckCircle2 className="h-6 w-6" strokeWidth={2} />
+                  ) : (
+                    <Clock className="h-6 w-6" strokeWidth={2} />
+                  )}
                 </div>
 
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="rounded bg-surface-container px-2 py-0.5 text-[11px] font-bold text-secondary uppercase">
+                    <span className="animate-pop-in rounded bg-surface-container px-2 py-0.5 text-[11px] font-bold text-secondary uppercase">
                       {hw.practiceCount} bài thực hành
                     </span>
                     {hw.dueDate && (
@@ -124,7 +127,7 @@ export const HomeworkPage: React.FC = () => {
 
                   {hw.score !== undefined && (
                     <span className="mt-1 inline-flex items-center gap-1 text-label-sm font-bold text-tertiary">
-                      <span className="material-symbols-outlined text-sm">verified</span>
+                      <Award className="h-4 w-4" strokeWidth={2} />
                       Điểm: {hw.score} / 9.0
                     </span>
                   )}
@@ -135,16 +138,16 @@ export const HomeworkPage: React.FC = () => {
                 {hw.status === 'submitted' ? (
                   <button
                     type="button"
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-outline-variant bg-surface-container-low px-4 py-2 text-label-sm font-semibold text-secondary hover:bg-surface-container"
+                    className="btn-interactive inline-flex items-center gap-1.5 rounded-lg border border-outline-variant bg-surface-container-low px-4 py-2 text-label-sm font-semibold text-secondary hover:bg-surface-container"
                   >
                     Xem bài đã nộp
                   </button>
                 ) : (
                   <Link
                     to="/practice"
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-label-sm font-semibold text-on-primary hover:bg-primary-hover shadow-xs"
+                    className="btn-interactive inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-label-sm font-semibold text-on-primary hover:bg-primary-hover shadow-xs"
                   >
-                    <span className="material-symbols-outlined text-base">upload_file</span>
+                    <Upload className="h-4 w-4" strokeWidth={2} />
                     Nộp bài tập
                   </Link>
                 )}
@@ -157,7 +160,7 @@ export const HomeworkPage: React.FC = () => {
           {syllabusUnits.map((item, idx) => (
             <div
               key={idx}
-              className="flex items-start gap-4 rounded-2xl border border-outline-variant bg-surface-container-lowest p-5 shadow-xs"
+              className={`animate-fade-in-up stagger-${idx + 1} card-interactive flex items-start gap-4 rounded-2xl border border-outline-variant bg-surface-container-lowest p-5 shadow-xs`}
             >
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary text-label-md font-bold text-on-primary">
                 {idx + 1}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
+import { ChevronRight, Bookmark, ChevronDown, CheckCircle2, Circle, ArrowRight } from 'lucide-react'
 import { materialService } from '@/services/materialService'
 import { booksMock } from '@/mocks/books.mock'
 
@@ -34,7 +35,7 @@ export const BooksPage: React.FC = () => {
             <Link to="/materials" className="hover:text-on-surface">
               Tài liệu
             </Link>
-            <span className="material-symbols-outlined text-sm">chevron_right</span>
+            <ChevronRight className="h-4 w-4 text-secondary/70" strokeWidth={2} />
             <span className="font-semibold text-on-surface">Khám phá Units</span>
           </nav>
           <h1 className="mt-1 text-headline-lg font-bold text-on-surface">
@@ -46,9 +47,9 @@ export const BooksPage: React.FC = () => {
         <div className="flex items-center gap-2">
           <button
             type="button"
-            className="inline-flex items-center gap-2 rounded-lg border border-outline-variant bg-surface-container-lowest px-3.5 py-2 text-label-sm font-semibold text-on-surface hover:bg-surface-container shadow-xs"
+            className="btn-interactive inline-flex items-center gap-2 rounded-lg border border-outline-variant bg-surface-container-lowest px-3.5 py-2 text-label-sm font-semibold text-on-surface hover:bg-surface-container shadow-xs"
           >
-            <span className="material-symbols-outlined text-base">bookmark</span>
+            <Bookmark className="h-4 w-4 text-secondary" strokeWidth={2} />
             Bài đã lưu
           </button>
         </div>
@@ -56,12 +57,12 @@ export const BooksPage: React.FC = () => {
 
       {/* ── Units Accordion List ────────────────────────────────── */}
       <div className="flex flex-col gap-4">
-        {currentBook?.units.map((unit) => {
+        {currentBook?.units.map((unit, idx) => {
           const isExpanded = expandedUnitId === unit.id
           return (
             <div
               key={unit.id}
-              className="overflow-hidden rounded-2xl border border-outline-variant bg-surface-container-lowest shadow-xs transition-all"
+              className={`animate-fade-in-up stagger-${(idx % 4) + 1} overflow-hidden rounded-2xl border border-outline-variant bg-surface-container-lowest shadow-xs transition-all`}
             >
               <button
                 type="button"
@@ -98,17 +99,14 @@ export const BooksPage: React.FC = () => {
 
                 <div className="flex items-center gap-3">
                   {unit.isBookmarked && (
-                    <span className="material-symbols-outlined text-amber-500 text-lg">
-                      bookmark
-                    </span>
+                    <Bookmark className="h-4 w-4 text-amber-500 fill-amber-500" strokeWidth={2} />
                   )}
-                  <span
-                    className={`material-symbols-outlined text-xl text-secondary transition-transform ${
+                  <ChevronDown
+                    className={`h-5 w-5 text-secondary transition-transform duration-200 ${
                       isExpanded ? 'rotate-180' : ''
                     }`}
-                  >
-                    expand_more
-                  </span>
+                    strokeWidth={2}
+                  />
                 </div>
               </button>
 
@@ -119,16 +117,17 @@ export const BooksPage: React.FC = () => {
                     {unit.lessons.map((lesson) => (
                       <div
                         key={lesson.id}
-                        className="flex items-center justify-between rounded-xl border border-outline-variant bg-surface-container-lowest p-3.5"
+                        className="card-interactive flex items-center justify-between rounded-xl border border-outline-variant bg-surface-container-lowest p-3.5"
                       >
                         <div className="flex items-center gap-3">
-                          <span
-                            className={`material-symbols-outlined text-xl ${
-                              lesson.isCompleted ? 'text-tertiary' : 'text-secondary'
-                            }`}
-                          >
-                            {lesson.isCompleted ? 'check_circle' : 'radio_button_unchecked'}
-                          </span>
+                          {lesson.isCompleted ? (
+                            <CheckCircle2
+                              className="h-5 w-5 text-tertiary shrink-0"
+                              strokeWidth={2}
+                            />
+                          ) : (
+                            <Circle className="h-5 w-5 text-secondary shrink-0" strokeWidth={2} />
+                          )}
                           <div>
                             <h4 className="text-body-md font-semibold text-on-surface">
                               {lesson.title}
@@ -141,10 +140,10 @@ export const BooksPage: React.FC = () => {
 
                         <Link
                           to="/practice"
-                          className="inline-flex items-center gap-1 rounded-lg bg-surface-container-low px-3 py-1.5 text-label-sm font-semibold text-primary hover:bg-red-50 transition-colors"
+                          className="btn-interactive inline-flex items-center gap-1.5 rounded-lg bg-surface-container-low px-3 py-1.5 text-label-sm font-semibold text-primary hover:bg-red-50 transition-colors"
                         >
                           Học bài
-                          <span className="material-symbols-outlined text-xs">arrow_forward</span>
+                          <ArrowRight className="h-3.5 w-3.5" strokeWidth={2} />
                         </Link>
                       </div>
                     ))}

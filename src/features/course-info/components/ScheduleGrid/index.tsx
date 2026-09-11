@@ -1,4 +1,5 @@
 import React from 'react'
+import { Clock } from 'lucide-react'
 import type { ScheduleDay } from '../../types'
 import { cn } from '@/lib/utils'
 
@@ -19,7 +20,7 @@ export const ScheduleGrid: React.FC<ScheduleGridProps> = ({ schedule }) => {
           </p>
         </div>
         <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-surface-container-low px-3 py-1 text-label-sm font-medium text-secondary">
-          <span className="material-symbols-outlined text-base">access_time</span>
+          <Clock className="h-4 w-4" strokeWidth={2} />
           20:00 - 22:00
         </span>
       </div>

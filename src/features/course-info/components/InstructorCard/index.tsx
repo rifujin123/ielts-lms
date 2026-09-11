@@ -1,4 +1,5 @@
 import React from 'react'
+import { Mail, Calendar } from 'lucide-react'
 import type { Instructor } from '../../types'
 
 interface InstructorCardProps {
@@ -7,7 +8,7 @@ interface InstructorCardProps {
 
 export const InstructorCard: React.FC<InstructorCardProps> = ({ instructor }) => {
   return (
-    <div className="flex flex-col justify-between rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 shadow-xs">
+    <div className="card-interactive flex flex-col justify-between rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 shadow-xs">
       <div>
         <div className="flex items-center justify-between">
           <span className="text-label-sm font-bold uppercase tracking-wider text-secondary">
@@ -48,14 +49,14 @@ export const InstructorCard: React.FC<InstructorCardProps> = ({ instructor }) =>
           type="button"
           className="btn-interactive inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-surface-container-low border border-outline-variant px-3 py-2 text-label-sm font-semibold text-on-surface hover:bg-surface-container transition-colors"
         >
-          <span className="material-symbols-outlined text-lg">mail</span>
+          <Mail className="h-4 w-4" strokeWidth={1.75} />
           Gửi tin nhắn
         </button>
         <button
           type="button"
           className="btn-interactive inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-primary/10 px-3 py-2 text-label-sm font-semibold text-primary hover:bg-primary/20 transition-colors"
         >
-          <span className="material-symbols-outlined text-lg">event</span>
+          <Calendar className="h-4 w-4" strokeWidth={1.75} />
           Đặt lịch 1-1
         </button>
       </div>

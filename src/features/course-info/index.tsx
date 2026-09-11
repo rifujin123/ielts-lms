@@ -1,5 +1,15 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import {
+  AlertCircle,
+  ChevronRight,
+  Download,
+  Users,
+  CheckCircle2,
+  Clock,
+  User,
+  Layers,
+} from 'lucide-react'
 import { useCourseInfo } from './hooks/useCourseInfo'
 import { CourseInfoCard } from './components/CourseInfoCard'
 import { InstructorCard } from './components/InstructorCard'
@@ -27,7 +37,7 @@ export const CourseInfoPage: React.FC = () => {
   if (error || !courseInfo) {
     return (
       <div className="flex min-h-[400px] flex-col items-center justify-center text-center">
-        <span className="material-symbols-outlined text-4xl text-error">error</span>
+        <AlertCircle className="h-10 w-10 text-error" strokeWidth={2} />
         <h3 className="mt-2 text-headline-sm text-on-surface">Không tìm thấy thông tin khóa học</h3>
         <p className="text-body-sm text-secondary">Vui lòng thử lại sau hoặc liên hệ ban học vụ.</p>
       </div>
@@ -45,7 +55,7 @@ export const CourseInfoPage: React.FC = () => {
           <Link to="/dashboard" className="hover:text-on-surface transition-colors">
             Khóa học của tôi
           </Link>
-          <span className="material-symbols-outlined text-sm">chevron_right</span>
+          <ChevronRight className="h-4 w-4 text-secondary/70" strokeWidth={2} />
           <span className="font-semibold text-on-surface">Thông tin khóa học</span>
         </nav>
 
@@ -54,7 +64,7 @@ export const CourseInfoPage: React.FC = () => {
             type="button"
             className="btn-interactive inline-flex items-center gap-2 rounded-lg border border-outline-variant bg-surface-container-lowest px-3.5 py-2 text-label-sm font-semibold text-on-surface hover:bg-surface-container shadow-xs"
           >
-            <span className="material-symbols-outlined text-base">download</span>
+            <Download className="h-4 w-4" strokeWidth={2} />
             Tải cẩm nang PDF
           </button>
           <a
@@ -63,7 +73,7 @@ export const CourseInfoPage: React.FC = () => {
             rel="noopener noreferrer"
             className="btn-interactive inline-flex items-center gap-2 rounded-lg border border-outline-variant bg-surface-container-lowest px-3.5 py-2 text-label-sm font-semibold text-on-surface hover:bg-surface-container shadow-xs"
           >
-            <span className="material-symbols-outlined text-base">groups</span>
+            <Users className="h-4 w-4" strokeWidth={2} />
             Nhóm trao đổi
           </a>
         </div>
@@ -73,7 +83,7 @@ export const CourseInfoPage: React.FC = () => {
       <div className="animate-fade-in-up stagger-1 relative overflow-hidden rounded-2xl border border-outline-variant bg-gradient-to-r from-red-600 to-red-700 p-6 sm:p-8 text-on-primary shadow-sm">
         <div className="relative z-10 max-w-2xl">
           <div className="inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1 text-label-sm font-semibold backdrop-blur-xs">
-            <span className="material-symbols-outlined text-base">verified</span>
+            <CheckCircle2 className="h-4 w-4" strokeWidth={2} />
             Khóa học chính khóa DOL English
           </div>
           <h1 className="mt-3 text-headline-lg sm:text-display-hero text-white font-extrabold tracking-tight">
@@ -86,17 +96,17 @@ export const CourseInfoPage: React.FC = () => {
 
           <div className="mt-6 flex flex-wrap items-center gap-4 text-body-sm text-white/80">
             <div className="flex items-center gap-1.5">
-              <span className="material-symbols-outlined text-base">schedule</span>
+              <Clock className="h-4 w-4" strokeWidth={2} />
               <span>20:00 - 22:00 (Thứ 2 - 4 - 6)</span>
             </div>
             <div className="hidden h-3 w-px bg-white/30 sm:block" />
             <div className="flex items-center gap-1.5">
-              <span className="material-symbols-outlined text-base">person</span>
+              <User className="h-4 w-4" strokeWidth={2} />
               <span>{courseInfo.instructors[0]?.name}</span>
             </div>
             <div className="hidden h-3 w-px bg-white/30 sm:block" />
             <div className="flex items-center gap-1.5">
-              <span className="material-symbols-outlined text-base">layers</span>
+              <Layers className="h-4 w-4" strokeWidth={2} />
               <span>{courseInfo.phase.name}</span>
             </div>
           </div>

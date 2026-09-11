@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { useDebounce } from 'use-debounce'
+import { ChevronRight, Search, Check, GraduationCap, SearchX } from 'lucide-react'
 import { roadmapService } from '@/services/roadmapService'
 import { roadmapMock } from '@/mocks/roadmap.mock'
 
@@ -44,7 +45,7 @@ export const PersonalRoadmapPage: React.FC = () => {
             <Link to="/roadmap" className="hover:text-on-surface">
               Lộ trình
             </Link>
-            <span className="material-symbols-outlined text-sm">chevron_right</span>
+            <ChevronRight className="h-4 w-4 text-secondary/70" strokeWidth={2} />
             <span className="font-semibold text-on-surface">Lộ trình cá nhân hóa</span>
           </nav>
           <h1 className="mt-1 text-headline-lg font-bold text-on-surface">Roadmap cá nhân hóa</h1>
@@ -59,7 +60,7 @@ export const PersonalRoadmapPage: React.FC = () => {
             <button
               key={tab}
               onClick={() => setFilter(tab)}
-              className={`rounded-lg px-3 py-1.5 text-label-sm font-semibold transition-colors ${
+              className={`btn-interactive rounded-lg px-3 py-1.5 text-label-sm font-semibold transition-colors ${
                 filter === tab
                   ? 'bg-surface-container-lowest text-primary shadow-xs'
                   : 'text-secondary hover:text-on-surface'
@@ -75,24 +76,25 @@ export const PersonalRoadmapPage: React.FC = () => {
 
       {/* Search Input */}
       <div className="relative w-full max-w-md">
-        <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-lg text-secondary">
-          search
-        </span>
+        <Search
+          className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-secondary"
+          strokeWidth={1.8}
+        />
         <input
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Tìm nhiệm vụ học tập..."
-          className="w-full rounded-xl border border-outline-variant bg-surface-container-lowest py-2 pl-9 pr-4 text-body-sm text-on-surface focus:border-primary focus:outline-none"
+          className="w-full rounded-xl border border-outline-variant bg-surface-container-lowest py-2 pl-9 pr-4 text-body-sm text-on-surface focus:border-primary focus:outline-none shadow-xs"
         />
       </div>
 
       {/* Task List */}
       <div className="grid grid-cols-1 gap-4">
-        {filteredItems.map((task) => (
+        {filteredItems.map((task, idx) => (
           <div
             key={task.id}
-            className="flex flex-col justify-between gap-4 rounded-2xl border border-outline-variant bg-surface-container-lowest p-5 shadow-xs sm:flex-row sm:items-center"
+            className={`animate-fade-in-up stagger-${(idx % 5) + 1} card-interactive flex flex-col justify-between gap-4 rounded-2xl border border-outline-variant bg-surface-container-lowest p-5 shadow-xs sm:flex-row sm:items-center`}
           >
             <div className="flex items-start gap-4">
               <div
@@ -102,14 +104,16 @@ export const PersonalRoadmapPage: React.FC = () => {
                     : 'bg-primary-container text-primary'
                 }`}
               >
-                <span className="material-symbols-outlined text-2xl">
-                  {task.status === 'completed' ? 'check' : 'school'}
-                </span>
+                {task.status === 'completed' ? (
+                  <Check className="h-5 w-5" strokeWidth={2.5} />
+                ) : (
+                  <GraduationCap className="h-5 w-5" strokeWidth={2} />
+                )}
               </div>
 
               <div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="rounded bg-surface-container-high px-2 py-0.5 text-[11px] font-bold text-secondary uppercase">
+                  <span className="animate-pop-in rounded bg-surface-container-high px-2 py-0.5 text-[11px] font-bold text-secondary uppercase">
                     {task.type}
                   </span>
                   <span className="text-[11px] font-semibold text-secondary">
@@ -127,7 +131,7 @@ export const PersonalRoadmapPage: React.FC = () => {
               </span>
               <button
                 type="button"
-                className={`inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-label-sm font-semibold transition-colors shadow-xs ${
+                className={`btn-interactive inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-label-sm font-semibold transition-colors shadow-xs ${
                   task.status === 'completed'
                     ? 'bg-surface-container-low text-secondary hover:bg-surface-container'
                     : 'bg-primary text-on-primary hover:bg-primary-hover'
@@ -140,8 +144,8 @@ export const PersonalRoadmapPage: React.FC = () => {
         ))}
 
         {filteredItems.length === 0 && (
-          <div className="flex min-h-[250px] flex-col items-center justify-center rounded-2xl border border-dashed border-outline-variant p-8 text-center">
-            <span className="material-symbols-outlined text-4xl text-secondary">search_off</span>
+          <div className="animate-fade-in-up flex min-h-[250px] flex-col items-center justify-center rounded-2xl border border-dashed border-outline-variant p-8 text-center">
+            <SearchX className="h-10 w-10 text-secondary/60" strokeWidth={1.5} />
             <p className="mt-2 text-body-md font-semibold text-on-surface">
               Không tìm thấy mục nào
             </p>

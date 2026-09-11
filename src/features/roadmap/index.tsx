@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
+import { ChevronRight, Route, CheckCircle2, PlayCircle } from 'lucide-react'
 import { roadmapService } from '@/services/roadmapService'
 import { roadmapMock } from '@/mocks/roadmap.mock'
 
@@ -57,7 +58,7 @@ export const RoadmapPage: React.FC = () => {
             <Link to="/" className="hover:text-on-surface">
               Khóa học
             </Link>
-            <span className="material-symbols-outlined text-sm">chevron_right</span>
+            <ChevronRight className="h-4 w-4 text-secondary/70" strokeWidth={2} />
             <span className="font-semibold text-on-surface">Lộ trình học tập</span>
           </nav>
           <h1 className="mt-1 text-headline-lg font-bold text-on-surface">
@@ -71,19 +72,19 @@ export const RoadmapPage: React.FC = () => {
 
         <Link
           to="/roadmap/personal"
-          className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-label-md font-semibold text-on-primary hover:bg-primary-hover shadow-xs"
+          className="btn-interactive inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-label-md font-semibold text-on-primary hover:bg-primary-hover shadow-xs"
         >
-          <span className="material-symbols-outlined text-lg">alt_route</span>
+          <Route className="h-4 w-4" strokeWidth={2} />
           Xem lộ trình cá nhân hóa
         </Link>
       </div>
 
       {/* 3 Phase Cards */}
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-        {phases.map((phase) => (
+        {phases.map((phase, idx) => (
           <div
             key={phase.number}
-            className={`relative flex flex-col justify-between rounded-2xl border p-6 shadow-xs ${
+            className={`animate-fade-in-up stagger-${idx + 1} card-interactive relative flex flex-col justify-between rounded-2xl border p-6 shadow-xs ${
               phase.status === 'active'
                 ? 'border-primary bg-surface-container-lowest ring-2 ring-primary/20'
                 : 'border-outline-variant bg-surface-container-low/60'
@@ -95,17 +96,17 @@ export const RoadmapPage: React.FC = () => {
                   {phase.sessions}
                 </span>
                 {phase.status === 'completed' && (
-                  <span className="rounded-full bg-tertiary-container px-2.5 py-0.5 text-label-sm font-semibold text-on-tertiary-container">
+                  <span className="animate-pop-in rounded-full bg-tertiary-container px-2.5 py-0.5 text-label-sm font-semibold text-on-tertiary-container">
                     Hoàn thành
                   </span>
                 )}
                 {phase.status === 'active' && (
-                  <span className="rounded-full bg-primary-container px-2.5 py-0.5 text-label-sm font-semibold text-on-primary-container">
+                  <span className="animate-pop-in rounded-full bg-primary-container px-2.5 py-0.5 text-label-sm font-semibold text-on-primary-container">
                     Đang học
                   </span>
                 )}
                 {phase.status === 'upcoming' && (
-                  <span className="rounded-full bg-surface-container-high px-2.5 py-0.5 text-label-sm font-semibold text-secondary">
+                  <span className="animate-pop-in rounded-full bg-surface-container-high px-2.5 py-0.5 text-label-sm font-semibold text-secondary">
                     Sắp tới
                   </span>
                 )}
@@ -127,7 +128,7 @@ export const RoadmapPage: React.FC = () => {
       </div>
 
       {/* Recommended Topics from items */}
-      <div className="rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 shadow-xs">
+      <div className="animate-fade-in-up stagger-4 rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 shadow-xs">
         <h3 className="text-headline-sm font-bold text-on-surface">Nhiệm vụ trọng tâm hiện tại</h3>
         <p className="text-body-sm text-secondary">
           Các bài tập và nội dung quan trọng được khuyến nghị hoàn thành trong tuần này:
@@ -137,16 +138,14 @@ export const RoadmapPage: React.FC = () => {
           {(items ?? []).map((item) => (
             <div
               key={item.id}
-              className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-outline-variant bg-surface-container-low p-4"
+              className="card-interactive flex flex-wrap items-center justify-between gap-3 rounded-xl border border-outline-variant bg-surface-container-low p-4"
             >
               <div className="flex items-center gap-3">
-                <span
-                  className={`material-symbols-outlined text-xl ${
-                    item.status === 'completed' ? 'text-tertiary' : 'text-primary'
-                  }`}
-                >
-                  {item.status === 'completed' ? 'check_circle' : 'play_circle'}
-                </span>
+                {item.status === 'completed' ? (
+                  <CheckCircle2 className="h-5 w-5 text-tertiary shrink-0" strokeWidth={2} />
+                ) : (
+                  <PlayCircle className="h-5 w-5 text-primary shrink-0" strokeWidth={2} />
+                )}
                 <div>
                   <h4 className="text-body-md font-bold text-on-surface">{item.title}</h4>
                   <p className="text-body-sm text-secondary">{item.description}</p>
@@ -155,7 +154,7 @@ export const RoadmapPage: React.FC = () => {
 
               <div className="flex items-center gap-3">
                 <span className="text-body-sm text-secondary">~{item.estimatedMinutes} phút</span>
-                <span className="rounded bg-surface-container-high px-2 py-0.5 text-[11px] font-semibold text-on-surface">
+                <span className="animate-pop-in rounded bg-surface-container-high px-2 py-0.5 text-[11px] font-semibold text-on-surface">
                   {item.type}
                 </span>
               </div>

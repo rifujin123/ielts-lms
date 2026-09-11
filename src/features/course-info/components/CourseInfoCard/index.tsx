@@ -1,4 +1,14 @@
 import React from 'react'
+import {
+  Video,
+  Calendar,
+  Clock,
+  Laptop,
+  MessageSquare,
+  ExternalLink,
+  ClipboardList,
+  ShieldCheck,
+} from 'lucide-react'
 import type { CourseInfo } from '../../types'
 import { formatDate } from '@/lib/utils'
 
@@ -8,7 +18,7 @@ interface CourseInfoCardProps {
 
 export const CourseInfoCard: React.FC<CourseInfoCardProps> = ({ data }) => {
   return (
-    <div className="rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 shadow-xs">
+    <div className="card-interactive rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 shadow-xs">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
         <div>
           <span className="animate-pop-in inline-flex items-center gap-1.5 rounded-full bg-tertiary-container px-3 py-1 text-label-sm font-semibold text-on-tertiary-container shadow-xs">
@@ -25,7 +35,7 @@ export const CourseInfoCard: React.FC<CourseInfoCardProps> = ({ data }) => {
             rel="noopener noreferrer"
             className="btn-interactive inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-label-md font-semibold text-on-primary hover:bg-primary-hover shadow-xs"
           >
-            <span className="material-symbols-outlined text-lg">videocam</span>
+            <Video className="h-4 w-4" strokeWidth={2} />
             Vào phòng Zoom
           </a>
         </div>
@@ -33,9 +43,9 @@ export const CourseInfoCard: React.FC<CourseInfoCardProps> = ({ data }) => {
 
       {/* Grid of details */}
       <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <div className="rounded-xl border border-outline-variant bg-surface-container-low p-3.5">
+        <div className="rounded-xl border border-outline-variant bg-surface-container-low p-3.5 transition-colors hover:bg-surface-container">
           <div className="flex items-center gap-2 text-secondary">
-            <span className="material-symbols-outlined text-lg">calendar_today</span>
+            <Calendar className="h-4 w-4" strokeWidth={1.75} />
             <span className="text-label-sm uppercase tracking-wider">Thời gian khóa học</span>
           </div>
           <p className="mt-1 text-body-md font-semibold text-on-surface">
@@ -44,27 +54,27 @@ export const CourseInfoCard: React.FC<CourseInfoCardProps> = ({ data }) => {
           <span className="text-[11px] text-secondary">{data.semester}</span>
         </div>
 
-        <div className="rounded-xl border border-outline-variant bg-surface-container-low p-3.5">
+        <div className="rounded-xl border border-outline-variant bg-surface-container-low p-3.5 transition-colors hover:bg-surface-container">
           <div className="flex items-center gap-2 text-secondary">
-            <span className="material-symbols-outlined text-lg">schedule</span>
+            <Clock className="h-4 w-4" strokeWidth={1.75} />
             <span className="text-label-sm uppercase tracking-wider">Giờ học cố định</span>
           </div>
           <p className="mt-1 text-body-md font-semibold text-on-surface">{data.classTime}</p>
           <span className="text-[11px] text-secondary">20:00 - 22:00 (Thứ 2 - 4 - 6)</span>
         </div>
 
-        <div className="rounded-xl border border-outline-variant bg-surface-container-low p-3.5">
+        <div className="rounded-xl border border-outline-variant bg-surface-container-low p-3.5 transition-colors hover:bg-surface-container">
           <div className="flex items-center gap-2 text-secondary">
-            <span className="material-symbols-outlined text-lg">meeting_room</span>
+            <Laptop className="h-4 w-4" strokeWidth={1.75} />
             <span className="text-label-sm uppercase tracking-wider">Phòng học Zoom</span>
           </div>
           <p className="mt-1 text-body-md font-semibold text-primary">{data.zoomRoom}</p>
           <span className="text-[11px] text-secondary">ID & Passcode đính kèm lịch</span>
         </div>
 
-        <div className="rounded-xl border border-outline-variant bg-surface-container-low p-3.5">
+        <div className="rounded-xl border border-outline-variant bg-surface-container-low p-3.5 transition-colors hover:bg-surface-container">
           <div className="flex items-center gap-2 text-secondary">
-            <span className="material-symbols-outlined text-lg">chat</span>
+            <MessageSquare className="h-4 w-4" strokeWidth={1.75} />
             <span className="text-label-sm uppercase tracking-wider">Nhóm Zalo lớp</span>
           </div>
           <p className="mt-1 text-body-md font-semibold text-on-surface truncate">
@@ -74,15 +84,15 @@ export const CourseInfoCard: React.FC<CourseInfoCardProps> = ({ data }) => {
             href={data.zaloGroupLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[11px] font-semibold text-primary hover:underline inline-flex items-center gap-0.5"
+            className="text-[11px] font-semibold text-primary hover:underline inline-flex items-center gap-1"
           >
-            Mở liên kết Zalo <span className="material-symbols-outlined text-xs">open_in_new</span>
+            Mở liên kết Zalo <ExternalLink className="h-3 w-3" strokeWidth={2} />
           </a>
         </div>
 
-        <div className="rounded-xl border border-outline-variant bg-surface-container-low p-3.5">
+        <div className="rounded-xl border border-outline-variant bg-surface-container-low p-3.5 transition-colors hover:bg-surface-container">
           <div className="flex items-center gap-2 text-secondary">
-            <span className="material-symbols-outlined text-lg">assignment</span>
+            <ClipboardList className="h-4 w-4" strokeWidth={1.75} />
             <span className="text-label-sm uppercase tracking-wider">Tổng bài tập</span>
           </div>
           <p className="mt-1 text-body-md font-semibold text-on-surface">
@@ -93,9 +103,9 @@ export const CourseInfoCard: React.FC<CourseInfoCardProps> = ({ data }) => {
           </span>
         </div>
 
-        <div className="rounded-xl border border-outline-variant bg-surface-container-low p-3.5">
+        <div className="rounded-xl border border-outline-variant bg-surface-container-low p-3.5 transition-colors hover:bg-surface-container">
           <div className="flex items-center gap-2 text-secondary">
-            <span className="material-symbols-outlined text-lg">verified_user</span>
+            <ShieldCheck className="h-4 w-4" strokeWidth={1.75} />
             <span className="text-label-sm uppercase tracking-wider">Trạng thái học viên</span>
           </div>
           <p className="mt-1 text-body-md font-semibold text-tertiary">Chính khóa (Đạt yêu cầu)</p>

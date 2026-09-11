@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { useDebounce } from 'use-debounce'
+import { ChevronRight, Search, Zap, Check, BookOpen, Languages } from 'lucide-react'
 import { vocabularyService } from '@/services/vocabularyService'
 import { calcProgressPercent } from '@/lib/utils'
 import { vocabularyMock } from '@/mocks/vocabulary.mock'
@@ -44,7 +45,7 @@ export const VocabularyPage: React.FC = () => {
             <Link to="/" className="hover:text-on-surface">
               Khóa học
             </Link>
-            <span className="material-symbols-outlined text-sm">chevron_right</span>
+            <ChevronRight className="h-4 w-4 text-secondary/70" strokeWidth={2} />
             <span className="font-semibold text-on-surface">Từ vựng</span>
           </nav>
           <h1 className="mt-1 text-headline-lg font-bold text-on-surface">Kho từ vựng học thuật</h1>
@@ -54,9 +55,10 @@ export const VocabularyPage: React.FC = () => {
         </div>
 
         <div className="relative w-full sm:w-64">
-          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-lg text-secondary">
-            search
-          </span>
+          <Search
+            className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-secondary"
+            strokeWidth={1.8}
+          />
           <input
             type="text"
             value={search}
@@ -68,7 +70,7 @@ export const VocabularyPage: React.FC = () => {
       </div>
 
       {/* ── Overall Vocabulary Progress Banner ─────────────────── */}
-      <div className="flex flex-col justify-between gap-4 rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 shadow-xs sm:flex-row sm:items-center">
+      <div className="animate-fade-in-up stagger-1 card-interactive flex flex-col justify-between gap-4 rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 shadow-xs sm:flex-row sm:items-center">
         <div>
           <span className="text-label-sm font-bold uppercase tracking-wider text-secondary">
             Tiến độ ghi nhớ toàn khóa
@@ -87,9 +89,9 @@ export const VocabularyPage: React.FC = () => {
           </div>
           <button
             type="button"
-            className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-label-md font-semibold text-on-primary hover:bg-primary-hover transition-colors shadow-xs"
+            className="btn-interactive inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-label-md font-semibold text-on-primary hover:bg-primary-hover transition-colors shadow-xs"
           >
-            <span className="material-symbols-outlined text-lg">bolt</span>
+            <Zap className="h-4 w-4" strokeWidth={2} />
             Ôn tập nhanh
           </button>
         </div>
@@ -97,12 +99,12 @@ export const VocabularyPage: React.FC = () => {
 
       {/* ── Vocabulary Sets Grid ────────────────────────────────── */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {filteredSets.map((vocab) => {
+        {filteredSets.map((vocab, idx) => {
           const percent = calcProgressPercent(vocab.masteredCount, vocab.wordCount)
           return (
             <div
               key={vocab.id}
-              className="flex flex-col justify-between rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 shadow-xs hover:border-primary/40 transition-colors"
+              className={`animate-fade-in-up stagger-${(idx % 4) + 1} card-interactive flex flex-col justify-between rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 shadow-xs`}
             >
               <div>
                 <div className="flex flex-wrap items-center justify-between gap-2">
@@ -118,8 +120,8 @@ export const VocabularyPage: React.FC = () => {
                   </div>
 
                   {vocab.status === 'completed' && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-tertiary-container px-2.5 py-0.5 text-[11px] font-bold text-on-tertiary-container">
-                      <span className="material-symbols-outlined text-xs">check</span>
+                    <span className="animate-pop-in inline-flex items-center gap-1 rounded-full bg-tertiary-container px-2.5 py-0.5 text-[11px] font-bold text-on-tertiary-container">
+                      <Check className="h-3 w-3" strokeWidth={2.5} />
                       Đã thuộc
                     </span>
                   )}
@@ -137,7 +139,7 @@ export const VocabularyPage: React.FC = () => {
                   </div>
                   <div className="mt-1.5 h-2 w-full overflow-hidden rounded-full bg-surface-container">
                     <div
-                      className="h-full bg-primary rounded-full transition-all duration-300"
+                      className="h-full bg-primary rounded-full transition-all duration-500 ease-out"
                       style={{ width: `${percent}%` }}
                     />
                   </div>
@@ -150,9 +152,9 @@ export const VocabularyPage: React.FC = () => {
                 </span>
                 <button
                   type="button"
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-primary/10 px-4 py-2 text-label-sm font-bold text-primary hover:bg-primary/20 transition-colors"
+                  className="btn-interactive inline-flex items-center gap-1.5 rounded-lg bg-primary/10 px-4 py-2 text-label-sm font-bold text-primary hover:bg-primary/20 transition-colors"
                 >
-                  <span className="material-symbols-outlined text-base">style</span>
+                  <BookOpen className="h-4 w-4" strokeWidth={2} />
                   Học ngay
                 </button>
               </div>
@@ -161,8 +163,8 @@ export const VocabularyPage: React.FC = () => {
         })}
 
         {filteredSets.length === 0 && (
-          <div className="col-span-2 flex min-h-[250px] flex-col items-center justify-center rounded-2xl border border-dashed border-outline-variant bg-surface-container-lowest p-8 text-center">
-            <span className="material-symbols-outlined text-5xl text-secondary/60">translate</span>
+          <div className="animate-fade-in-up col-span-2 flex min-h-[250px] flex-col items-center justify-center rounded-2xl border border-dashed border-outline-variant bg-surface-container-lowest p-8 text-center">
+            <Languages className="h-12 w-12 text-secondary/60" strokeWidth={1.5} />
             <h3 className="mt-3 text-headline-sm font-bold text-on-surface">
               Không tìm thấy bộ từ vựng
             </h3>
