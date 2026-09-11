@@ -150,6 +150,7 @@ export const ExamRunnerPage: React.FC = () => {
     <div className="flex h-screen w-screen flex-col overflow-hidden bg-slate-100 select-none">
       {/* ── Top Universal 4-Skill Header ───────────────────────────── */}
       <header className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-slate-200 bg-white px-4 shadow-xs">
+        {/* ── Left: Exit & Branding ─────────────────────────────────── */}
         <div className="flex items-center gap-3">
           <button
             type="button"
@@ -160,24 +161,26 @@ export const ExamRunnerPage: React.FC = () => {
             <ArrowLeft className="h-5 w-5" strokeWidth={2} />
           </button>
 
-          <div className="hidden xl:flex items-center gap-2.5 pr-3 border-r border-slate-200">
+          <div className="flex items-center gap-2.5">
             <img
               src="/branding.png"
               alt="IELTS Hồ Thành"
               className="h-8 w-auto max-w-[100px] object-contain"
             />
-            <div>
+            <div className="hidden sm:block">
               <div className="text-[10px] font-bold text-red-600 uppercase tracking-wider">
                 IELTS Hồ Thành
               </div>
-              <div className="text-xs font-bold text-slate-800 line-clamp-1 max-w-[220px]">
+              <div className="text-xs font-bold text-slate-800 line-clamp-1 max-w-[180px] lg:max-w-[220px]">
                 {manifest.title}
               </div>
             </div>
           </div>
+        </div>
 
-          {/* 4-Skill Switcher Tabs */}
-          <div className="flex items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200">
+        {/* ── Center: 4-Skill Switcher Tabs ─────────────────────────── */}
+        <div className="flex items-center justify-center">
+          <div className="flex items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200 shadow-2xs">
             {(
               [
                 { key: 'LISTENING', label: 'Listening', icon: Headphones },
@@ -219,8 +222,8 @@ export const ExamRunnerPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Center: Exam Mode Badge & Realtime Countdown Timer */}
-        <div className="flex items-center gap-2">
+        {/* ── Right: Mode Badge, Timer & Submit Actions ─────────────── */}
+        <div className="flex items-center gap-2.5">
           {/* Read-only Badge: Shows 'Strict' or 'Practice' */}
           <div
             title={
@@ -280,10 +283,8 @@ export const ExamRunnerPage: React.FC = () => {
             <Clock className="h-4 w-4 text-slate-500" />
             <span>{isSubmitted ? 'Đã thu bài' : formattedTime}</span>
           </div>
-        </div>
 
-        {/* Right: Submit & Review Actions */}
-        <div className="flex items-center gap-2">
+          {/* Submit & Review Actions */}
           {!isSubmitted ? (
             <button
               type="button"
