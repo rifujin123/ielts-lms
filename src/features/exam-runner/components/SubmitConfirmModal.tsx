@@ -80,13 +80,15 @@ export const SubmitConfirmModal: React.FC<SubmitConfirmModalProps> = ({
           )}
 
           {flaggedQuestionIds.length > 0 && (
-            <div className="flex flex-col gap-1 border-t border-slate-200/60 pt-2 text-amber-700">
+            <div className="flex flex-col gap-1 border-t border-slate-200/60 pt-2 text-slate-800">
               <div className="flex items-center justify-between font-bold">
                 <span className="flex items-center gap-1.5">
-                  <Flag className="h-3.5 w-3.5 fill-amber-500 text-amber-600" />
+                  <Flag className="h-3.5 w-3.5 fill-slate-900 text-slate-900" />
                   Đang gắn cờ xem lại:
                 </span>
-                <span>{flaggedQuestionIds.length} câu</span>
+                <span className="rounded-md bg-slate-100 px-2 py-0.5 text-xs text-slate-800 font-bold border border-slate-200">
+                  {flaggedQuestionIds.length} câu
+                </span>
               </div>
               <div className="text-[11px] text-slate-500 line-clamp-2">
                 Danh sách: {flaggedQuestionIds.map((q) => `Câu ${q}`).join(', ')}

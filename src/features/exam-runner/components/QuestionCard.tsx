@@ -85,17 +85,17 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ question }) => {
                 toggleFlag(question.id)
               }}
               title={isFlagged ? 'Bỏ đánh dấu xem lại' : 'Đánh dấu xem lại câu này'}
-              className={`btn-interactive flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-semibold transition-colors ${
+              className={`btn-interactive flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-semibold transition-all border ${
                 isFlagged
-                  ? 'bg-amber-100 text-amber-800 ring-1 ring-amber-300'
-                  : 'text-slate-400 hover:bg-slate-100 hover:text-slate-700'
+                  ? 'border-slate-900 bg-slate-900 text-white shadow-xs'
+                  : 'border-slate-200 bg-white text-slate-500 hover:bg-slate-100 hover:text-slate-900'
               }`}
             >
               <Flag
-                className={`h-3.5 w-3.5 ${isFlagged ? 'fill-amber-500 text-amber-600' : ''}`}
+                className={`h-3.5 w-3.5 ${isFlagged ? 'fill-white text-white' : 'text-slate-400'}`}
                 strokeWidth={2}
               />
-              <span>{isFlagged ? 'Đã đánh dấu' : 'Xem lại'}</span>
+              <span>{isFlagged ? 'Đã gắn cờ' : 'Xem lại'}</span>
             </button>
           )}
         </div>

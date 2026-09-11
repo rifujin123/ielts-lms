@@ -60,17 +60,21 @@ export const ExamBottomPalette: React.FC = () => {
         <button
           type="button"
           onClick={() => toggleFlag(activeQuestionId)}
-          className={`btn-interactive flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${
+          className={`btn-interactive flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all border ${
             isCurrentFlagged
-              ? 'bg-amber-100 text-amber-800 ring-1 ring-amber-300'
-              : 'border border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100'
+              ? 'border-slate-900 bg-slate-900 text-white shadow-xs'
+              : 'border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100 hover:text-slate-900'
           }`}
         >
           <Flag
-            className={`h-3.5 w-3.5 ${isCurrentFlagged ? 'fill-amber-500 text-amber-600' : ''}`}
+            className={`h-3.5 w-3.5 ${isCurrentFlagged ? 'fill-white text-white' : 'text-slate-400'}`}
             strokeWidth={2}
           />
-          <span>Đánh dấu xem lại câu {activeQuestionId}</span>
+          <span>
+            {isCurrentFlagged
+              ? `Đang gắn cờ câu ${activeQuestionId}`
+              : `Gắn cờ xem lại câu ${activeQuestionId}`}
+          </span>
         </button>
 
         <div className="hidden sm:flex items-center gap-2 text-xs font-medium text-slate-500">
@@ -121,7 +125,16 @@ export const ExamBottomPalette: React.FC = () => {
                   >
                     <span>{q.id}</span>
                     {isFlagged && (
-                      <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-amber-500 ring-1 ring-white" />
+                      <span
+                        title="Đã gắn cờ xem lại"
+                        className={`absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5 items-center justify-center rounded-full ring-1 ${
+                          isAnswered ? 'bg-white ring-slate-900' : 'bg-slate-900 ring-white'
+                        }`}
+                      >
+                        <span
+                          className={`h-1 w-1 rounded-full ${isAnswered ? 'bg-slate-900' : 'bg-white'}`}
+                        />
+                      </span>
                     )}
                   </button>
                 )
