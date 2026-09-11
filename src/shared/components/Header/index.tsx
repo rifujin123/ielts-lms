@@ -1,12 +1,12 @@
 import React from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useUIStore } from '@/store/uiStore'
 
+/**
+ * Header — Top navigation bar, unified across all routes (including Overview).
+ */
 export const Header: React.FC = () => {
-  const location = useLocation()
   const { toggleSidebar, activePhase, currentUser } = useUIStore()
-
-  const isDashboard = location.pathname === '/dashboard'
 
   return (
     <header className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-outline-variant bg-surface-container-lowest px-4 md:px-8">
@@ -21,16 +21,6 @@ export const Header: React.FC = () => {
           <span className="material-symbols-outlined text-2xl">menu</span>
         </button>
 
-        {!isDashboard && (
-          <Link
-            to="/dashboard"
-            aria-label="Về trang tổng quan"
-            className="hidden items-center justify-center rounded-lg p-2 text-secondary hover:bg-surface-container hover:text-on-surface md:flex"
-          >
-            <span className="material-symbols-outlined text-xl">arrow_back</span>
-          </Link>
-        )}
-
         {/* Branding Logo */}
         <Link to="/" className="flex items-center gap-2.5">
           <img
@@ -40,44 +30,24 @@ export const Header: React.FC = () => {
           />
         </Link>
 
-        {/* Course title for course pages */}
-        {!isDashboard && (
-          <div className="hidden items-center gap-2 border-l border-outline-variant pl-4 lg:flex">
-            <span className="rounded bg-primary-container px-2 py-0.5 text-label-sm font-semibold text-on-primary-container">
-              IELTS 6.5
-            </span>
-            <span className="text-body-sm font-medium text-secondary truncate max-w-[280px]">
-              Online-IELTS-6.5-12.08.2026-20:00
-            </span>
-          </div>
-        )}
-      </div>
-
-      {/* Center: Search for Dashboard */}
-      {isDashboard && (
-        <div className="hidden max-w-md flex-1 px-6 md:block">
-          <div className="relative">
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-lg text-secondary">
-              search
-            </span>
-            <input
-              type="text"
-              placeholder="Tìm kiếm khóa học, tài liệu, bài giảng..."
-              className="w-full rounded-full border border-outline-variant bg-surface-container-low py-1.5 pl-9 pr-4 text-body-sm text-on-surface focus:border-primary focus:bg-surface-container-lowest focus:outline-none"
-            />
-          </div>
+        {/* Course title badge */}
+        <div className="hidden items-center gap-2 border-l border-outline-variant pl-4 lg:flex">
+          <span className="rounded bg-primary-container px-2 py-0.5 text-label-sm font-semibold text-on-primary-container">
+            IELTS 6.5
+          </span>
+          <span className="text-body-sm font-medium text-secondary truncate max-w-[280px]">
+            Online-IELTS-6.5-12.08.2026-20:00
+          </span>
         </div>
-      )}
+      </div>
 
       {/* Right side */}
       <div className="flex items-center gap-3">
         {/* Phase Pill */}
-        {!isDashboard && (
-          <div className="hidden items-center gap-1.5 rounded-full border border-outline-variant bg-surface-container-low px-3 py-1 text-label-sm font-medium text-secondary sm:flex">
-            <span className="h-2 w-2 rounded-full bg-tertiary"></span>
-            <span>{activePhase.label}</span>
-          </div>
-        )}
+        <div className="hidden items-center gap-1.5 rounded-full border border-outline-variant bg-surface-container-low px-3 py-1 text-label-sm font-medium text-secondary sm:flex">
+          <span className="h-2 w-2 rounded-full bg-tertiary"></span>
+          <span>{activePhase.label}</span>
+        </div>
 
         {/* Notifications */}
         <button
