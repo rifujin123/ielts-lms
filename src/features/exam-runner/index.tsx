@@ -227,8 +227,9 @@ export const ExamRunnerPage: React.FC = () => {
         <div className="flex items-center justify-center min-w-0 px-1">
           {availableSkills.length > 1 ? (
             <>
-              {/* Mobile (< md): Single Active Skill with Prev/Next Chevrons (matches bottom bar pattern) */}
-              <div className="flex md:hidden items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200 shadow-2xs select-none">
+              {/* Mobile (< md): Single Active Skill flanked by Small Circular Chevrons */}
+              <div className="flex md:hidden items-center gap-1.5 select-none">
+                {/* Left Circular Chevron Button */}
                 <button
                   type="button"
                   onClick={handlePrevSkill}
@@ -239,13 +240,13 @@ export const ExamRunnerPage: React.FC = () => {
                       ? `Chuyển về ${availableSkills[safeSkillIndex - 1].label}`
                       : 'Đã ở kỹ năng đầu tiên'
                   }
-                  className="btn-interactive flex h-7 w-7 items-center justify-center rounded-lg text-slate-700 hover:bg-white disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                  className="btn-interactive flex h-7 w-7 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-2xs hover:bg-slate-50 hover:border-slate-300 disabled:opacity-25 disabled:cursor-not-allowed transition-all active:scale-95 shrink-0"
                 >
-                  <ChevronLeft className="h-4 w-4" />
+                  <ChevronLeft className="h-3.5 w-3.5" />
                 </button>
 
                 {/* Active Skill Pill */}
-                <div className="flex items-center gap-1.5 rounded-lg bg-slate-900 px-2.5 py-1 text-xs font-bold text-white shadow-xs">
+                <div className="flex items-center gap-1.5 rounded-full bg-slate-900 px-3 py-1 text-xs font-bold text-white shadow-xs border border-slate-800">
                   {React.createElement(currentSkillObj.icon, {
                     className: 'h-3.5 w-3.5 text-red-400 shrink-0',
                   })}
@@ -264,6 +265,7 @@ export const ExamRunnerPage: React.FC = () => {
                   </span>
                 </div>
 
+                {/* Right Circular Chevron Button */}
                 <button
                   type="button"
                   onClick={handleNextSkill}
@@ -274,9 +276,9 @@ export const ExamRunnerPage: React.FC = () => {
                       ? `Chuyển sang ${availableSkills[safeSkillIndex + 1].label}`
                       : 'Đã ở kỹ năng cuối cùng'
                   }
-                  className="btn-interactive flex h-7 w-7 items-center justify-center rounded-lg text-slate-700 hover:bg-white disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                  className="btn-interactive flex h-7 w-7 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-2xs hover:bg-slate-50 hover:border-slate-300 disabled:opacity-25 disabled:cursor-not-allowed transition-all active:scale-95 shrink-0"
                 >
-                  <ChevronRight className="h-4 w-4" />
+                  <ChevronRight className="h-3.5 w-3.5" />
                 </button>
               </div>
 
