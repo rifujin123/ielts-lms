@@ -418,6 +418,14 @@ toast.warning('Phiên học sắp kết thúc', {
   - **Global Window (`src/shared/providers/GlobalErrorHandler.tsx`)**: Listens to unhandled runtime errors and promise rejections.
   - **React Boundaries (`src/shared/components/ErrorBoundary`)**: Emits toast alerts and displays resilient recovery fallbacks.
 
+- **Silent / Inline Error Suppression**:
+  - In Axios: pass `{ skipErrorToast: true }` when writing inline validation or silent background sync.
+  - In TanStack Query: pass `meta: { suppressToast: true }`.
+
+- **Container Mounting Rule**:
+  - `<ToastContainer />` is mounted **once globally** in `src/shared/layouts/AppLayout/index.tsx` at `fixed top-5 right-5 z-50`.
+  - **DO NOT** mount `<ToastContainer />` inside individual sub-pages or feature components.
+
 ---
 
 ## Gatekeeper — Post-Build Review Process
