@@ -6,6 +6,7 @@ export const cambridgeFull4SkillMock: FullIeltsExamManifest = {
   title: 'Cambridge Academic IELTS — Full 4-Skill Simulation Test',
   code: 'IELTS-HT-CBT-4SKILLS-01',
   type: 'ACADEMIC',
+  mode: 'STRICT',
   description:
     'Full Computer-Based Test (CBT) covering all 4 skills: Listening (40 Qs), Reading (40 Qs), Writing (2 Tasks), and Speaking (3 Parts). 100% schema-driven and extensible.',
   skills: {

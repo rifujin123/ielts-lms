@@ -65,7 +65,7 @@ export const useFullExamStore = create<FullExamStoreState>((set, get) => ({
   manifest: defaultManifest,
   activeSkill: (saved?.activeSkill as IeltsSkillType) ?? 'LISTENING',
   activeSectionIndex: saved?.activeSectionIndex ?? 0,
-  examMode: (saved?.examMode as ExamMode) ?? 'STRICT',
+  examMode: (saved?.examMode as ExamMode) ?? defaultManifest.mode ?? 'STRICT',
   tabSwitchCount: saved?.tabSwitchCount ?? 0,
   isRubricModalOpen: false,
 
@@ -85,7 +85,7 @@ export const useFullExamStore = create<FullExamStoreState>((set, get) => ({
   isSubmitted: saved?.isSubmitted ?? false,
 
   setManifest: (manifest) => {
-    set({ manifest })
+    set({ manifest, examMode: manifest.mode ?? 'STRICT' })
   },
 
   setExamMode: (mode) => {
@@ -221,6 +221,7 @@ export const useFullExamStore = create<FullExamStoreState>((set, get) => ({
     set({
       activeSkill: 'LISTENING',
       activeSectionIndex: 0,
+      examMode: manifest.mode ?? 'STRICT',
       listeningAnswers: {},
       readingAnswers: {},
       writingSubmissions: { task1: '', task2: '' },

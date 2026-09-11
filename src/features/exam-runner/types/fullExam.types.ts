@@ -138,6 +138,7 @@ export interface FullIeltsExamManifest {
   title: string
   code: string // e.g. "CAM-18-ACAD-FULL-01"
   type: 'ACADEMIC' | 'GENERAL_TRAINING'
+  mode?: ExamMode // 'STRICT' (Do Giáo viên / Hệ thống cấu hình) | 'PRACTICE' (Tự luyện tập)
   description?: string
   skills: {
     listening?: ListeningExamSkill
