@@ -98,50 +98,54 @@ export const SpeakingRunner: React.FC<SpeakingRunnerProps> = ({ skillData }) => 
   const existingRecording = speakingRecordings[activePart]
 
   return (
-    <div className="flex h-full flex-col overflow-hidden bg-slate-100">
+    <div className="flex h-full flex-col overflow-hidden bg-white selection:bg-emerald-100 selection:text-emerald-900">
       {/* ── Scrollable Main Speaking Workspace ──────────────────────── */}
-      <div className="flex-1 overflow-y-auto p-6 md:p-8 custom-scrollbar">
-        <div className="mx-auto max-w-4xl w-full space-y-6">
+      <div className="flex-1 overflow-y-auto px-4 sm:px-6 pt-6 sm:pt-10 pb-12 custom-scrollbar">
+        <div className="mx-auto max-w-2xl w-full space-y-8">
           {/* ── PART 1: Introduction & Interview ──────────────────────── */}
           {activePart === 1 && (
-            <div className="rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 shadow-xs space-y-6">
+            <div className="rounded-3xl border border-slate-200 bg-white p-8 sm:p-10 shadow-sm space-y-8">
               <div>
-                <span className="inline-flex items-center gap-1.5 rounded-md bg-red-100 px-2.5 py-1 text-xs font-bold text-red-700 uppercase">
+                <span className="inline-flex items-center gap-1.5 rounded-lg bg-red-100 px-3 py-1.5 text-xs font-bold text-red-700 uppercase">
                   SPEAKING PART 1 (4–5 PHÚT)
                 </span>
-                <h2 className="mt-2 text-xl font-bold text-slate-900">{skillData.part1.topic}</h2>
-                <p className="mt-1 text-xs text-slate-500">{skillData.part1.description}</p>
+                <h2 className="mt-3 text-2xl font-bold text-slate-900">{skillData.part1.topic}</h2>
+                <p className="mt-2 text-sm text-slate-600 leading-relaxed">
+                  {skillData.part1.description}
+                </p>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {skillData.part1.questions.map((q, idx) => (
                   <div
                     key={q.id}
-                    className="flex items-start gap-3 rounded-2xl border border-slate-100 bg-slate-50/70 p-4"
+                    className="flex items-start gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-5"
                   >
-                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-200 text-xs font-bold text-slate-800">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-200 text-sm font-bold text-slate-800">
                       {idx + 1}
                     </span>
-                    <div className="text-sm font-medium text-slate-800 pt-0.5">{q.text}</div>
+                    <div className="text-base font-medium text-slate-800 pt-1 leading-relaxed">
+                      {q.text}
+                    </div>
                   </div>
                 ))}
               </div>
 
               {/* Recording Controls */}
-              <div className="flex items-center justify-between rounded-2xl bg-slate-900 p-5 text-white shadow-lg">
-                <div className="flex items-center gap-3">
+              <div className="flex items-center justify-between rounded-2xl bg-slate-900 p-6 text-white shadow-sm">
+                <div className="flex items-center gap-4">
                   <div
-                    className={`flex h-12 w-12 items-center justify-center rounded-2xl ${
+                    className={`flex h-14 w-14 items-center justify-center rounded-2xl ${
                       isRecording ? 'animate-pulse bg-red-600 text-white' : 'bg-white/10 text-white'
                     }`}
                   >
                     <Mic className="h-6 w-6" />
                   </div>
                   <div>
-                    <div className="text-xs font-bold">
+                    <div className="text-sm font-bold">
                       {isRecording ? 'Đang ghi âm câu trả lời...' : 'Thu âm phần thi Part 1'}
                     </div>
-                    <div className="text-xs font-mono text-slate-400">
+                    <div className="text-sm font-mono text-slate-400">
                       Thời lượng: {Math.floor(recordingSeconds / 60)}:
                       {String(recordingSeconds % 60).padStart(2, '0')}
                     </div>

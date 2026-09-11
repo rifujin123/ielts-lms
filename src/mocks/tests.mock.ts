@@ -10,6 +10,7 @@ export const testsMock: OnlineTest[] = [
     duration: 60,
     score: 7.0,
     completedAt: '2026-08-25',
+    subCategory: 'Cambridge 18 Standard - Diagnostic Assessment',
   },
   {
     id: 'TEST-02',
@@ -18,6 +19,7 @@ export const testsMock: OnlineTest[] = [
     skill: 'Reading',
     status: 'in_progress',
     duration: 60,
+    subCategory: 'Academic Reading - Linearthinking Method',
   },
   {
     id: 'TEST-03',
@@ -26,6 +28,7 @@ export const testsMock: OnlineTest[] = [
     skill: 'Writing',
     status: 'pending',
     duration: 40,
+    subCategory: 'Writing Task 2 - Agree / Disagree Essay',
   },
   {
     id: 'TEST-04',
@@ -34,5 +37,24 @@ export const testsMock: OnlineTest[] = [
     skill: 'Listening',
     status: 'pending',
     duration: 45,
+    subCategory: 'Full 4 Sections - Cambridge Official Audio',
+  },
+  {
+    id: 'TEST-05',
+    title: 'Speaking Full Simulation: Part 1, 2 & 3 with AI Examiner',
+    type: 'mock',
+    skill: 'Speaking',
+    status: 'pending',
+    duration: 15,
+    subCategory: 'AI IELTS Examiner - Real-time Speech Analysis',
+  },
+  {
+    id: 'TEST-06',
+    title: 'Full Mock Exam Cambridge 19: 4 Skills Comprehensive',
+    type: 'full',
+    skill: 'Full',
+    status: 'pending',
+    duration: 165,
+    subCategory: 'Cambridge 19 - Simulation Phòng Thi Thật',
   },
 ]

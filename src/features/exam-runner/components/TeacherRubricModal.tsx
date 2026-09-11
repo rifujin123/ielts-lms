@@ -41,7 +41,7 @@ export const TeacherRubricModal: React.FC<TeacherRubricModalProps> = ({
               </div>
               <p className="text-xs text-slate-500">
                 Chấm bởi:{' '}
-                <span className="font-semibold text-slate-700">{assessment.teacherName}</span> •
+                <span className="font-semibold text-slate-700">{assessment.teacherName}</span> -
                 Lúc: {assessment.gradedAt}
               </p>
             </div>

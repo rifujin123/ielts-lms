@@ -26,7 +26,7 @@ export const CompletionQuestion: React.FC<CompletionQuestionProps> = ({
     <div className="w-full">
       {/* Inline Completion: bullet, prompt text, blue mono number, input */}
       <div className="flex flex-wrap items-center gap-2 text-sm font-semibold text-slate-800 leading-relaxed">
-        <span className="text-slate-400 text-base select-none">•</span>
+        <span className="text-slate-400 text-base select-none">-</span>
         {promptParts[0] && <span>{promptParts[0]}</span>}
 
         <span className="font-bold text-blue-600 font-mono text-sm">{q.id}.</span>

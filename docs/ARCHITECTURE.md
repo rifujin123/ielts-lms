@@ -361,29 +361,30 @@ Whenever any agent adds, modifies, or extracts a **reusable asset** (UI componen
 
 ### 📦 Current Reusable Asset Registry
 
-| Asset Name               | Location                                                 | Type      | Description & Purpose                                                                                                                   |
-| ------------------------ | -------------------------------------------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `.card-interactive`      | `src/styles/globals.css`                                 | CSS Class | Lifts card by 3px (`translateY(-3px)`), softens shadow, and adds subtle crimson hover ring. Apply to all clickable / interactive cards. |
-| `.btn-interactive`       | `src/styles/globals.css`                                 | CSS Class | Tactile click micro-compression (`scale(0.97)`) on `:active`. Apply to all interactive buttons.                                         |
-| `.animate-fade-in-up`    | `src/styles/globals.css`                                 | CSS Class | GPU-accelerated entrance animation (opacity 0 → 1, translateY 12px → 0 in 400ms).                                                       |
-| `.stagger-1`..`5`        | `src/styles/globals.css`                                 | CSS Class | Progressive 50ms delay steps (50ms–250ms) to stagger entrance across grid / list children.                                              |
-| `.animate-pop-in`        | `src/styles/globals.css`                                 | CSS Class | Micro-bounce scale animation for status badges, tags, and active checkmarks.                                                            |
-| `.badge-minimal`         | `src/styles/globals.css`                                 | CSS Class | Minimal Modern status badge (Linear/Notion style). Slate-100 base, slate-200 border, and semantic micro-dot (emerald/red/amber/slate).  |
-| `.badge-tag`             | `src/styles/globals.css`                                 | CSS Class | Clean desaturated metadata/skill tag for Reading, Writing, and course modules.                                                          |
-| `.badge-score`           | `src/styles/globals.css`                                 | CSS Class | High-contrast deep slate (slate-900) score badge for IELTS band scores and primary counters.                                            |
-| `.animate-toast-in`      | `src/styles/globals.css`                                 | CSS Class | Toast entrance animation (slide left + spring scale in 220ms with cubic-bezier(0.16, 1, 0.3, 1)).                                       |
-| `.animate-toast-out`     | `src/styles/globals.css`                                 | CSS Class | Toast exit animation (slide right + fade out in 180ms ease-out).                                                                        |
-| `.nav-item-active`       | `src/styles/globals.css`                                 | CSS Class | Deep Slate / Ink pill active styling with 4px slate-900 indicator and 0px shift border.                                                 |
-| `<ToastContainer />`     | `src/shared/components/Toast`                            | Component | Top-right fixed viewport container rendering active toasts with hover-pause countdown and accessible live region.                       |
-| `toast`                  | `src/shared/components/Toast/toastStore`                 | Utility   | Imperative toast dispatcher: `toast.error()`, `toast.warning()`, `toast.success()`, `toast.info()`, `toast.dismiss()`.                  |
-| `<GlobalErrorHandler />` | `src/shared/providers/GlobalErrorHandler`                | Component | Window lifecycle listener catching uncaught exceptions and unhandled promise rejections, triggering actionable toasts.                  |
-| `<Sidebar />`            | `src/shared/components/Sidebar`                          | Component | Slim 224px navigation sidebar with categorized groups and Deep Slate active pills.                                                      |
-| `<Header />`             | `src/shared/components/Header`                           | Component | Standard top navbar with branding logo, left-chevron back button, user profile, and notifications.                                      |
-| `<MobileSidebar />`      | `src/shared/components/MobileSidebar`                    | Component | Mobile responsive drawer wrapper with backdrop blur and route-change auto-close.                                                        |
-| `<ErrorBoundary />`      | `src/shared/components/ErrorBoundary`                    | Component | Dual-layer error boundary (`FeatureErrorBoundary` + `GlobalErrorBoundary`) catching render exceptions with toast alerts & retry UI.     |
-| `<PageLoader />`         | `src/shared/components/PageLoader`                       | Component | Centered brand loading skeleton indicator.                                                                                              |
-| `<TeacherRubricModal />` | `src/features/exam-runner/components/TeacherRubricModal` | Component | Modal displaying Cambridge 4-criteria evaluation (TA/TR, CC, LR, GRA) for Writing & Speaking with examiner commentary & 0px shift.      |
-| `roundToIeltsBand`       | `src/features/exam-runner/utils/ieltsScoring`            | Utility   | Official IDP / British Council IELTS overall band rounding algorithm (.125, .25, .625, .75).                                            |
+| Asset Name                     | Location                                                            | Type      | Description & Purpose                                                                                                                   |
+| ------------------------------ | ------------------------------------------------------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `.card-interactive`            | `src/styles/globals.css`                                            | CSS Class | Lifts card by 3px (`translateY(-3px)`), softens shadow, and adds subtle crimson hover ring. Apply to all clickable / interactive cards. |
+| `.btn-interactive`             | `src/styles/globals.css`                                            | CSS Class | Tactile click micro-compression (`scale(0.97)`) on `:active`. Apply to all interactive buttons.                                         |
+| `.animate-fade-in-up`          | `src/styles/globals.css`                                            | CSS Class | GPU-accelerated entrance animation (opacity 0 → 1, translateY 12px → 0 in 400ms).                                                       |
+| `.stagger-1`..`5`              | `src/styles/globals.css`                                            | CSS Class | Progressive 50ms delay steps (50ms–250ms) to stagger entrance across grid / list children.                                              |
+| `.animate-pop-in`              | `src/styles/globals.css`                                            | CSS Class | Micro-bounce scale animation for status badges, tags, and active checkmarks.                                                            |
+| `.badge-minimal`               | `src/styles/globals.css`                                            | CSS Class | Minimal Modern status badge (Linear/Notion style). Slate-100 base, slate-200 border, and semantic micro-dot (emerald/red/amber/slate).  |
+| `.badge-tag`                   | `src/styles/globals.css`                                            | CSS Class | Clean desaturated metadata/skill tag for Reading, Writing, and course modules.                                                          |
+| `.badge-score`                 | `src/styles/globals.css`                                            | CSS Class | High-contrast deep slate (slate-900) score badge for IELTS band scores and primary counters.                                            |
+| `.animate-toast-in`            | `src/styles/globals.css`                                            | CSS Class | Toast entrance animation (slide left + spring scale in 220ms with cubic-bezier(0.16, 1, 0.3, 1)).                                       |
+| `.animate-toast-out`           | `src/styles/globals.css`                                            | CSS Class | Toast exit animation (slide right + fade out in 180ms ease-out).                                                                        |
+| `.nav-item-active`             | `src/styles/globals.css`                                            | CSS Class | Deep Slate / Ink pill active styling with 4px slate-900 indicator and 0px shift border.                                                 |
+| `<ToastContainer />`           | `src/shared/components/Toast`                                       | Component | Top-right fixed viewport container rendering active toasts with hover-pause countdown and accessible live region.                       |
+| `toast`                        | `src/shared/components/Toast/toastStore`                            | Utility   | Imperative toast dispatcher: `toast.error()`, `toast.warning()`, `toast.success()`, `toast.info()`, `toast.dismiss()`.                  |
+| `<GlobalErrorHandler />`       | `src/shared/providers/GlobalErrorHandler`                           | Component | Window lifecycle listener catching uncaught exceptions and unhandled promise rejections, triggering actionable toasts.                  |
+| `<Sidebar />`                  | `src/shared/components/Sidebar`                                     | Component | Slim 224px navigation sidebar with categorized groups and Deep Slate active pills.                                                      |
+| `<Header />`                   | `src/shared/components/Header`                                      | Component | Standard top navbar with branding logo, left-chevron back button, user profile, and notifications.                                      |
+| `<MobileSidebar />`            | `src/shared/components/MobileSidebar`                               | Component | Mobile responsive drawer wrapper with backdrop blur and route-change auto-close.                                                        |
+| `<ErrorBoundary />`            | `src/shared/components/ErrorBoundary`                               | Component | Dual-layer error boundary (`FeatureErrorBoundary` + `GlobalErrorBoundary`) catching render exceptions with toast alerts & retry UI.     |
+| `<PageLoader />`               | `src/shared/components/PageLoader`                                  | Component | Centered brand loading skeleton indicator.                                                                                              |
+| `<TeacherRubricModal />`       | `src/features/exam-runner/components/TeacherRubricModal`            | Component | Modal displaying Cambridge 4-criteria evaluation (TA/TR, CC, LR, GRA) for Writing & Speaking with examiner commentary & 0px shift.      |
+| `<QuestionExplanationModal />` | `src/features/exercises/runner/components/QuestionExplanationModal` | Component | Pop-up modal displaying question prompt, context, correct answer banner, and Linearthinking grammatical explanation.                    |
+| `roundToIeltsBand`             | `src/features/exam-runner/utils/ieltsScoring`                       | Utility   | Official IDP / British Council IELTS overall band rounding algorithm (.125, .25, .625, .75).                                            |
 
 ### 4. Toast & System-Wide Error Handling Specification
 
@@ -729,3 +730,45 @@ Whenever an engineer or AI agent introduces a reusable component, hook, or layou
   - Zero layout shift during play/pause or column collapse/expand.
   - Keyboard shortcuts: <kbd>Tab</kbd> for play/pause segment, <kbd>R</kbd> for replay, <kbd>Enter</kbd> for answer submission.
   - YouTube player synchronization strictly constrained to segment `start` and `end` times with optional auto-looping.
+
+### 14. Gamified Bite-Sized Exercise Runner (Duolingo-Inspired)
+
+- **Asset Name & File Path**:
+  - `ExerciseGamifiedRunner` (`src/features/exercises/runner/ExerciseGamifiedRunner.tsx`)
+  - `SingleChoiceQuestion` (`src/features/exercises/runner/components/SingleChoiceQuestion.tsx`)
+  - `MultipleChoiceQuestion` (`src/features/exercises/runner/components/MultipleChoiceQuestion.tsx`)
+  - `WordBankGapFillQuestion` (`src/features/exercises/runner/components/WordBankGapFillQuestion.tsx`)
+  - `ExerciseTopBar` (`src/features/exercises/runner/components/ExerciseTopBar.tsx`)
+  - `ExerciseBottomFeedbackDrawer` (`src/features/exercises/runner/components/ExerciseBottomFeedbackDrawer.tsx`)
+  - `ExerciseCompleteScreen` (`src/features/exercises/runner/components/ExerciseCompleteScreen.tsx`)
+  - `soundEffects` (`src/features/exercises/runner/utils/soundEffects.ts`)
+  - `.btn-duo-3d`, `.card-duo-choice`, `.card-duo-choice-selected` (`src/styles/globals.css`)
+- **Purpose & UX Intent**:
+  - **Bite-sized Gamified Learning Loop**: Transforms short drill exercises into an interactive, encouraging game experience inspired by Duolingo.
+  - **3 Core Question Mechanics**:
+    1. `single_choice`: 3D tactile cards with numbered shortcut keys (1–4), instant single-selection toggle, and check evaluation.
+    2. `multiple_choice`: Multi-select card list with real-time selection counter (`Đã chọn: X/Y`) and atomic toggling.
+    3. `word_bank_gap_fill`: Interactive sentence blanks and bank of word chips. Tapping chips moves them into the first available blank slot; tapping filled slots returns chips to the pool. When a chip is slotted, its original pool spot shows an outlined placeholder ensuring a strict **0px layout shift**.
+  - **Sticky Bottom Feedback Drawer**:
+    - `Idle`: Disabled/neutral "Kiểm tra" button until valid input is given.
+    - `Correct`: Slides up with vibrant emerald theme (`bg-emerald-100/90 text-emerald-950`), pleasant chime tone, and "Tiếp tục" CTA.
+    - `Incorrect`: Slides up with soft rose theme (`bg-rose-100/95 text-rose-950`), soft buzzer sound, correct answer summary, and IELTS Linearthinking rule explanation. Supports <kbd>Enter</kbd> key for instant Check / Continue.
+  - **Native Web Audio API (`soundEffects`)**: Zero-asset audio engine using browser `AudioContext` oscillators (chime, buzz, tap, victory chord) with no external network latency or audio file dependencies.
+  - **Celebration End Screen (`ExerciseCompleteScreen`)**: Victory fanfare, accuracy rate, and max combo streak bonus.
+- **Usage Example**:
+  ```tsx
+  import { ExerciseGamifiedRunner } from '@/features/exercises/runner'
+
+  ;<ExerciseGamifiedRunner
+    exerciseId="EX-01"
+    onExit={() => setActiveExerciseId(null)}
+    onComplete={({ accuracyPct }) => {
+      toast.success(`Chúc mừng! Bạn đã hoàn thành bài tập (Chính xác: ${accuracyPct}%)`)
+    }}
+  />
+  ```
+- **Constraints & Invariants**:
+  - Zero pixel layout shift when moving words between bank and blank slots.
+  - 3D tactile button motion budget: `border-b-4 active:border-b-0 active:translate-y-1` (150ms `ease-out`).
+  - Native Web Audio oscillators safely muted/unmuted with global toggle state persisted.
+  - Keyboard listeners (<kbd>1–4</kbd> and <kbd>Enter</kbd>) must automatically detach upon unmount.

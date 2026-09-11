@@ -23,7 +23,7 @@ export const ReadingRunner: React.FC<ReadingRunnerProps> = () => {
   )
 
   return (
-    <div className="flex h-full flex-col overflow-hidden bg-slate-100">
+    <div className="flex h-full flex-col overflow-hidden bg-white selection:bg-emerald-100 selection:text-emerald-900">
       {/* ── Main Dual-Pane Resizable Workspace (Full Viewport Height) ── */}
       <div className="flex-1 overflow-hidden">
         <Group orientation="horizontal" id="ielts-reading-split-main" className="h-full">
@@ -32,9 +32,9 @@ export const ReadingRunner: React.FC<ReadingRunnerProps> = () => {
             <ReadingPassageView />
           </Panel>
 
-          <Separator className="group relative flex w-2.5 items-center justify-center bg-slate-200/80 hover:bg-red-500/20 transition-colors cursor-col-resize select-none">
-            <div className="flex h-8 w-1.5 items-center justify-center rounded-full bg-slate-400 group-hover:bg-red-600 transition-colors">
-              <GripVertical className="h-3 w-3 text-white opacity-0 group-hover:opacity-100" />
+          <Separator className="group relative flex w-2 items-center justify-center bg-slate-100 hover:bg-slate-200 transition-colors cursor-col-resize select-none">
+            <div className="flex h-10 w-1 items-center justify-center rounded-full bg-slate-300 group-hover:bg-slate-400 transition-colors">
+              <GripVertical className="h-3.5 w-3.5 text-white opacity-0 group-hover:opacity-100" />
             </div>
           </Separator>
 
@@ -42,20 +42,20 @@ export const ReadingRunner: React.FC<ReadingRunnerProps> = () => {
           <Panel
             defaultSize="52%"
             minSize="35%"
-            className="h-full overflow-y-auto bg-slate-100/70 p-6 md:p-8 custom-scrollbar"
+            className="h-full overflow-y-auto bg-white p-6 md:p-10 custom-scrollbar"
           >
-            <div id="reading-questions-panel" className="mx-auto max-w-3xl space-y-5">
-              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-red-600">
+            <div id="reading-questions-panel" className="mx-auto max-w-2xl space-y-6">
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-6 shadow-sm">
+                <span className="inline-block px-2.5 py-1 rounded-md bg-red-100 text-xs font-bold text-red-700 mb-2">
                   Questions {startQ} – {endQ}
                 </span>
-                <h3 className="text-base font-bold text-slate-900 mt-1">{currentPassage?.title}</h3>
-                <p className="text-xs text-slate-500 mt-1">
+                <h3 className="text-lg font-bold text-slate-900">{currentPassage?.title}</h3>
+                <p className="text-sm text-slate-600 mt-2 leading-relaxed">
                   Đọc kỹ đoạn văn ở khung bên trái và chọn đáp án tương ứng bên dưới.
                 </p>
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-5">
                 {currentQuestions.map((q) => (
                   <QuestionCard key={q.id} question={q} />
                 ))}

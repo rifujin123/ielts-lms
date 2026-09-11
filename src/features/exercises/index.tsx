@@ -1,38 +1,54 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState, useRef, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useDebounce } from 'use-debounce'
 import {
-  ChevronRight,
   Search,
-  BookOpen,
-  PenLine,
-  Headphones,
-  Mic,
-  Award,
-  Eye,
-  Play,
+  ChevronDown,
+  FileText,
+  CornerDownRight,
   SearchX,
+  Check,
+  PlayCircle,
 } from 'lucide-react'
 import { exerciseService } from '@/services/exerciseService'
 import type { ExerciseSkill, ExerciseStatus } from '@/types/api.types'
 import { exercisesMock } from '@/mocks/exercises.mock'
+import { ExerciseGamifiedRunner } from './runner'
 import { toast } from '@/shared/components/Toast/toastStore'
 
 /**
- * ExercisesPage — Practice Exercises List (screens 01, 09).
- * Supports filtering by Skill (Reading, Writing, Listening, Speaking),
- * Status (all, pending, completed), and debounced search (300ms).
- *
- * Line count budget: 200-300 lines.
+ * ExercisesPage — Practice Exercises List (matches reference design 1:1).
+ * Layout: 2-column grid, clean minimal card, subcategory with arrow,
+ * question count badge, and Duolingo-style bite-sized gamified runner.
  */
 export const ExercisesPage: React.FC = () => {
+  const [activeExerciseId, setActiveExerciseId] = useState<string | null>(null)
   const [skill, setSkill] = useState<'all' | ExerciseSkill>('all')
   const [status, setStatus] = useState<'all' | ExerciseStatus>('all')
   const [search, setSearch] = useState('')
   const [debouncedSearch] = useDebounce(search, 300)
 
-  const { data: exercises = exercisesMock, isLoading: _isLoading } = useQuery({
+  // Dropdown open states
+  const [isStatusOpen, setIsStatusOpen] = useState(false)
+  const [isSkillOpen, setIsSkillOpen] = useState(false)
+  const statusRef = useRef<HTMLDivElement>(null)
+  const skillRef = useRef<HTMLDivElement>(null)
+
+  // Close dropdowns on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (statusRef.current && !statusRef.current.contains(event.target as Node)) {
+        setIsStatusOpen(false)
+      }
+      if (skillRef.current && !skillRef.current.contains(event.target as Node)) {
+        setIsSkillOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  const { data: exercises = exercisesMock } = useQuery({
     queryKey: ['exercises', skill, status, debouncedSearch],
     queryFn: () =>
       exerciseService.getExercises({
@@ -42,185 +58,216 @@ export const ExercisesPage: React.FC = () => {
       }),
   })
 
-  // ⏸️ Skip spinner for now:
-  // if (_isLoading) return <PageLoader />
+  const statusOptions: { label: string; value: 'all' | ExerciseStatus }[] = [
+    { label: 'Tất cả trạng thái', value: 'all' },
+    { label: 'Chưa hoàn thành', value: 'pending' },
+    { label: 'Đang làm', value: 'in_progress' },
+    { label: 'Đã nộp bài', value: 'completed' },
+  ]
 
   const skillOptions: { label: string; value: 'all' | ExerciseSkill }[] = [
-    { label: 'Tất cả kỹ năng', value: 'all' },
+    { label: 'Tất cả phân loại', value: 'all' },
     { label: 'Reading', value: 'Reading' },
-    { label: 'Writing', value: 'Writing' },
     { label: 'Listening', value: 'Listening' },
+    { label: 'Writing', value: 'Writing' },
     { label: 'Speaking', value: 'Speaking' },
   ]
+
+  const currentStatusLabel =
+    status === 'all'
+      ? 'Trạng thái'
+      : statusOptions.find((o) => o.value === status)?.label || 'Trạng thái'
+
+  const currentSkillLabel =
+    skill === 'all'
+      ? 'Phân loại'
+      : skillOptions.find((o) => o.value === skill)?.label || 'Phân loại'
+
+  if (activeExerciseId) {
+    return (
+      <div className="fixed inset-0 z-50 bg-white overflow-y-auto">
+        <ExerciseGamifiedRunner
+          exerciseId={activeExerciseId}
+          onExit={() => setActiveExerciseId(null)}
+          onComplete={({ accuracyPct }) => {
+            toast.success(`Chúc mừng! Bạn đã hoàn thành bài tập (Chính xác: ${accuracyPct}%)`)
+            setActiveExerciseId(null)
+          }}
+        />
+      </div>
+    )
+  }
 
   return (
     <div className="flex flex-col gap-6">
       {/* ── Page Header ─────────────────────────────────────────── */}
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <nav
-            aria-label="Breadcrumb"
-            className="flex items-center gap-2 text-body-sm text-secondary"
-          >
-            <Link to="/" className="hover:text-on-surface">
-              Khóa học
-            </Link>
-            <ChevronRight className="h-4 w-4 text-secondary/70" strokeWidth={2} />
-            <span className="font-semibold text-on-surface">Bài tập luyện tập</span>
-          </nav>
-          <h1 className="mt-1 text-headline-lg font-bold text-on-surface">Kho bài tập luyện tập</h1>
-          <p className="text-body-sm text-secondary">
-            Hoàn thành các bài tập theo phương pháp Linearthinking để củng cố kỹ năng sau mỗi buổi
-            học.
-          </p>
-        </div>
+      <h1 className="text-xl sm:text-2xl font-bold text-slate-800">Danh sách exercises</h1>
 
-        {/* Search input with 300ms debounce */}
-        <div className="relative w-full max-w-xs sm:w-64">
+      {/* ── Filter Bar: Search + Status Dropdown + Category Dropdown ── */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+        {/* Search input */}
+        <div className="relative flex-1">
           <Search
-            className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-secondary"
-            strokeWidth={1.8}
+            className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400"
+            strokeWidth={2}
           />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Tìm theo tiêu đề bài tập..."
-            className="w-full rounded-xl border border-outline-variant bg-surface-container-lowest py-2 pl-9 pr-4 text-body-sm text-on-surface focus:border-primary focus:outline-none shadow-xs"
+            placeholder="Tìm kiếm..."
+            className="w-full h-11 pl-10 pr-4 rounded-xl bg-slate-100/90 hover:bg-slate-100 focus:bg-white text-sm text-slate-800 placeholder:text-slate-400 border border-transparent focus:border-slate-300 focus:outline-none transition-all shadow-2xs"
           />
         </div>
-      </div>
 
-      {/* ── Filter Bar ──────────────────────────────────────────── */}
-      <div className="animate-fade-in-up stagger-1 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-outline-variant bg-surface-container-lowest p-4 shadow-xs">
-        {/* Skill tabs */}
-        <div className="flex flex-wrap items-center gap-1.5">
-          {skillOptions.map((opt) => (
+        {/* Dropdown Filters */}
+        <div className="flex items-center gap-2.5">
+          {/* Trạng thái Dropdown */}
+          <div className="relative" ref={statusRef}>
             <button
-              key={opt.value}
-              onClick={() => setSkill(opt.value)}
-              className={`btn-interactive rounded-lg px-3 py-1.5 text-label-sm font-semibold transition-colors ${
-                skill === opt.value
-                  ? 'bg-primary text-on-primary shadow-xs'
-                  : 'bg-surface-container-low text-secondary hover:bg-surface-container hover:text-on-surface'
-              }`}
+              type="button"
+              onClick={() => {
+                setIsStatusOpen((prev) => !prev)
+                setIsSkillOpen(false)
+              }}
+              className="h-11 px-4 rounded-xl bg-slate-100/90 hover:bg-slate-200/70 text-sm font-medium text-slate-700 flex items-center gap-2 border border-transparent transition-colors"
             >
-              {opt.label}
+              <span>{currentStatusLabel}</span>
+              <ChevronDown
+                className={`h-4 w-4 text-slate-500 transition-transform duration-150 ${
+                  isStatusOpen ? 'rotate-180' : ''
+                }`}
+                strokeWidth={2}
+              />
             </button>
-          ))}
-        </div>
 
-        {/* Status filter dropdown */}
-        <div className="flex items-center gap-2">
-          <span className="text-body-sm text-secondary">Trạng thái:</span>
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value as 'all' | ExerciseStatus)}
-            aria-label="Lọc theo trạng thái bài tập"
-            className="rounded-lg border border-outline-variant bg-surface-container-low px-3 py-1.5 text-label-sm font-semibold text-on-surface focus:outline-none"
-          >
-            <option value="all">Tất cả trạng thái</option>
-            <option value="pending">Chưa hoàn thành</option>
-            <option value="in_progress">Đang làm</option>
-            <option value="completed">Đã nộp bài</option>
-          </select>
+            {isStatusOpen && (
+              <div className="absolute right-0 top-full mt-1.5 w-44 rounded-xl border border-slate-200 bg-white py-1.5 shadow-lg z-20 animate-pop-in">
+                {statusOptions.map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => {
+                      setStatus(opt.value)
+                      setIsStatusOpen(false)
+                    }}
+                    className={`flex w-full items-center justify-between px-3.5 py-2 text-xs font-medium transition-colors ${
+                      status === opt.value
+                        ? 'bg-slate-100 text-slate-900 font-bold'
+                        : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                    }`}
+                  >
+                    <span>{opt.label}</span>
+                    {status === opt.value && (
+                      <Check className="h-3.5 w-3.5 text-primary" strokeWidth={2.5} />
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Phân loại Dropdown */}
+          <div className="relative" ref={skillRef}>
+            <button
+              type="button"
+              onClick={() => {
+                setIsSkillOpen((prev) => !prev)
+                setIsStatusOpen(false)
+              }}
+              className="h-11 px-4 rounded-xl bg-slate-100/90 hover:bg-slate-200/70 text-sm font-medium text-slate-700 flex items-center gap-2 border border-transparent transition-colors"
+            >
+              <span>{currentSkillLabel}</span>
+              <ChevronDown
+                className={`h-4 w-4 text-slate-500 transition-transform duration-150 ${
+                  isSkillOpen ? 'rotate-180' : ''
+                }`}
+                strokeWidth={2}
+              />
+            </button>
+
+            {isSkillOpen && (
+              <div className="absolute right-0 top-full mt-1.5 w-44 rounded-xl border border-slate-200 bg-white py-1.5 shadow-lg z-20 animate-pop-in">
+                {skillOptions.map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => {
+                      setSkill(opt.value)
+                      setIsSkillOpen(false)
+                    }}
+                    className={`flex w-full items-center justify-between px-3.5 py-2 text-xs font-medium transition-colors ${
+                      skill === opt.value
+                        ? 'bg-slate-100 text-slate-900 font-bold'
+                        : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                    }`}
+                  >
+                    <span>{opt.label}</span>
+                    {skill === opt.value && (
+                      <Check className="h-3.5 w-3.5 text-primary" strokeWidth={2.5} />
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* ── Exercise Cards Grid ─────────────────────────────────── */}
-      <div className="grid grid-cols-1 gap-4">
-        {(exercises ?? []).map((item, idx) => (
+      {/* ── Exercise Cards Grid (2 columns) ─────────────────────── */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+        {(exercises ?? []).map((item) => (
           <div
             key={item.id}
-            className={`animate-fade-in-up stagger-${(idx % 5) + 1} card-interactive flex flex-col justify-between gap-4 rounded-2xl border border-outline-variant bg-surface-container-lowest p-5 shadow-xs transition-colors hover:border-primary/40 sm:flex-row sm:items-center`}
+            onClick={() => setActiveExerciseId(item.id)}
+            className="group card-interactive flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-5 sm:p-6 cursor-pointer min-h-[160px]"
           >
-            <div className="flex items-start gap-4">
-              <div
-                className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl font-bold shadow-xs ${
-                  item.skill === 'Reading'
-                    ? 'bg-red-100 text-primary'
-                    : item.skill === 'Writing'
-                      ? 'bg-emerald-100 text-tertiary'
-                      : item.skill === 'Listening'
-                        ? 'bg-blue-100 text-blue-600'
-                        : 'bg-amber-100 text-amber-700'
-                }`}
-              >
-                {item.skill === 'Reading' && <BookOpen className="h-6 w-6" strokeWidth={2} />}
-                {item.skill === 'Writing' && <PenLine className="h-6 w-6" strokeWidth={2} />}
-                {item.skill === 'Listening' && <Headphones className="h-6 w-6" strokeWidth={2} />}
-                {item.skill === 'Speaking' && <Mic className="h-6 w-6" strokeWidth={2} />}
+            <div>
+              {/* Skill Icon & Name */}
+              <div className="flex items-center gap-2 text-slate-500 text-sm font-medium">
+                <FileText className="h-4 w-4 text-slate-400" strokeWidth={1.8} />
+                <span>{item.skill}</span>
               </div>
 
-              <div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="badge-tag animate-pop-in">{item.skill}</span>
-                  <span className="text-[11px] text-secondary">{item.questionCount} câu hỏi</span>
-                  {item.dueDate && (
-                    <span className="badge-minimal">
-                      <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
-                      Hạn nộp: {item.dueDate}
-                    </span>
-                  )}
-                </div>
+              {/* Title */}
+              <h3 className="mt-2.5 text-base font-bold text-slate-800 leading-snug group-hover:text-primary transition-colors">
+                {item.title}
+              </h3>
 
-                <h3 className="mt-1 text-headline-sm font-bold text-on-surface">{item.title}</h3>
-
-                {item.score !== undefined && (
-                  <div className="mt-1 inline-flex items-center gap-1.5 text-label-sm font-bold text-tertiary">
-                    <Award className="h-4 w-4" strokeWidth={2} />
-                    Điểm số: {item.score} / 9.0
-                  </div>
-                )}
+              {/* Subcategory with curved arrow */}
+              <div className="mt-1.5 flex items-center gap-1.5 text-slate-500 text-sm font-normal">
+                <CornerDownRight
+                  className="h-3.5 w-3.5 text-slate-400 shrink-0"
+                  strokeWidth={1.8}
+                />
+                <span>{item.subCategory || `${item.skill} 1 - ${item.skill} 1`}</span>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 self-end sm:self-center">
-              {item.status === 'completed' ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    toast.info('Giao diện bài tập đang được thiết kế', {
-                      description:
-                        'Phần bài tập luyện tập (Exercises) sẽ được phát triển theo giao diện riêng biệt, không dùng chung với phòng thi CBT.',
-                    })
-                  }}
-                  className="btn-interactive inline-flex items-center gap-1.5 rounded-lg border border-outline-variant bg-surface-container-low px-4 py-2 text-label-sm font-semibold text-secondary hover:bg-surface-container transition-colors"
-                >
-                  <Eye className="h-4 w-4" strokeWidth={2} />
-                  Xem lại kết quả
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => {
-                    toast.info('Giao diện bài tập đang được thiết kế', {
-                      description:
-                        'Phần bài tập luyện tập (Exercises) sẽ được phát triển theo giao diện riêng biệt, không dùng chung với phòng thi CBT.',
-                    })
-                  }}
-                  className="btn-interactive inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-label-sm font-semibold text-on-primary hover:bg-primary-hover transition-colors shadow-xs"
-                >
-                  <Play className="h-4 w-4" strokeWidth={2} />
-                  Bắt đầu làm bài
-                </button>
-              )}
+            {/* Question count badge & Action indicator */}
+            <div className="mt-4 sm:mt-5 flex items-center justify-between">
+              <span className="inline-flex items-center rounded-lg bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
+                {item.questionCount} câu
+              </span>
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold text-red-600 group-hover:text-red-700 transition-colors">
+                <PlayCircle className="h-4 w-4 fill-red-100 text-red-600" />
+                Luyện tập ngay
+              </span>
             </div>
           </div>
         ))}
-
-        {(exercises ?? []).length === 0 && (
-          <div className="animate-fade-in-up flex min-h-[300px] flex-col items-center justify-center rounded-2xl border border-dashed border-outline-variant bg-surface-container-lowest p-8 text-center">
-            <SearchX className="h-12 w-12 text-secondary/60" strokeWidth={1.5} />
-            <h3 className="mt-3 text-headline-sm font-bold text-on-surface">
-              Không có bài tập nào
-            </h3>
-            <p className="mt-1 text-body-sm text-secondary">
-              Bạn đã hoàn thành hết các bài tập hoặc không tìm thấy bài tập phù hợp với bộ lọc.
-            </p>
-          </div>
-        )}
       </div>
+
+      {/* ── Empty State ─────────────────────────────────────────── */}
+      {(exercises ?? []).length === 0 && (
+        <div className="flex min-h-[260px] flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-white p-8 text-center">
+          <SearchX className="h-10 w-10 text-slate-400" strokeWidth={1.5} />
+          <h3 className="mt-3 text-sm font-bold text-slate-800">Không tìm thấy bài tập nào</h3>
+          <p className="mt-1 text-xs text-slate-500">
+            Vui lòng thử tìm kiếm bằng từ khóa khác hoặc thay đổi bộ lọc trạng thái / phân loại.
+          </p>
+        </div>
+      )}
     </div>
   )
 }

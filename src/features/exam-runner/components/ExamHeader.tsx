@@ -132,7 +132,7 @@ export const ExamHeader: React.FC<ExamHeaderProps> = ({ onOpenSubmitModal, onExi
           {isTimerVisible ? (
             <span>{isSubmitted ? 'Đã kết thúc' : formattedTime}</span>
           ) : (
-            <span className="text-slate-400">••:••</span>
+            <span className="text-slate-400">--:--</span>
           )}
         </div>
 

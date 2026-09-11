@@ -85,7 +85,7 @@ export const BooksPage: React.FC = () => {
                     <h3 className="text-headline-sm font-bold text-on-surface">{unit.title}</h3>
                     <div className="flex items-center gap-2 text-[11px] text-secondary">
                       <span>{unit.lessons.length} bài giảng</span>
-                      <span>•</span>
+                      <span>-</span>
                       <span className="capitalize">
                         {unit.status === 'completed'
                           ? 'Đã hoàn thành'

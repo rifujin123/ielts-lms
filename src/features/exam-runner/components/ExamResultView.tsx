@@ -38,7 +38,7 @@ export const ExamResultView: React.FC<ExamResultViewProps> = ({ onReviewExam, on
           </span>
           <h2 className="mt-2 text-2xl font-bold text-slate-900">{manifest.title}</h2>
           <p className="mt-1 text-xs text-slate-500">
-            Mã đề thi: {manifest.code} • Chuẩn khảo thí Cambridge
+            Mã đề thi: {manifest.code} - Chuẩn khảo thí Cambridge
           </p>
         </div>
 
@@ -59,7 +59,7 @@ export const ExamResultView: React.FC<ExamResultViewProps> = ({ onReviewExam, on
                   {correctCount} / {totalQuestions} câu
                 </strong>
               </span>
-              <span>•</span>
+              <span>-</span>
               <span>
                 Tỷ lệ chính xác: <strong className="text-white">{percentage}%</strong>
               </span>

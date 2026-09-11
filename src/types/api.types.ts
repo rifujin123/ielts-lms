@@ -121,6 +121,7 @@ export interface Exercise {
   completedAt?: string
   score?: number
   questionCount: number
+  subCategory?: string
 }
 
 export interface ExerciseFilters {
@@ -157,6 +158,7 @@ export interface OnlineTest {
   duration: number // minutes
   score?: number
   completedAt?: string
+  subCategory?: string
 }
 
 export interface TestFilters {

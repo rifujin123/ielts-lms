@@ -364,7 +364,7 @@ export const ExamRunnerPage: React.FC = () => {
                   Bảng Điểm Tổng Hợp IELTS 4 Kỹ Năng
                 </h2>
                 <p className="text-xs text-slate-500 mt-1">
-                  Mã đề thi: {manifest.code} • Quy chuẩn làm tròn IELTS IDP / British Council
+                  Mã đề thi: {manifest.code} - Quy chuẩn làm tròn IELTS IDP / British Council
                 </p>
 
                 {(() => {

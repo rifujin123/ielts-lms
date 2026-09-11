@@ -310,8 +310,8 @@ export const DictationPage: React.FC = () => {
         initPlayer(lesson.youtubeId)
         navigate(`/topics/dictation/${targetId}`, { replace: true })
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [navigate],
   )
 

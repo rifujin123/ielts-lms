@@ -95,7 +95,7 @@ export const ListeningRunner: React.FC<ListeningRunnerProps> = ({ skillData, onS
   const progressPct = duration > 0 ? (currentTime / duration) * 100 : 0
 
   return (
-    <div className="flex h-full flex-col overflow-hidden bg-slate-100">
+    <div className="flex h-full flex-col overflow-hidden bg-white selection:bg-emerald-100 selection:text-emerald-900">
       {/* ── Hidden HTML5 Audio Element for live stream support ──────── */}
       {currentSection.audioUrl && (
         <audio
@@ -121,9 +121,9 @@ export const ListeningRunner: React.FC<ListeningRunnerProps> = ({ skillData, onS
       {/* ── 1. SCROLLABLE QUESTIONS WORKSPACE (FULL HEIGHT) ─────────── */}
       <div
         id="listening-scroll-workspace"
-        className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 custom-scrollbar"
+        className="flex-1 overflow-y-auto px-4 sm:px-6 pt-6 sm:pt-10 pb-36 custom-scrollbar"
       >
-        <div className="mx-auto w-full max-w-5xl space-y-4">
+        <div className="mx-auto w-full max-w-2xl space-y-6">
           {/* Modular Section View (Supports Multiple Choice, Completion, Table Completion, etc.) */}
           <ListeningSectionView
             section={currentSection}
@@ -139,14 +139,14 @@ export const ListeningRunner: React.FC<ListeningRunnerProps> = ({ skillData, onS
       {/* ── 2. SIGNATURE DOL BOTTOM NAVIGATION BAR (MATCHES SCREENSHOT) ── */}
       <footer className="sticky bottom-0 z-30 shrink-0 border-t border-slate-200 bg-white shadow-lg">
         {/* Red Line Audio Progress Track with Sliding Timestamp Capsule Pill */}
-        <div className="relative w-full h-[3px] bg-slate-200/90 overflow-visible">
+        <div className="relative w-full h-1 bg-slate-100 overflow-visible">
           <div
             className="h-full bg-red-600 transition-all duration-300"
             style={{ width: `${progressPct}%` }}
           />
           <div
             title="Thời gian phát audio"
-            className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 rounded-full bg-red-600 px-2.5 py-0.5 text-[10px] font-mono font-bold text-white shadow-xs select-none pointer-events-none whitespace-nowrap z-10"
+            className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 rounded-full bg-red-600 px-3 py-1 text-xs font-mono font-bold text-white shadow-sm select-none pointer-events-none whitespace-nowrap z-10"
             style={{ left: `${Math.max(2, Math.min(98, progressPct))}%` }}
           >
             {formatTime(currentTime)}
@@ -155,7 +155,7 @@ export const ListeningRunner: React.FC<ListeningRunnerProps> = ({ skillData, onS
 
         {/* Row A: Centered Question Jump Pills (1, 2, 3... 10) */}
         {showQuestionPills && (
-          <div className="flex items-center justify-center gap-1.5 border-b border-slate-100 py-2 px-4 overflow-x-auto custom-scrollbar">
+          <div className="flex items-center justify-center gap-2 border-b border-slate-100 py-3 px-4 overflow-x-auto custom-scrollbar">
             {currentSection.questions.map((q) => {
               const isAns = listeningAnswers[q.id] && listeningAnswers[q.id].trim() !== ''
               const isFlag = !!flaggedQuestions[`LISTENING_${q.id}`]
@@ -166,15 +166,15 @@ export const ListeningRunner: React.FC<ListeningRunnerProps> = ({ skillData, onS
                   type="button"
                   onClick={() => scrollToQuestion(q.id)}
                   title={`Câu ${q.id} - ${isAns ? 'Đã làm' : 'Chưa làm'}`}
-                  className={`btn-interactive relative flex h-7 min-w-8 items-center justify-center rounded-xl px-2.5 text-xs font-bold transition-all border border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50 ${
+                  className={`btn-interactive relative flex h-9 min-w-9 items-center justify-center rounded-lg px-3 text-sm font-bold transition-all border ${
                     isAns
-                      ? 'text-slate-900 underline decoration-2 underline-offset-4 decoration-slate-900'
-                      : 'text-slate-700'
+                      ? 'border-slate-900 bg-slate-900 text-white shadow-sm'
+                      : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50'
                   }`}
                 >
                   <span>{q.id}</span>
                   {isFlag && (
-                    <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-amber-500 ring-1 ring-white" />
+                    <span className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-amber-500 ring-2 ring-white" />
                   )}
                 </button>
               )
@@ -183,7 +183,7 @@ export const ListeningRunner: React.FC<ListeningRunnerProps> = ({ skillData, onS
         )}
 
         {/* Row B: Main DOL Bottom Action Bar */}
-        <div className="flex items-center justify-between gap-3 px-4 sm:px-6 py-2.5">
+        <div className="flex items-center justify-between gap-3 px-4 sm:px-6 py-3">
           {/* Left: Collapse Icon + Section Count + Audio Volume */}
           <div className="flex items-center gap-3 shrink-0">
             <button
