@@ -1,12 +1,21 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useUIStore } from '@/store/uiStore'
 
 /**
- * Header — Top navigation bar, unified across all routes (including Overview).
+ * Header — Top navigation bar, unified across all routes with back chevron.
  */
 export const Header: React.FC = () => {
+  const navigate = useNavigate()
   const { toggleSidebar, activePhase, currentUser } = useUIStore()
+
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1)
+    } else {
+      navigate('/dashboard')
+    }
+  }
 
   return (
     <header className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-outline-variant bg-surface-container-lowest px-4 md:px-8">
@@ -19,6 +28,17 @@ export const Header: React.FC = () => {
           className="flex h-10 w-10 items-center justify-center rounded-lg text-secondary hover:bg-surface-container md:hidden"
         >
           <span className="material-symbols-outlined text-2xl">menu</span>
+        </button>
+
+        {/* Back navigation left-chevron */}
+        <button
+          type="button"
+          onClick={handleBack}
+          aria-label="Quay lại"
+          title="Quay lại"
+          className="flex items-center justify-center rounded-lg p-1.5 text-secondary hover:bg-surface-container hover:text-on-surface transition-colors cursor-pointer"
+        >
+          <span className="material-symbols-outlined text-[24px]">chevron_left</span>
         </button>
 
         {/* Branding Logo */}
