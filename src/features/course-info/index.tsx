@@ -52,7 +52,7 @@ export const CourseInfoPage: React.FC = () => {
         <div className="flex flex-wrap items-center gap-2.5">
           <button
             type="button"
-            className="inline-flex items-center gap-2 rounded-lg border border-outline-variant bg-surface-container-lowest px-3.5 py-2 text-label-sm font-semibold text-on-surface hover:bg-surface-container transition-colors shadow-xs"
+            className="btn-interactive inline-flex items-center gap-2 rounded-lg border border-outline-variant bg-surface-container-lowest px-3.5 py-2 text-label-sm font-semibold text-on-surface hover:bg-surface-container shadow-xs"
           >
             <span className="material-symbols-outlined text-base">download</span>
             Tải cẩm nang PDF
@@ -61,7 +61,7 @@ export const CourseInfoPage: React.FC = () => {
             href="https://zalo.me/g/dol-ielts-65"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-lg border border-outline-variant bg-surface-container-lowest px-3.5 py-2 text-label-sm font-semibold text-on-surface hover:bg-surface-container transition-colors shadow-xs"
+            className="btn-interactive inline-flex items-center gap-2 rounded-lg border border-outline-variant bg-surface-container-lowest px-3.5 py-2 text-label-sm font-semibold text-on-surface hover:bg-surface-container shadow-xs"
           >
             <span className="material-symbols-outlined text-base">groups</span>
             Nhóm trao đổi
@@ -70,7 +70,7 @@ export const CourseInfoPage: React.FC = () => {
       </div>
 
       {/* ── Page Hero Title Banner ───────────────────────────────── */}
-      <div className="relative overflow-hidden rounded-2xl border border-outline-variant bg-gradient-to-r from-red-600 to-red-700 p-6 sm:p-8 text-on-primary shadow-sm">
+      <div className="animate-fade-in-up stagger-1 relative overflow-hidden rounded-2xl border border-outline-variant bg-gradient-to-r from-red-600 to-red-700 p-6 sm:p-8 text-on-primary shadow-sm">
         <div className="relative z-10 max-w-2xl">
           <div className="inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1 text-label-sm font-semibold backdrop-blur-xs">
             <span className="material-symbols-outlined text-base">verified</span>
@@ -114,22 +114,22 @@ export const CourseInfoPage: React.FC = () => {
       {/* ── Main Bento Grid Layout ──────────────────────────────── */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Section 1: Course details key-value grid (2 columns wide) */}
-        <div className="lg:col-span-2">
+        <div className="animate-fade-in-up stagger-2 card-interactive rounded-2xl lg:col-span-2">
           <CourseInfoCard data={courseInfo} />
         </div>
 
         {/* Section 2: Instructor details (1 column wide) */}
-        <div className="col-span-1">
+        <div className="animate-fade-in-up stagger-2 card-interactive rounded-2xl col-span-1">
           {courseInfo.instructors[0] && <InstructorCard instructor={courseInfo.instructors[0]} />}
         </div>
 
         {/* Section 3: Weekly schedule grid (full 3 columns width) */}
-        <div className="lg:col-span-3">
+        <div className="animate-fade-in-up stagger-3 card-interactive rounded-2xl lg:col-span-3">
           <ScheduleGrid schedule={courseInfo.schedule} />
         </div>
 
         {/* Section 4: Learning Objectives (1 column wide) */}
-        <div className="col-span-1">
+        <div className="animate-fade-in-up stagger-4 card-interactive rounded-2xl col-span-1">
           <ObjectivesCard
             description={courseInfo.objectiveDescription}
             highlights={courseInfo.objectiveHighlights}
@@ -137,7 +137,7 @@ export const CourseInfoPage: React.FC = () => {
         </div>
 
         {/* Section 5: Class Rules & Responsibilities (2 columns wide) */}
-        <div className="lg:col-span-2">
+        <div className="animate-fade-in-up stagger-4 card-interactive rounded-2xl lg:col-span-2">
           <ClassRulesCard rules={courseInfo.classRules} />
         </div>
       </div>

@@ -55,7 +55,7 @@ export const DashboardPage: React.FC = () => {
 
       {/* ── Stat Summary Cards ──────────────────────────────────── */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-2xl border border-outline-variant bg-surface-container-lowest p-4 shadow-xs">
+        <div className="animate-fade-in-up stagger-1 card-interactive rounded-2xl border border-outline-variant bg-surface-container-lowest p-4 shadow-xs">
           <div className="flex items-center justify-between">
             <span className="text-label-sm font-semibold text-secondary">Khóa đang học</span>
             <span className="material-symbols-outlined text-primary text-xl">school</span>
@@ -64,7 +64,7 @@ export const DashboardPage: React.FC = () => {
           <span className="text-[11px] text-tertiary font-medium">Tiến độ đều đặn</span>
         </div>
 
-        <div className="rounded-2xl border border-outline-variant bg-surface-container-lowest p-4 shadow-xs">
+        <div className="animate-fade-in-up stagger-2 card-interactive rounded-2xl border border-outline-variant bg-surface-container-lowest p-4 shadow-xs">
           <div className="flex items-center justify-between">
             <span className="text-label-sm font-semibold text-secondary">Buổi đã học</span>
             <span className="material-symbols-outlined text-tertiary text-xl">event_available</span>
@@ -73,7 +73,7 @@ export const DashboardPage: React.FC = () => {
           <span className="text-[11px] text-secondary">Hoàn thành 33%</span>
         </div>
 
-        <div className="rounded-2xl border border-outline-variant bg-surface-container-lowest p-4 shadow-xs">
+        <div className="animate-fade-in-up stagger-3 card-interactive rounded-2xl border border-outline-variant bg-surface-container-lowest p-4 shadow-xs">
           <div className="flex items-center justify-between">
             <span className="text-label-sm font-semibold text-secondary">Bài tập cần làm</span>
             <span className="material-symbols-outlined text-amber-500 text-xl">assignment</span>
@@ -82,7 +82,7 @@ export const DashboardPage: React.FC = () => {
           <span className="text-[11px] text-amber-600 font-medium">Hạn nộp trong 3 ngày</span>
         </div>
 
-        <div className="rounded-2xl border border-outline-variant bg-surface-container-lowest p-4 shadow-xs">
+        <div className="animate-fade-in-up stagger-4 card-interactive rounded-2xl border border-outline-variant bg-surface-container-lowest p-4 shadow-xs">
           <div className="flex items-center justify-between">
             <span className="text-label-sm font-semibold text-secondary">Điểm danh</span>
             <span className="material-symbols-outlined text-tertiary text-xl">check_circle</span>
