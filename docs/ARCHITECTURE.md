@@ -317,17 +317,50 @@ Sidebar active items are designed as **full pills** (`rounded-full`) with **Deep
 
 ---
 
+## Reusable Asset Registry & Documentation Protocol
+
+### 📜 Mandatory Agent Workflow Protocol
+
+Whenever any agent adds, modifies, or extracts a **reusable asset** (UI component, CSS utility, animation, custom hook, design token, or service pattern):
+
+1. **Implement the asset cleanly** following strict TypeScript (`strict: true`) and zero ESLint warnings.
+2. **Document the asset in this section** before completing the turn:
+   - Provide the file location and export signature.
+   - Describe the UX purpose and when to use it.
+   - Provide a copy-pasteable usage example.
+   - State design invariants (e.g. 0px layout shift, timing budget, accessibility).
+3. **Verify**: Ensure `pnpm type-check`, `pnpm lint`, and `pnpm build` pass with 0 errors.
+
+### 📦 Current Reusable Asset Registry
+
+| Asset Name            | Location                              | Type      | Description & Purpose                                                                                                                   |
+| --------------------- | ------------------------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `.card-interactive`   | `src/styles/globals.css`              | CSS Class | Lifts card by 3px (`translateY(-3px)`), softens shadow, and adds subtle crimson hover ring. Apply to all clickable / interactive cards. |
+| `.btn-interactive`    | `src/styles/globals.css`              | CSS Class | Tactile click micro-compression (`scale(0.97)`) on `:active`. Apply to all interactive buttons.                                         |
+| `.animate-fade-in-up` | `src/styles/globals.css`              | CSS Class | GPU-accelerated entrance animation (opacity 0 → 1, translateY 12px → 0 in 400ms).                                                       |
+| `.stagger-1`..`5`     | `src/styles/globals.css`              | CSS Class | Progressive 50ms delay steps (50ms–250ms) to stagger entrance across grid / list children.                                              |
+| `.animate-pop-in`     | `src/styles/globals.css`              | CSS Class | Micro-bounce scale animation for status badges, tags, and active checkmarks.                                                            |
+| `.nav-item-active`    | `src/styles/globals.css`              | CSS Class | Deep Slate / Ink pill active styling with 4px slate-900 indicator and 0px shift border.                                                 |
+| `<Sidebar />`         | `src/shared/components/Sidebar`       | Component | Slim 224px navigation sidebar with categorized groups and Deep Slate active pills.                                                      |
+| `<Header />`          | `src/shared/components/Header`        | Component | Standard top navbar with branding logo, left-chevron back button, user profile, and notifications.                                      |
+| `<MobileSidebar />`   | `src/shared/components/MobileSidebar` | Component | Mobile responsive drawer wrapper with backdrop blur and route-change auto-close.                                                        |
+| `<ErrorBoundary />`   | `src/shared/components/ErrorBoundary` | Component | React error boundary catching render exceptions and showing a user-friendly retry screen.                                               |
+| `<PageLoader />`      | `src/shared/components/PageLoader`    | Component | Centered brand loading skeleton indicator.                                                                                              |
+
+---
+
 ## Gatekeeper — Post-Build Review Process
 
-After the scaffold build is complete, a **Gatekeeper review agent** runs automatically and checks:
+After each feature or enhancement is implemented, a **Gatekeeper review agent** runs automatically and checks:
 
 1. **Pattern consistency** — does every feature follow the service → hook → page pattern?
-2. **TypeScript** — does `pnpm tsc --noEmit` pass with 0 errors?
-3. **Wire comments** — does every mock branch have a `// 🔌 WIRE:` comment?
-4. **Line budget** — is every `features/{name}/index.tsx` within 200–300 lines?
-5. **Naming conventions** — do all files follow the agreed convention table?
-6. **Token usage** — are there any raw color values in JSX?
-7. **Barrel exports** — does every shared component use `ComponentName/index.tsx`?
+2. **Reusable Asset Documentation** — did the agent register any new reusable component/utility in `docs/ARCHITECTURE.md`?
+3. **TypeScript** — does `pnpm tsc --noEmit` pass with 0 errors?
+4. **Wire comments** — does every mock branch have a `// 🔌 WIRE:` comment?
+5. **Line budget** — is every `features/{name}/index.tsx` within 200–300 lines?
+6. **Naming conventions** — do all files follow the agreed convention table?
+7. **Token usage** — are there any raw color values in JSX?
+8. **Barrel exports** — does every shared component use `ComponentName/index.tsx`?
 
 **Decision**: Auto-fix minor issues; escalate critical findings to the developer with a clear action list.
 
