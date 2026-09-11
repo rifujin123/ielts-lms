@@ -172,18 +172,22 @@ export const ExamRunnerPage: React.FC = () => {
     }
   }, [availableSkills, activeSkill, setActiveSkill])
 
-  // Auto-scroll the active skill tab into view smoothly
-  useEffect(() => {
-    const activeTabEl = document.getElementById(`skill-tab-${activeSkill}`)
-    if (activeTabEl) {
-      activeTabEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' })
-    }
-  }, [activeSkill])
+  // Compute current skill index and pagination for mobile single-skill stepper
+  const currentSkillIndex = availableSkills.findIndex((s) => s.key === activeSkill)
+  const safeSkillIndex = currentSkillIndex >= 0 ? currentSkillIndex : 0
+  const currentSkillObj = availableSkills[safeSkillIndex] || availableSkills[0]
+  const hasPrevSkill = safeSkillIndex > 0
+  const hasNextSkill = safeSkillIndex < availableSkills.length - 1
 
-  const scrollSkills = (direction: 'left' | 'right') => {
-    const container = document.getElementById('exam-header-skills-scroll')
-    if (container) {
-      container.scrollBy({ left: direction === 'left' ? -120 : 120, behavior: 'smooth' })
+  const handlePrevSkill = () => {
+    if (hasPrevSkill) {
+      setActiveSkill(availableSkills[safeSkillIndex - 1].key)
+    }
+  }
+
+  const handleNextSkill = () => {
+    if (hasNextSkill) {
+      setActiveSkill(availableSkills[safeSkillIndex + 1].key)
     }
   }
 
@@ -219,24 +223,65 @@ export const ExamRunnerPage: React.FC = () => {
           </div>
         </div>
 
-        {/* ── Center: Dynamic Skill Switcher Tabs (With Smooth Scroll Handling) ── */}
-        <div className="flex items-center justify-center min-w-0 max-w-[50vw] sm:max-w-[60vw] md:max-w-none px-1">
+        {/* ── Center: Dynamic Skill Switcher ────────────────────────── */}
+        <div className="flex items-center justify-center min-w-0 px-1">
           {availableSkills.length > 1 ? (
-            <div className="relative flex items-center group max-w-full">
-              {/* Left scroll chevron button (Mobile / Narrow screens) */}
-              <button
-                type="button"
-                onClick={() => scrollSkills('left')}
-                title="Cuộn kỹ năng sang trái"
-                className="btn-interactive flex md:hidden h-8 w-5 items-center justify-center rounded-l-lg bg-slate-200/80 text-slate-600 hover:text-slate-900 hover:bg-slate-300/80 shrink-0 z-10 transition-colors"
-              >
-                <ChevronLeft className="h-3.5 w-3.5" />
-              </button>
+            <>
+              {/* Mobile (< md): Single Active Skill with Prev/Next Chevrons (matches bottom bar pattern) */}
+              <div className="flex md:hidden items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200 shadow-2xs select-none">
+                <button
+                  type="button"
+                  onClick={handlePrevSkill}
+                  disabled={!hasPrevSkill}
+                  aria-label="Kỹ năng trước"
+                  title={
+                    hasPrevSkill
+                      ? `Chuyển về ${availableSkills[safeSkillIndex - 1].label}`
+                      : 'Đã ở kỹ năng đầu tiên'
+                  }
+                  className="btn-interactive flex h-7 w-7 items-center justify-center rounded-lg text-slate-700 hover:bg-white disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </button>
 
-              <div
-                id="exam-header-skills-scroll"
-                className="flex items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200 shadow-2xs overflow-x-auto custom-scrollbar scroll-smooth whitespace-nowrap"
-              >
+                {/* Active Skill Pill */}
+                <div className="flex items-center gap-1.5 rounded-lg bg-slate-900 px-2.5 py-1 text-xs font-bold text-white shadow-xs">
+                  {React.createElement(currentSkillObj.icon, {
+                    className: 'h-3.5 w-3.5 text-red-400 shrink-0',
+                  })}
+                  <span>{currentSkillObj.label}</span>
+                  <span
+                    className={`rounded-full px-1.5 py-0.2 text-[10px] shrink-0 ${
+                      getSkillCompletion(currentSkillObj.key).isDone
+                        ? 'bg-emerald-500 text-white'
+                        : 'bg-white/20 text-white'
+                    }`}
+                  >
+                    {getSkillCompletion(currentSkillObj.key).label}
+                  </span>
+                  <span className="text-[10px] text-slate-400 font-mono">
+                    {safeSkillIndex + 1}/{availableSkills.length}
+                  </span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleNextSkill}
+                  disabled={!hasNextSkill}
+                  aria-label="Kỹ năng sau"
+                  title={
+                    hasNextSkill
+                      ? `Chuyển sang ${availableSkills[safeSkillIndex + 1].label}`
+                      : 'Đã ở kỹ năng cuối cùng'
+                  }
+                  className="btn-interactive flex h-7 w-7 items-center justify-center rounded-lg text-slate-700 hover:bg-white disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+              </div>
+
+              {/* Desktop (>= md): Full 4 Skills Horizontal Tabs */}
+              <div className="hidden md:flex items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200 shadow-2xs">
                 {availableSkills.map(({ key, label, icon: Icon }) => {
                   const isActive = activeSkill === key
                   const { label: compLabel, isDone } = getSkillCompletion(key)
@@ -244,19 +289,18 @@ export const ExamRunnerPage: React.FC = () => {
                   return (
                     <button
                       key={key}
-                      id={`skill-tab-${key}`}
                       type="button"
                       onClick={() => setActiveSkill(key)}
-                      className={`btn-interactive flex shrink-0 items-center gap-1.5 sm:gap-2 rounded-lg px-2.5 sm:px-3 py-1.5 text-xs font-bold transition-all border ${
+                      className={`btn-interactive flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-bold transition-all border ${
                         isActive
                           ? 'border-slate-900 bg-slate-900 text-white shadow-xs'
                           : 'border-transparent text-slate-600 hover:text-slate-900 hover:bg-white/60'
                       }`}
                     >
-                      <Icon className="h-3.5 w-3.5 shrink-0" />
+                      <Icon className="h-3.5 w-3.5" />
                       <span>{label}</span>
                       <span
-                        className={`rounded-full px-1.5 py-0.2 text-[10px] shrink-0 ${
+                        className={`rounded-full px-1.5 py-0.2 text-[10px] ${
                           isDone
                             ? 'bg-emerald-500 text-white'
                             : isActive
@@ -270,17 +314,7 @@ export const ExamRunnerPage: React.FC = () => {
                   )
                 })}
               </div>
-
-              {/* Right scroll chevron button (Mobile / Narrow screens) */}
-              <button
-                type="button"
-                onClick={() => scrollSkills('right')}
-                title="Cuộn kỹ năng sang phải"
-                className="btn-interactive flex md:hidden h-8 w-5 items-center justify-center rounded-r-lg bg-slate-200/80 text-slate-600 hover:text-slate-900 hover:bg-slate-300/80 shrink-0 z-10 transition-colors"
-              >
-                <ChevronRight className="h-3.5 w-3.5" />
-              </button>
-            </div>
+            </>
           ) : availableSkills.length === 1 ? (
             /* Single Skill Exam Badge */
             <div className="flex shrink-0 items-center gap-2 rounded-xl bg-slate-100 px-3.5 py-1.5 border border-slate-200 text-xs font-bold text-slate-800">
