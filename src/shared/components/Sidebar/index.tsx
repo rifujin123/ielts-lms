@@ -53,15 +53,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, onItemClick }) => {
   return (
     <aside
       className={cn(
-        'custom-scrollbar flex w-64 flex-col border-r border-outline-variant bg-surface-container-lowest py-4 text-on-surface select-none overflow-y-auto',
+        'custom-scrollbar flex w-56 flex-col border-r border-outline-variant bg-surface-container-lowest py-3.5 text-on-surface select-none overflow-y-auto',
         className,
       )}
     >
-      <nav className="flex flex-col gap-6 px-3">
+      <nav className="flex flex-col gap-5 px-2.5">
         {navGroups.map((group, gIdx) => (
-          <div key={gIdx} className="flex flex-col gap-1">
+          <div key={gIdx} className="flex flex-col gap-0.5">
             {group.title && (
-              <h4 className="px-3 pb-1 text-[11px] font-bold uppercase tracking-wider text-secondary/70">
+              <h4 className="px-2.5 pb-1 text-[10px] font-bold uppercase tracking-wider text-secondary/70">
                 {group.title}
               </h4>
             )}
@@ -73,15 +73,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, onItemClick }) => {
                 onClick={onItemClick}
                 className={({ isActive }) =>
                   cn(
-                    'flex items-center gap-3 rounded-lg px-3 py-2 text-body-sm font-medium transition-colors',
+                    'flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-body-sm font-medium transition-colors',
                     isActive
-                      ? 'bg-red-50 text-primary font-semibold border-l-4 border-primary rounded-l-none pl-2.5'
+                      ? 'bg-red-50 text-primary font-semibold border-l-4 border-primary rounded-l-none pl-2'
                       : 'text-secondary hover:bg-surface-container-low hover:text-on-surface',
                   )
                 }
               >
-                <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
-                <span className="truncate flex-1">{item.label}</span>
+                <span className="material-symbols-outlined text-[19px]">{item.icon}</span>
+                <span className="truncate flex-1 text-[13px]">{item.label}</span>
                 {item.badge && (
                   <span className="rounded bg-primary-container px-1.5 py-0.5 text-[10px] font-bold text-on-primary-container">
                     {item.badge}

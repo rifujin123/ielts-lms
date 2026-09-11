@@ -31,17 +31,13 @@ export const Header: React.FC = () => {
           </Link>
         )}
 
-        {/* DOL Logo */}
-        <Link to="/" className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-on-primary font-bold shadow-xs">
-            <span className="text-lg tracking-wider font-display">DOL</span>
-          </div>
-          <div className="hidden sm:block">
-            <span className="text-headline-sm tracking-tight text-on-surface">DOL English</span>
-            <span className="block text-[10px] uppercase tracking-widest text-primary font-semibold">
-              IELTS LMS
-            </span>
-          </div>
+        {/* Branding Logo */}
+        <Link to="/" className="flex items-center gap-2.5">
+          <img
+            src="/branding.png"
+            alt="IELTS Hồ Thành"
+            className="h-10 max-w-[140px] object-contain"
+          />
         </Link>
 
         {/* Course title for course pages */}

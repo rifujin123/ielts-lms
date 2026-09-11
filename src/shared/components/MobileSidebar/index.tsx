@@ -26,10 +26,11 @@ export const MobileSidebar: React.FC = () => {
       <div className="relative flex w-72 max-w-[85vw] flex-1 flex-col bg-surface-container-lowest shadow-xl">
         <div className="flex h-16 items-center justify-between border-b border-outline-variant px-4">
           <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded bg-primary text-on-primary font-bold">
-              DOL
-            </div>
-            <span className="text-headline-sm text-on-surface">Menu điều hướng</span>
+            <img
+              src="/branding.png"
+              alt="IELTS Hồ Thành"
+              className="h-8 max-w-[120px] object-contain"
+            />
           </div>
           <button
             onClick={closeSidebar}
