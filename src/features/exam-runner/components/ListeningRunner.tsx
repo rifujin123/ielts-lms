@@ -314,9 +314,9 @@ export const ListeningRunner: React.FC<ListeningRunnerProps> = ({ skillData, onS
           </div>
 
           {/* Center: 4 Section Pills with Mini Progress Bars */}
-          <div className="flex items-center justify-center min-w-0 px-1 md:absolute md:left-1/2 md:-translate-x-1/2 md:top-1/2 md:-translate-y-1/2">
-            {/* Mobile (< md): Single Active Section with Half-Inset Circular Chevrons (50% in, 50% out) */}
-            <div className="relative flex md:hidden items-center select-none mx-3.5">
+          <div className="flex items-center justify-center min-w-0 px-1 lg:absolute lg:left-1/2 lg:-translate-x-1/2 lg:top-1/2 lg:-translate-y-1/2">
+            {/* Mobile & Tablet (< lg): Single Active Section with Half-Inset Circular Chevrons (50% in, 50% out) */}
+            <div className="relative flex lg:hidden items-center select-none mx-3.5">
               <button
                 type="button"
                 onClick={() => {
@@ -367,8 +367,8 @@ export const ListeningRunner: React.FC<ListeningRunnerProps> = ({ skillData, onS
               </button>
             </div>
 
-            {/* Desktop (>= md): Full 4 Sections Horizontal Tabs */}
-            <div className="hidden md:flex items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200 shadow-2xs overflow-x-auto custom-scrollbar">
+            {/* Desktop (>= lg): Full 4 Sections Horizontal Tabs */}
+            <div className="hidden lg:flex items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200 shadow-2xs overflow-x-auto custom-scrollbar">
               {skillData.sections.map((sec, idx) => {
                 const isActive = activeSectionIndex === idx
                 const [s, e] = sec.questionRange

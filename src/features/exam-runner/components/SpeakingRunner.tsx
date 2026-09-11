@@ -562,9 +562,9 @@ export const SpeakingRunner: React.FC<SpeakingRunnerProps> = ({ skillData }) => 
           </div>
 
           {/* Center: 3 Part Switcher Pills (Part 1, Part 2, Part 3) ──── */}
-          <div className="flex items-center justify-center min-w-0 px-1 md:absolute md:left-1/2 md:-translate-x-1/2 md:top-1/2 md:-translate-y-1/2">
-            {/* Mobile (< md): Single Active Part with Half-Inset Circular Chevrons (50% in, 50% out) */}
-            <div className="relative flex md:hidden items-center select-none mx-3.5">
+          <div className="flex items-center justify-center min-w-0 px-1 lg:absolute lg:left-1/2 lg:-translate-x-1/2 lg:top-1/2 lg:-translate-y-1/2">
+            {/* Mobile & Tablet (< lg): Single Active Part with Half-Inset Circular Chevrons (50% in, 50% out) */}
+            <div className="relative flex lg:hidden items-center select-none mx-3.5">
               <button
                 type="button"
                 onClick={() => setActivePart((activePart - 1) as 1 | 2 | 3)}
@@ -603,8 +603,8 @@ export const SpeakingRunner: React.FC<SpeakingRunnerProps> = ({ skillData }) => 
               </button>
             </div>
 
-            {/* Desktop (>= md): Full 3 Parts Horizontal Tabs */}
-            <div className="hidden md:flex items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200 shadow-2xs overflow-x-auto custom-scrollbar">
+            {/* Desktop (>= lg): Full 3 Parts Horizontal Tabs */}
+            <div className="hidden lg:flex items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200 shadow-2xs overflow-x-auto custom-scrollbar">
               {[1, 2, 3].map((partNum) => {
                 const isActive = activePart === partNum
                 const hasRecorded = !!speakingRecordings[partNum]

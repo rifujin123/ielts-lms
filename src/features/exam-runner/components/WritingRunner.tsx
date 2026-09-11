@@ -381,9 +381,9 @@ export const WritingRunner: React.FC<WritingRunnerProps> = ({ skillData }) => {
           </div>
 
           {/* Center: 2 Task Switcher Pills (Task 1, Task 2) ─────────── */}
-          <div className="flex items-center justify-center min-w-0 px-1 md:absolute md:left-1/2 md:-translate-x-1/2 md:top-1/2 md:-translate-y-1/2">
-            {/* Mobile (< md): Single Active Task with Half-Inset Circular Chevrons (50% in, 50% out) */}
-            <div className="relative flex md:hidden items-center select-none mx-3.5">
+          <div className="flex items-center justify-center min-w-0 px-1 lg:absolute lg:left-1/2 lg:-translate-x-1/2 lg:top-1/2 lg:-translate-y-1/2">
+            {/* Mobile & Tablet (< lg): Single Active Task with Half-Inset Circular Chevrons (50% in, 50% out) */}
+            <div className="relative flex lg:hidden items-center select-none mx-3.5">
               <button
                 type="button"
                 onClick={() => setActiveTaskIndex(0)}
@@ -426,8 +426,8 @@ export const WritingRunner: React.FC<WritingRunnerProps> = ({ skillData }) => {
               </button>
             </div>
 
-            {/* Desktop (>= md): Full 2 Tasks Horizontal Tabs */}
-            <div className="hidden md:flex items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200 shadow-2xs overflow-x-auto custom-scrollbar">
+            {/* Desktop (>= lg): Full 2 Tasks Horizontal Tabs */}
+            <div className="hidden lg:flex items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200 shadow-2xs overflow-x-auto custom-scrollbar">
               {skillData.tasks.map((task, idx) => {
                 const isActive = activeTaskIndex === idx
                 const taskKey = idx === 0 ? 'task1' : 'task2'

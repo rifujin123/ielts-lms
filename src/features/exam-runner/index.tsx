@@ -212,7 +212,7 @@ export const ExamRunnerPage: React.FC = () => {
               alt="IELTS Hồ Thành"
               className="h-8 w-auto max-w-[80px] sm:max-w-[100px] object-contain"
             />
-            <div className="hidden md:block">
+            <div className="hidden xl:block">
               <div className="text-[10px] font-bold text-red-600 uppercase tracking-wider">
                 IELTS Hồ Thành
               </div>
@@ -224,11 +224,11 @@ export const ExamRunnerPage: React.FC = () => {
         </div>
 
         {/* ── Center: Dynamic Skill Switcher ────────────────────────── */}
-        <div className="flex items-center justify-center min-w-0 px-1 md:absolute md:left-1/2 md:-translate-x-1/2 md:top-1/2 md:-translate-y-1/2">
+        <div className="flex items-center justify-center min-w-0 px-1 lg:absolute lg:left-1/2 lg:-translate-x-1/2 lg:top-1/2 lg:-translate-y-1/2">
           {availableSkills.length > 1 ? (
             <>
-              {/* Mobile (< md): Single Active Skill with Half-Inset Circular Chevrons (50% in, 50% out) */}
-              <div className="relative flex md:hidden items-center select-none mx-3.5">
+              {/* Mobile & Tablet (< lg): Single Active Skill with Half-Inset Circular Chevrons (50% in, 50% out) */}
+              <div className="relative flex lg:hidden items-center select-none mx-3.5">
                 {/* Left Half-Inset Circular Chevron */}
                 <button
                   type="button"
@@ -282,8 +282,8 @@ export const ExamRunnerPage: React.FC = () => {
                 </button>
               </div>
 
-              {/* Desktop (>= md): Full 4 Skills Horizontal Tabs */}
-              <div className="hidden md:flex items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200 shadow-2xs">
+              {/* Desktop (>= lg): Full 4 Skills Horizontal Tabs */}
+              <div className="hidden lg:flex items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200 shadow-2xs max-w-full overflow-x-auto">
                 {availableSkills.map(({ key, label, icon: Icon }) => {
                   const isActive = activeSkill === key
                   const { label: compLabel, isDone } = getSkillCompletion(key)

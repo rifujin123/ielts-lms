@@ -160,9 +160,9 @@ export const ExamBottomPalette: React.FC = () => {
         </div>
 
         {/* Center: 3 Passage Switcher Pills (Pass 1, Pass 2, Pass 3) ───── */}
-        <div className="flex items-center justify-center min-w-0 px-1 md:absolute md:left-1/2 md:-translate-x-1/2 md:top-1/2 md:-translate-y-1/2">
-          {/* Mobile (< md): Single Active Passage with Half-Inset Circular Chevrons (50% in, 50% out) */}
-          <div className="relative flex md:hidden items-center select-none mx-3.5">
+        <div className="flex items-center justify-center min-w-0 px-1 lg:absolute lg:left-1/2 lg:-translate-x-1/2 lg:top-1/2 lg:-translate-y-1/2">
+          {/* Mobile & Tablet (< lg): Single Active Passage with Half-Inset Circular Chevrons (50% in, 50% out) */}
+          <div className="relative flex lg:hidden items-center select-none mx-3.5">
             <button
               type="button"
               onClick={() => handlePassageSwitch((activePassageId - 1) as 1 | 2 | 3)}
@@ -205,8 +205,8 @@ export const ExamBottomPalette: React.FC = () => {
             </button>
           </div>
 
-          {/* Desktop (>= md): Full 3 Passages Horizontal Tabs */}
-          <div className="hidden md:flex items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200 shadow-2xs overflow-x-auto custom-scrollbar">
+          {/* Desktop (>= lg): Full 3 Passages Horizontal Tabs */}
+          <div className="hidden lg:flex items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200 shadow-2xs overflow-x-auto custom-scrollbar">
             {manifest.passages.map((p) => {
               const isActive = activePassageId === p.id
               const [pStart, pEnd] = p.questionRange
