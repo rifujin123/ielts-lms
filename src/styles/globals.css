@@ -67,14 +67,14 @@
 }
 
 @layer utilities {
-  /* Sidebar nav active state — Pill shape with subtle elevation */
+  /* Sidebar nav active state — Pill shape with red left border accent */
   .nav-item-active {
-    @apply bg-red-50 text-primary font-bold rounded-full shadow-xs border border-red-200 scale-[1.01];
+    @apply bg-red-50 text-primary font-bold rounded-full shadow-xs border border-red-200 border-l-4 border-l-primary scale-[1.01];
   }
 
   /* Sidebar nav default state */
   .nav-item {
-    @apply text-secondary rounded-full border border-transparent hover:bg-surface-container-low hover:text-on-surface hover:translate-x-0.5 transition-all duration-200 ease-out;
+    @apply text-secondary rounded-full border border-l-4 border-transparent hover:bg-surface-container-low hover:text-on-surface hover:translate-x-0.5 transition-all duration-200 ease-out;
   }
 
   /* ── Sally's Subtle & Academic UX Micro-interactions ─────── */

@@ -303,8 +303,8 @@ The portal adheres to a **Subtle & Academic** motion philosophy (150–250ms, GP
 
 Sidebar active items are designed as **full pills** (`rounded-full`) with active state transitions:
 
-- **Active state**: `bg-red-50 text-primary font-bold rounded-full shadow-xs border border-red-200 scale-[1.01]` + crimson indicator dot (`animate-pop-in`) + icon micro-scale (`scale-110`).
-- **Inactive state**: `rounded-full border border-transparent text-secondary hover:bg-surface-container-low hover:text-on-surface hover:translate-x-0.5 transition-all duration-200 ease-out`.
+- **Active state**: `bg-red-50 text-primary font-bold rounded-full shadow-xs border border-red-200 border-l-4 border-l-primary scale-[1.01]` + icon micro-scale (`scale-110`).
+- **Inactive state**: `rounded-full border border-l-4 border-transparent text-secondary hover:bg-surface-container-low hover:text-on-surface hover:translate-x-0.5 transition-all duration-200 ease-out`.
 
 ### 3. Rules for Agents Building New Features
 

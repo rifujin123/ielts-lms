@@ -73,9 +73,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, onItemClick }) => {
                 onClick={onItemClick}
                 className={({ isActive }) =>
                   cn(
-                    'group relative flex items-center gap-2.5 rounded-full px-3 py-2 text-body-sm transition-all duration-200 ease-out border',
+                    'group relative flex items-center gap-2.5 rounded-full px-3 py-2 text-body-sm transition-all duration-200 ease-out border border-l-4',
                     isActive
-                      ? 'bg-red-50 text-primary font-bold shadow-xs border-red-200 scale-[1.01]'
+                      ? 'bg-red-50 text-primary font-bold shadow-xs border-red-200 border-l-primary scale-[1.01]'
                       : 'border-transparent text-secondary hover:bg-surface-container-low hover:text-on-surface hover:translate-x-0.5',
                   )
                 }
@@ -93,9 +93,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, onItemClick }) => {
                       {item.icon}
                     </span>
                     <span className="truncate flex-1 text-[13px]">{item.label}</span>
-                    {isActive && (
-                      <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pop-in shrink-0" />
-                    )}
                     {item.badge && (
                       <span className="rounded-full bg-primary-container px-2 py-0.5 text-[10px] font-bold text-on-primary-container animate-pop-in">
                         {item.badge}
