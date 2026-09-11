@@ -159,10 +159,6 @@ export const ListeningRunner: React.FC<ListeningRunnerProps> = ({ skillData, onS
             </span>
           </div>
 
-          <span className="text-xs font-mono font-bold text-red-600 bg-red-50 px-2.5 py-0.5 rounded-full border border-red-200">
-            {formatTime(currentTime)} / {formatTime(duration)}
-          </span>
-
           <div className="flex items-center gap-1.5">
             <button
               type="button"
