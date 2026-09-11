@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import type { FullIeltsExamManifest, IeltsSkillType, ExamMode } from '../types/fullExam.types'
-import { cambridgeFull4SkillMock } from '../data/cambridgeFull4SkillMock'
+import { cambridgeFull4SkillMock } from '../data'
 
 interface FullExamStoreState {
   manifest: FullIeltsExamManifest

@@ -30,11 +30,8 @@ import { ExamBottomPalette } from './components/ExamBottomPalette'
 import { SubmitConfirmModal } from './components/SubmitConfirmModal'
 import { ExamResultView } from './components/ExamResultView'
 import { TeacherRubricModal } from './components/TeacherRubricModal'
-import {
-  calculateIeltsOverall,
-  getListeningBandFromRaw,
-  mockTeacherAssessment,
-} from './utils/ieltsScoring'
+import { calculateIeltsOverall, getListeningBandFromRaw } from './utils/ieltsScoring'
+import { mockTeacherAssessment } from './data'
 import { toast } from '@/shared/components/Toast/toastStore'
 import type { IeltsSkillType } from './types/fullExam.types'
 

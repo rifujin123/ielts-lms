@@ -543,6 +543,23 @@ export const cambridgeFull4SkillMock: FullIeltsExamManifest = {
           minWords: 150,
           recommendedMinutes: 20,
           visualType: 'BAR_CHART',
+          chartDataPoints: [
+            {
+              category: 'Denmark',
+              startYearValue: 35,
+              endYearValue: 60,
+              colorClass: 'bg-emerald-500',
+            },
+            {
+              category: 'Germany',
+              startYearValue: 17,
+              endYearValue: 42,
+              colorClass: 'bg-blue-500',
+            },
+            { category: 'Spain', startYearValue: 25, endYearValue: 39, colorClass: 'bg-amber-500' },
+            { category: 'UK', startYearValue: 7, endYearValue: 38, colorClass: 'bg-purple-500' },
+            { category: 'Italy', startYearValue: 14, endYearValue: 22, colorClass: 'bg-slate-500' },
+          ],
           prompt:
             'The chart below shows the percentage of electricity generated from renewable sources in five European countries (Germany, United Kingdom, Denmark, Spain, Italy) in 2010, 2015, and 2020.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.',
           sampleModelAnswer:

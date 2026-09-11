@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { cambridgeAcademicMock18 } from '../data/cambridgeMock18'
+import { cambridgeAcademicMock18 } from '../data'
 import type { IeltsExamManifest, TextHighlight, ExamScoreResult } from '../types/ielts.types'
 
 interface IeltsExamStoreState {

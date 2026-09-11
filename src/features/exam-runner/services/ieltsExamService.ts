@@ -1,7 +1,7 @@
 import { apiClient } from '@/lib/axios'
 import { getMock } from '@/mocks'
 import type { FullIeltsExamManifest, FullExamStudentResponses } from '../types/fullExam.types'
-import { cambridgeFull4SkillMock } from '../data/cambridgeFull4SkillMock'
+import { cambridgeFull4SkillMock } from '../data'
 
 export interface ExamSubmissionResult {
   success: boolean

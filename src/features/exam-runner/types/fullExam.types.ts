@@ -75,6 +75,16 @@ export interface ReadingExamSkill {
 }
 
 /* ── 3. WRITING SKILL SCHEMA ──────────────────────────────────── */
+export interface WritingChartDataPoint {
+  category: string // e.g. "Germany", "Denmark"
+  startYearValue?: number // e.g. 17 (%)
+  endYearValue?: number // e.g. 42 (%)
+  startYearLabel?: string // e.g. "2010"
+  endYearLabel?: string // e.g. "2020"
+  percentage?: number
+  colorClass?: string // e.g. "bg-blue-500"
+}
+
 export interface WritingTask {
   taskNumber: 1 | 2
   title: string
@@ -84,6 +94,7 @@ export interface WritingTask {
   visualType?: 'BAR_CHART' | 'LINE_GRAPH' | 'PIE_CHART' | 'TABLE' | 'MAP' | 'PROCESS'
   chartImageUrl?: string // URL of visual prompt
   chartSvgContent?: string // Inline SVG visual
+  chartDataPoints?: WritingChartDataPoint[]
   sampleModelAnswer?: string // For review mode
 }
 

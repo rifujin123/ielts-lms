@@ -124,31 +124,27 @@ export const WritingRunner: React.FC<WritingRunnerProps> = ({ skillData }) => {
                     <span className="text-[11px] text-slate-400">2010 vs 2020</span>
                   </div>
 
-                  {/* SVG Bar Chart Visualization */}
-                  <div className="space-y-4 text-xs font-sans">
-                    {[
-                      { country: 'Denmark', y2010: 35, y2020: 60, color: 'bg-emerald-500' },
-                      { country: 'Germany', y2010: 17, y2020: 42, color: 'bg-blue-500' },
-                      { country: 'Spain', y2010: 25, y2020: 39, color: 'bg-amber-500' },
-                      { country: 'UK', y2010: 7, y2020: 38, color: 'bg-purple-500' },
-                      { country: 'Italy', y2010: 14, y2020: 22, color: 'bg-slate-500' },
-                    ].map((item) => (
-                      <div key={item.country} className="space-y-1">
-                        <div className="flex justify-between font-bold text-slate-700">
-                          <span>{item.country}</span>
-                          <span className="text-slate-500">
-                            {item.y2010}% → {item.y2020}%
-                          </span>
+                  {/* Dynamic Bar Chart Visualization driven 100% by manifest */}
+                  {currentTask.chartDataPoints && currentTask.chartDataPoints.length > 0 && (
+                    <div className="space-y-4 text-xs font-sans">
+                      {currentTask.chartDataPoints.map((item) => (
+                        <div key={item.category} className="space-y-1">
+                          <div className="flex justify-between font-bold text-slate-700">
+                            <span>{item.category}</span>
+                            <span className="text-slate-500">
+                              {item.startYearValue ?? 0}% → {item.endYearValue ?? 0}%
+                            </span>
+                          </div>
+                          <div className="flex h-3 w-full overflow-hidden rounded-full bg-slate-100">
+                            <div
+                              style={{ width: `${item.endYearValue ?? 0}%` }}
+                              className={`${item.colorClass || 'bg-red-600'} rounded-full transition-all duration-500`}
+                            />
+                          </div>
                         </div>
-                        <div className="flex h-3 w-full overflow-hidden rounded-full bg-slate-100">
-                          <div
-                            style={{ width: `${item.y2020}%` }}
-                            className={`${item.color} rounded-full transition-all duration-500`}
-                          />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  )}
 
                   <div className="mt-4 flex items-center justify-center gap-4 text-[11px] text-slate-500 border-t border-slate-100 pt-3">
                     <span className="flex items-center gap-1.5">
