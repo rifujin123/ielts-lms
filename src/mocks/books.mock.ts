@@ -7,6 +7,8 @@ export const booksMock: CourseBook[] = [
     subtitle: 'Giáo trình cốt lõi kỹ năng Đọc hiểu tuyến tính',
     type: 'main',
     coverColor: '#dc2626',
+    coverImage:
+      'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=400&q=80',
     units: [
       {
         id: 'UNIT-01',
@@ -78,6 +80,8 @@ export const booksMock: CourseBook[] = [
     subtitle: 'Cẩm nang tư duy lập luận và phát triển đoạn văn',
     type: 'supplementary',
     coverColor: '#16a34a',
+    coverImage:
+      'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=400&q=80',
     units: [
       {
         id: 'UNIT-W1',

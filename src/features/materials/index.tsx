@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { ChevronRight, BookOpen, BookMarked } from 'lucide-react'
+import { ChevronRight, BookMarked } from 'lucide-react'
 import { materialService } from '@/services/materialService'
 import { booksMock } from '@/mocks/books.mock'
 
@@ -75,14 +75,19 @@ export const MaterialsPage: React.FC = () => {
           >
             <div>
               <div className="flex items-start gap-4">
-                {/* Book cover visual */}
+                {/* Book cover visual with embedded image */}
                 <div
-                  className="flex h-24 w-18 shrink-0 flex-col items-center justify-center rounded-xl p-2 text-center text-white shadow-sm"
-                  style={{ backgroundColor: book.coverColor }}
+                  className="relative h-28 w-20 shrink-0 overflow-hidden rounded-xl border border-outline-variant bg-surface-container bg-cover bg-center shadow-sm"
+                  style={{
+                    backgroundImage: `url(${book.coverImage || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=400&q=80'})`,
+                    backgroundColor: book.coverColor,
+                  }}
+                  aria-label={book.title}
                 >
-                  <span className="text-[10px] font-black uppercase tracking-wider">DOL</span>
-                  <BookOpen className="h-6 w-6 my-1" strokeWidth={2} />
-                  <span className="text-[9px] font-bold leading-none">IELTS 6.5</span>
+                  {/* Academic book spine accent on the left */}
+                  <div className="absolute inset-y-0 left-0 w-1.5 bg-black/25" />
+                  {/* Subtle gloss and depth overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-tr from-black/35 via-transparent to-white/10 pointer-events-none" />
                 </div>
 
                 <div className="flex-1">

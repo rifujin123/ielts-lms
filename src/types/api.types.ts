@@ -237,6 +237,7 @@ export interface CourseBook {
   subtitle?: string
   type: 'main' | 'supplementary' | 'vocabulary'
   coverColor: string
+  coverImage?: string
   units: BookUnit[]
 }
 
