@@ -1,0 +1,79 @@
+/**
+ * globals.css — Base resets and global styles
+ * Imports tokens.css as the single source of design truth.
+ */
+@import './tokens.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-outline-variant;
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: var(--font-body);
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-on-surface antialiased;
+    font-family: var(--font-body);
+    min-height: 100vh;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+  }
+
+  /* Material Symbols configuration */
+  .material-symbols-outlined {
+    font-variation-settings:
+      'FILL' 0,
+      'wght' 400,
+      'GRAD' 0,
+      'opsz' 24;
+    user-select: none;
+    vertical-align: middle;
+    line-height: 1;
+  }
+
+  /* Custom scrollbar for sidebar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-outline-variant rounded-full;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-outline;
+  }
+
+  /* Text selection */
+  ::selection {
+    @apply bg-primary-container text-on-primary-container;
+  }
+}
+
+@layer utilities {
+  /* Sidebar nav active state */
+  .nav-item-active {
+    @apply bg-red-50 text-primary font-semibold border-l-4 border-primary;
+  }
+
+  /* Sidebar nav default state */
+  .nav-item {
+    @apply text-secondary hover:bg-surface-container-low hover:text-on-surface transition-all duration-150;
+  }
+}

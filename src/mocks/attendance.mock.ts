@@ -1,0 +1,52 @@
+import type { Session } from '@/types/api.types'
+
+export const attendanceMock: Session[] = [
+  {
+    id: 'SES-01',
+    number: 1,
+    date: '2026-08-12',
+    time: '20:00 - 22:00',
+    status: 'attended',
+    topic: 'Khai giảng & Giới thiệu phương pháp Linearthinking',
+    summary: 'Làm quen giảng viên, định hướng lộ trình học tập và cài đặt công cụ học.',
+    isStandard: true,
+  },
+  {
+    id: 'SES-02',
+    number: 2,
+    date: '2026-08-14',
+    time: '20:00 - 22:00',
+    status: 'attended',
+    topic: 'Reading: Kỹ thuật Simplify & Read connection',
+    summary: 'Học cách đơn giản hóa câu phức và nhận diện liên kết ngữ nghĩa.',
+    isStandard: true,
+  },
+  {
+    id: 'SES-03',
+    number: 3,
+    date: '2026-08-17',
+    time: '20:00 - 22:00',
+    status: 'attended',
+    topic: 'Writing: Cấu trúc câu chuẩn học thuật & Cách tránh lỗi ngữ pháp',
+    summary: 'Thực hành viết mở bài và 2 câu luận điểm Task 2.',
+    isStandard: true,
+  },
+  {
+    id: 'SES-04',
+    number: 4,
+    date: '2026-08-19',
+    time: '20:00 - 22:00',
+    status: 'upcoming',
+    topic: 'Listening: Section 1 & 2 - Bẫy phát âm và số liệu',
+    isStandard: true,
+  },
+  {
+    id: 'SES-05',
+    number: 5,
+    date: '2026-08-21',
+    time: '20:00 - 22:00',
+    status: 'upcoming',
+    topic: 'Speaking: Phát triển ý tưởng Part 1 bằng kỹ thuật mở rộng tự nhiên',
+    isStandard: true,
+  },
+]

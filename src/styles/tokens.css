@@ -1,0 +1,114 @@
+/**
+ * ============================================================
+ * DOL IELTS LMS — Design Tokens (Single Source of Truth)
+ * ============================================================
+ * All design tokens extracted from stitch-assets/style2.css.
+ * This file feeds into tailwind.config.ts via CSS var references.
+ * DO NOT use raw hex values in JSX — always reference via Tailwind
+ * semantic class names (e.g. text-primary, bg-surface-container).
+ * ============================================================
+ */
+
+:root {
+  /* ── Primary Brand (DOL Crimson Red) ──────────────────────── */
+  --color-primary: #dc2626;
+  --color-primary-hover: #b91c1c;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #fee2e2;
+  --color-on-primary-container: #991b1b;
+  --color-inverse-primary: #fca5a5;
+  --color-primary-fixed: #fee2e2;
+  --color-primary-fixed-dim: #fecaca;
+  --color-on-primary-fixed: #7f1d1d;
+  --color-on-primary-fixed-variant: #991b1b;
+
+  /* ── Secondary (Slate-Steel) ──────────────────────────────── */
+  --color-secondary: #475569;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #f1f5f9;
+  --color-on-secondary-container: #334155;
+  --color-secondary-fixed: #e2e8f0;
+  --color-secondary-fixed-dim: #cbd5e1;
+  --color-on-secondary-fixed: #0f172a;
+  --color-on-secondary-fixed-variant: #334155;
+
+  /* ── Tertiary (Mastery Emerald Green) ─────────────────────── */
+  --color-tertiary: #16a34a;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #dcfce7;
+  --color-on-tertiary-container: #15803d;
+  --color-tertiary-fixed: #bbf7d0;
+  --color-tertiary-fixed-dim: #86efac;
+  --color-on-tertiary-fixed: #14532d;
+  --color-on-tertiary-fixed-variant: #166534;
+
+  /* ── Surface & Canvas ──────────────────────────────────────── */
+  --color-surface: #f8fafc;
+  --color-surface-dim: #e2e8f0;
+  --color-surface-bright: #ffffff;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f8fafc;
+  --color-surface-container: #f1f5f9;
+  --color-surface-container-high: #e2e8f0;
+  --color-surface-container-highest: #cbd5e1;
+  --color-surface-variant: #e0e7ff;
+  --color-surface-tint: #dc2626;
+
+  /* ── Content & Text ────────────────────────────────────────── */
+  --color-on-surface: #0f172a;
+  --color-on-surface-variant: #475569;
+  --color-inverse-surface: #1e293b;
+  --color-inverse-on-surface: #f8fafc;
+  --color-background: #f8fafc;
+  --color-on-background: #0f172a;
+
+  /* ── Outlines & Borders ────────────────────────────────────── */
+  --color-outline: #cbd5e1;
+  --color-outline-variant: #e2e8f0;
+
+  /* ── Error ──────────────────────────────────────────────────── */
+  --color-error: #dc2626;
+  --color-on-error: #ffffff;
+  --color-error-container: #fee2e2;
+  --color-on-error-container: #991b1b;
+
+  /* ── Typography ─────────────────────────────────────────────── */
+  --font-display: 'Plus Jakarta Sans', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+  /* ── Border Radius ──────────────────────────────────────────── */
+  --radius-sm: 9px;
+  --radius-default: 9px;
+  --radius-md: 13px;
+  --radius-lg: 17px;
+  --radius-xl: 21px;
+  --radius-2xl: 29px;
+  --radius-full: 9999px;
+
+  /* ── Spacing ─────────────────────────────────────────────────── */
+  --space-2xs: 0.25rem; /* 4px  */
+  --space-xs: 0.5rem; /* 8px  */
+  --space-sm: 0.75rem; /* 12px */
+  --space-md: 1rem; /* 16px */
+  --space-lg: 1.5rem; /* 24px */
+  --space-xl: 2rem; /* 32px */
+  --space-2xl: 3rem; /* 48px */
+  --gutter: 1.5rem; /* 24px */
+  --margin-mobile: 1rem; /* 16px */
+  --margin-desktop: 2rem; /* 32px */
+
+  /* ── Elevation / Shadow ──────────────────────────────────────── */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.05);
+
+  /* ── Z-index ─────────────────────────────────────────────────── */
+  --z-sidebar: 30;
+  --z-header: 40;
+  --z-modal: 50;
+  --z-toast: 60;
+
+  /* ── Layout ──────────────────────────────────────────────────── */
+  --sidebar-width: 256px;
+  --header-height: 64px;
+}
