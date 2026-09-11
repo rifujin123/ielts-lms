@@ -149,41 +149,32 @@ export const ExamRunnerPage: React.FC = () => {
 
   return (
     <div className="flex h-screen w-screen flex-col overflow-hidden bg-slate-100 select-none">
-      {/* ── Top Universal 4-Skill Header (Narrow & Sleek) ─────────── */}
-      <header className="relative sticky top-0 z-40 flex h-13 w-full items-center justify-between border-b border-slate-200 bg-white px-3 sm:px-4 shadow-2xs">
-        {/* Subtle Ambient Warning Indicator Bar at Bottom of Header */}
-        {examMode === 'STRICT' && tabSwitchCount > 0 && !isSubmitted && (
-          <div
-            className={`absolute bottom-0 left-0 right-0 h-0.5 ${
-              tabSwitchCount >= 3 ? 'bg-red-600 animate-pulse' : 'bg-amber-500'
-            }`}
-          />
-        )}
-
-        <div className="flex items-center gap-2.5">
+      {/* ── Top Universal 4-Skill Header ───────────────────────────── */}
+      <header className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-slate-200 bg-white px-4 shadow-xs">
+        <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={() => navigate('/tests')}
             title="Thoát phòng thi"
-            className="btn-interactive flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-colors"
+            className="btn-interactive flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-colors"
           >
-            <ArrowLeft className="h-4.5 w-4.5" strokeWidth={2} />
+            <ArrowLeft className="h-5 w-5" strokeWidth={2} />
           </button>
 
-          <div className="hidden xl:flex items-center gap-2 pr-2.5 border-r border-slate-200">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-red-600 text-white shadow-xs">
-              <GraduationCap className="h-4 w-4" strokeWidth={2} />
+          <div className="hidden xl:flex items-center gap-2 pr-3 border-r border-slate-200">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-600 text-white shadow-xs">
+              <GraduationCap className="h-5 w-5" strokeWidth={2} />
             </div>
             <div>
-              <div className="text-[9px] font-bold text-red-600 uppercase tracking-wider">
+              <div className="text-[10px] font-bold text-red-600 uppercase tracking-wider">
                 IELTS Hồ Thành
               </div>
               <div className="text-xs font-bold text-slate-800 line-clamp-1">{manifest.title}</div>
             </div>
           </div>
 
-          {/* 4-Skill Switcher Tabs (Compact) */}
-          <div className="flex items-center gap-0.5 rounded-lg bg-slate-100 p-0.5 border border-slate-200">
+          {/* 4-Skill Switcher Tabs */}
+          <div className="flex items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200">
             {(
               [
                 { key: 'LISTENING', label: 'Listening', icon: Headphones },
@@ -200,7 +191,7 @@ export const ExamRunnerPage: React.FC = () => {
                   key={key}
                   type="button"
                   onClick={() => setActiveSkill(key)}
-                  className={`btn-interactive flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-bold transition-all ${
+                  className={`btn-interactive flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
                     isActive
                       ? 'bg-slate-900 text-white shadow-xs'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
@@ -227,7 +218,7 @@ export const ExamRunnerPage: React.FC = () => {
 
         {/* Center: Exam Mode Badge & Realtime Countdown Timer */}
         <div className="flex items-center gap-2">
-          {/* Read-only Badge: Shows 'Strict' or 'Practice' with integrated Warning */}
+          {/* Read-only Badge: Shows 'Strict' or 'Practice' */}
           <div
             title={
               examMode === 'STRICT'
@@ -238,7 +229,7 @@ export const ExamRunnerPage: React.FC = () => {
                   }`
                 : 'Chế độ Practice do giáo viên thiết lập: Cho phép tự do kiểm soát audio và xem lại bài.'
             }
-            className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-bold select-none border cursor-default transition-all ${
+            className={`hidden sm:flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 text-xs font-bold select-none border cursor-default transition-all ${
               examMode === 'STRICT'
                 ? tabSwitchCount > 0
                   ? 'border-amber-300 bg-amber-50 text-amber-900 ring-1 ring-amber-300 shadow-2xs'
@@ -276,15 +267,14 @@ export const ExamRunnerPage: React.FC = () => {
             )}
           </div>
 
-          {/* Compact Countdown Timer */}
           <div
-            className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1 font-mono text-xs font-bold tracking-tight shadow-xs ${
+            className={`flex items-center gap-2 rounded-xl px-3.5 py-1.5 font-mono text-sm font-bold tracking-tight shadow-xs ${
               isUrgent && !isSubmitted
                 ? 'animate-pulse bg-red-50 text-red-600 border border-red-200'
                 : 'bg-slate-100 text-slate-800 border border-slate-200'
             }`}
           >
-            <Clock className="h-3.5 w-3.5 text-slate-500" />
+            <Clock className="h-4 w-4 text-slate-500" />
             <span>{isSubmitted ? 'Đã thu bài' : formattedTime}</span>
           </div>
         </div>
@@ -295,7 +285,7 @@ export const ExamRunnerPage: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsSubmitModalOpen(true)}
-              className="btn-interactive inline-flex items-center gap-1.5 rounded-lg bg-red-600 px-3.5 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-red-700 active:scale-95 transition-all"
+              className="btn-interactive inline-flex items-center gap-1.5 rounded-xl bg-red-600 px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-red-700 active:scale-95 transition-all"
             >
               <Send className="h-3.5 w-3.5" />
               <span>Nộp bài Full Test</span>
@@ -305,16 +295,16 @@ export const ExamRunnerPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShowResultView(!showResultView)}
-                className="btn-interactive inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-3 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-slate-800"
+                className="btn-interactive inline-flex items-center gap-1.5 rounded-xl bg-slate-900 px-3.5 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-slate-800"
               >
                 {showResultView ? (
                   <>
-                    <Eye className="h-3.5 w-3.5 text-emerald-400" />
+                    <Eye className="h-4 w-4 text-emerald-400" />
                     <span>Xem lại đề thi</span>
                   </>
                 ) : (
                   <>
-                    <Award className="h-3.5 w-3.5 text-amber-400" />
+                    <Award className="h-4 w-4 text-amber-400" />
                     <span>Xem bảng điểm</span>
                   </>
                 )}
@@ -323,9 +313,9 @@ export const ExamRunnerPage: React.FC = () => {
               <button
                 type="button"
                 onClick={handleRetakeExam}
-                className="btn-interactive inline-flex items-center gap-1.5 rounded-lg bg-red-600 px-3 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-red-700 active:scale-95 transition-all"
+                className="btn-interactive inline-flex items-center gap-1.5 rounded-xl bg-red-600 px-3.5 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-red-700 active:scale-95 transition-all"
               >
-                <RotateCcw className="h-3.5 w-3.5" />
+                <RotateCcw className="h-4 w-4" />
                 <span>Làm lại (Retake)</span>
               </button>
             </div>
