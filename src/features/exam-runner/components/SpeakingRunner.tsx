@@ -10,9 +10,12 @@ import {
   ChevronLeft,
   ChevronRight,
   ArrowRight,
+  ShieldCheck,
+  AlertTriangle,
 } from 'lucide-react'
 import type { SpeakingExamSkill } from '../types/fullExam.types'
 import { useFullExamStore } from '../store/fullExamStore'
+import { toast } from '@/shared/components/Toast/toastStore'
 
 interface SpeakingRunnerProps {
   skillData: SpeakingExamSkill
@@ -21,6 +24,12 @@ interface SpeakingRunnerProps {
 export const SpeakingRunner: React.FC<SpeakingRunnerProps> = ({ skillData }) => {
   const [activePart, setActivePart] = useState<1 | 2 | 3>(1)
   const { speakingRecordings, setSpeakingRecording } = useFullExamStore()
+
+  // 2-Stage Mic Onboarding State (Prevents Safari iOS permanent lockout)
+  const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState<boolean>(false)
+  const [micPermissionState, setMicPermissionState] = useState<'prompt' | 'granted' | 'denied'>(
+    'prompt',
+  )
 
   // Part 2 Prep Timer State (60s prep, 120s speak)
   const [prepSeconds, setPrepSeconds] = useState<number>(60)
@@ -40,6 +49,7 @@ export const SpeakingRunner: React.FC<SpeakingRunnerProps> = ({ skillData }) => 
       timer = setInterval(() => setPrepSeconds((s) => s - 1), 1000)
     } else if (prepSeconds === 0 && isPrepActive) {
       setIsPrepActive(false)
+      toast.info('Hết 1 phút chuẩn bị! Bạn có thể bắt đầu phần nói 2 phút.')
     }
     return () => clearInterval(timer)
   }, [isPrepActive, prepSeconds])
@@ -52,6 +62,24 @@ export const SpeakingRunner: React.FC<SpeakingRunnerProps> = ({ skillData }) => 
     }
     return () => clearInterval(recTimer)
   }, [isRecording])
+
+  // Request explicit mic permission
+  const handleRequestMicPermission = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      setMicPermissionState('granted')
+      setHasCompletedOnboarding(true)
+      stream.getTracks().forEach((track) => track.stop())
+      toast.success('Microphone đã kết nối thành công!')
+    } catch (err) {
+      console.warn('Microphone permission denied:', err)
+      setMicPermissionState('denied')
+      toast.error('Chưa thể kết nối Microphone', {
+        description:
+          'Vui lòng kiểm tra quyền truy cập microphone trong cài đặt trình duyệt của bạn.',
+      })
+    }
+  }
 
   // Start microphone recording using browser native API
   const handleStartRecording = async (partId: number) => {
@@ -98,7 +126,59 @@ export const SpeakingRunner: React.FC<SpeakingRunnerProps> = ({ skillData }) => 
   const existingRecording = speakingRecordings[activePart]
 
   return (
-    <div className="flex h-full flex-col overflow-hidden bg-white selection:bg-emerald-100 selection:text-emerald-900">
+    <div className="flex h-full flex-col overflow-hidden bg-white selection:bg-emerald-100 selection:text-emerald-900 relative">
+      {/* ── 2-Stage Pre-Permission Gate Modal (Prevents Safari iOS Permanent Lockout) ── */}
+      {!hasCompletedOnboarding && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 animate-fade-in">
+          <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 shadow-2xl text-center space-y-5 animate-scale-up">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-red-50 text-red-600">
+              <Mic className="h-8 w-8" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-slate-900">
+                Kiểm tra Micro trước khi thi Speaking
+              </h3>
+              <p className="text-xs text-slate-600 mt-2 leading-relaxed">
+                IELTS Hồ Thành cần kết nối Microphone của bạn để ghi âm bài làm 3 Parts của kỹ năng
+                Nói. Vui lòng bấm nút bên dưới để cấp quyền và kiểm tra tín hiệu.
+              </p>
+            </div>
+
+            {micPermissionState === 'denied' && (
+              <div className="rounded-xl border border-amber-300 bg-amber-50 p-3 text-left text-xs text-amber-900 space-y-1">
+                <p className="font-bold flex items-center gap-1.5">
+                  <AlertTriangle className="h-4 w-4 text-amber-600 shrink-0" />
+                  Trình duyệt đang chặn Microphone
+                </p>
+                <p className="text-[11px] leading-relaxed">
+                  Trên iPhone / Safari: Bấm vào biểu tượng <strong>aA</strong> trên thanh địa chỉ →
+                  Cài đặt trang web → Cho phép Micro. Trên Android / Chrome: Bấm biểu tượng{' '}
+                  <strong>Ổ khóa</strong> cạnh URL → Cấp quyền Micro.
+                </p>
+              </div>
+            )}
+
+            <div className="flex flex-col gap-2 pt-2">
+              <button
+                type="button"
+                onClick={handleRequestMicPermission}
+                className="btn-interactive w-full flex items-center justify-center gap-2 rounded-xl bg-red-600 py-3 text-sm font-bold text-white hover:bg-red-700 shadow-md"
+              >
+                <ShieldCheck className="h-4 w-4" />
+                <span>Kiểm tra & Cấp quyền Micro</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setHasCompletedOnboarding(true)}
+                className="text-xs text-slate-400 hover:text-slate-600 py-1"
+              >
+                Bỏ qua kiểm tra (Sử dụng chế độ giả lập)
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ── Scrollable Main Speaking Workspace ──────────────────────── */}
       <div className="flex-1 overflow-y-auto px-4 sm:px-6 pt-6 sm:pt-10 pb-12 custom-scrollbar">
         <div className="mx-auto max-w-2xl w-full space-y-8">
@@ -132,7 +212,7 @@ export const SpeakingRunner: React.FC<SpeakingRunnerProps> = ({ skillData }) => 
               </div>
 
               {/* Recording Controls */}
-              <div className="flex items-center justify-between rounded-2xl bg-slate-900 p-6 text-white shadow-sm">
+              <div className="flex items-center justify-between rounded-2xl bg-slate-900 p-6 text-white shadow-sm flex-wrap gap-4">
                 <div className="flex items-center gap-4">
                   <div
                     className={`flex h-14 w-14 items-center justify-center rounded-2xl ${
@@ -145,9 +225,20 @@ export const SpeakingRunner: React.FC<SpeakingRunnerProps> = ({ skillData }) => 
                     <div className="text-sm font-bold">
                       {isRecording ? 'Đang ghi âm câu trả lời...' : 'Thu âm phần thi Part 1'}
                     </div>
-                    <div className="text-sm font-mono text-slate-400">
-                      Thời lượng: {Math.floor(recordingSeconds / 60)}:
-                      {String(recordingSeconds % 60).padStart(2, '0')}
+                    <div className="flex items-center gap-3 mt-0.5">
+                      <span className="text-sm font-mono text-slate-400">
+                        Thời lượng: {Math.floor(recordingSeconds / 60)}:
+                        {String(recordingSeconds % 60).padStart(2, '0')}
+                      </span>
+                      {/* Animated Audio Waveform */}
+                      {isRecording && (
+                        <div className="flex items-end gap-1 h-4">
+                          <span className="w-1 bg-red-400 rounded-full animate-pulse h-2" />
+                          <span className="w-1 bg-red-400 rounded-full animate-pulse h-4" />
+                          <span className="w-1 bg-red-400 rounded-full animate-pulse h-2.5" />
+                          <span className="w-1 bg-red-400 rounded-full animate-pulse h-3.5" />
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -216,23 +307,55 @@ export const SpeakingRunner: React.FC<SpeakingRunnerProps> = ({ skillData }) => 
                 </div>
               </div>
 
-              {/* 1-Minute Prep Countdown & Scratchpad */}
-              <div className="rounded-2xl border border-slate-200 bg-white p-5 space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-xs font-bold text-slate-800">
-                    <Clock className="h-4 w-4 text-amber-600" />
-                    <span>Thời gian chuẩn bị (1 phút suy nghĩ và ghi nháp)</span>
+              {/* 1-Minute Prep Countdown with Circular Progress Ring & Scratchpad */}
+              <div className="rounded-2xl border border-slate-200 bg-white p-5 space-y-4">
+                <div className="flex items-center justify-between flex-wrap gap-3">
+                  <div className="flex items-center gap-3">
+                    {/* SVG Circular Countdown Ring */}
+                    <div className="relative flex h-12 w-12 shrink-0 items-center justify-center">
+                      <svg className="h-full w-full -rotate-90 transform" viewBox="0 0 48 48">
+                        <circle
+                          cx="24"
+                          cy="24"
+                          r="20"
+                          className="stroke-amber-100"
+                          strokeWidth="4"
+                          fill="transparent"
+                        />
+                        <circle
+                          cx="24"
+                          cy="24"
+                          r="20"
+                          className="stroke-amber-500 transition-all duration-1000"
+                          strokeWidth="4"
+                          strokeDasharray={125.6}
+                          strokeDashoffset={125.6 - (prepSeconds / 60) * 125.6}
+                          strokeLinecap="round"
+                          fill="transparent"
+                        />
+                      </svg>
+                      <span className="absolute font-mono text-[11px] font-bold text-amber-700">
+                        {prepSeconds}s
+                      </span>
+                    </div>
+
+                    <div>
+                      <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                        <Clock className="h-4 w-4 text-amber-600" />
+                        Thời gian chuẩn bị
+                      </span>
+                      <p className="text-[11px] text-slate-500">
+                        1 phút suy nghĩ và ghi nháp ý chính
+                      </p>
+                    </div>
                   </div>
 
-                  <div className="flex items-center gap-3">
-                    <span className="font-mono text-sm font-bold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">
-                      00:{String(prepSeconds).padStart(2, '0')}
-                    </span>
+                  <div className="flex items-center gap-2">
                     {!isPrepActive && prepSeconds > 0 && (
                       <button
                         type="button"
                         onClick={() => setIsPrepActive(true)}
-                        className="btn-interactive flex items-center gap-1 rounded-lg bg-amber-600 px-3 py-1 text-xs font-bold text-white hover:bg-amber-700"
+                        className="btn-interactive flex items-center gap-1 rounded-xl bg-amber-600 px-3.5 py-1.5 text-xs font-bold text-white hover:bg-amber-700 shadow-2xs"
                       >
                         <Play className="h-3.5 w-3.5" />
                         <span>Bắt đầu 1 phút</span>
@@ -245,9 +368,9 @@ export const SpeakingRunner: React.FC<SpeakingRunnerProps> = ({ skillData }) => 
                           setPrepSeconds(60)
                           setIsPrepActive(false)
                         }}
-                        className="btn-interactive flex items-center gap-1 rounded-lg border border-slate-200 px-2.5 py-1 text-xs text-slate-600 hover:bg-slate-50"
+                        className="btn-interactive flex items-center gap-1 rounded-xl border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-2xs"
                       >
-                        <RotateCcw className="h-3 w-3" />
+                        <RotateCcw className="h-3.5 w-3.5" />
                         <span>Đặt lại</span>
                       </button>
                     )}
@@ -258,12 +381,12 @@ export const SpeakingRunner: React.FC<SpeakingRunnerProps> = ({ skillData }) => 
                   value={scratchNotes}
                   onChange={(e) => setScratchNotes(e.target.value)}
                   placeholder="Ghi nhanh các ý chính/keywords nháp cho bài nói Part 2 tại đây..."
-                  className="w-full h-24 rounded-xl border border-slate-200 bg-slate-50/60 p-3 text-xs text-slate-800 placeholder-slate-400 focus:border-slate-900 focus:bg-white focus:outline-hidden"
+                  className="w-full h-24 rounded-xl border border-slate-200 bg-slate-50/60 p-3 text-xs text-slate-800 placeholder-slate-400 focus:border-slate-900 focus:bg-white focus:outline-hidden custom-scrollbar"
                 />
               </div>
 
               {/* Part 2 Recording */}
-              <div className="flex items-center justify-between rounded-2xl bg-slate-900 p-5 text-white shadow-lg">
+              <div className="flex items-center justify-between rounded-2xl bg-slate-900 p-5 text-white shadow-lg flex-wrap gap-4">
                 <div className="flex items-center gap-3">
                   <div
                     className={`flex h-12 w-12 items-center justify-center rounded-2xl ${
@@ -276,9 +399,19 @@ export const SpeakingRunner: React.FC<SpeakingRunnerProps> = ({ skillData }) => 
                     <div className="text-xs font-bold">
                       {isRecording ? 'Đang ghi âm bài nói 2 phút...' : 'Ghi âm Part 2 (Long turn)'}
                     </div>
-                    <div className="text-xs font-mono text-slate-400">
-                      Thời lượng nói: {Math.floor(recordingSeconds / 60)}:
-                      {String(recordingSeconds % 60).padStart(2, '0')} / 02:00
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <span className="text-xs font-mono text-slate-400">
+                        Thời lượng: {Math.floor(recordingSeconds / 60)}:
+                        {String(recordingSeconds % 60).padStart(2, '0')} / 02:00
+                      </span>
+                      {/* Animated Audio Waveform */}
+                      {isRecording && (
+                        <div className="flex items-end gap-1 h-3.5">
+                          <span className="w-1 bg-red-400 rounded-full animate-pulse h-2" />
+                          <span className="w-1 bg-red-400 rounded-full animate-pulse h-3.5" />
+                          <span className="w-1 bg-red-400 rounded-full animate-pulse h-2.5" />
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -343,7 +476,7 @@ export const SpeakingRunner: React.FC<SpeakingRunnerProps> = ({ skillData }) => 
               </div>
 
               {/* Part 3 Recording */}
-              <div className="flex items-center justify-between rounded-2xl bg-slate-900 p-5 text-white shadow-lg">
+              <div className="flex items-center justify-between rounded-2xl bg-slate-900 p-5 text-white shadow-lg flex-wrap gap-4">
                 <div className="flex items-center gap-3">
                   <div
                     className={`flex h-12 w-12 items-center justify-center rounded-2xl ${
@@ -356,9 +489,19 @@ export const SpeakingRunner: React.FC<SpeakingRunnerProps> = ({ skillData }) => 
                     <div className="text-xs font-bold">
                       {isRecording ? 'Đang ghi âm Part 3...' : 'Thu âm phần thảo luận Part 3'}
                     </div>
-                    <div className="text-xs font-mono text-slate-400">
-                      Thời lượng: {Math.floor(recordingSeconds / 60)}:
-                      {String(recordingSeconds % 60).padStart(2, '0')}
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <span className="text-xs font-mono text-slate-400">
+                        Thời lượng: {Math.floor(recordingSeconds / 60)}:
+                        {String(recordingSeconds % 60).padStart(2, '0')}
+                      </span>
+                      {/* Animated Audio Waveform */}
+                      {isRecording && (
+                        <div className="flex items-end gap-1 h-3.5">
+                          <span className="w-1 bg-red-400 rounded-full animate-pulse h-2" />
+                          <span className="w-1 bg-red-400 rounded-full animate-pulse h-3.5" />
+                          <span className="w-1 bg-red-400 rounded-full animate-pulse h-2.5" />
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

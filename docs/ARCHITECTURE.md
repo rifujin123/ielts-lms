@@ -828,3 +828,31 @@ Whenever an engineer or AI agent introduces a reusable component, hook, or layou
   - Motion Budget: 300ms `ease-out` slide and fade.
   - Uses `invisible delay-300` on exit to allow exit transitions to play completely before removing pointer/focus visibility.
   - Body overflow restored on unmount/close to eliminate sticky body scroll bugs.
+
+### 17. IELTS 4-Skills Mobile Exam Runner (< 768px Viewports)
+
+- **Asset Name & File Path**:
+  - `ReadingRunner` (`src/features/exam-runner/components/ReadingRunner.tsx`)
+  - `ListeningRunner` (`src/features/exam-runner/components/ListeningRunner.tsx`)
+  - `WritingRunner` (`src/features/exam-runner/components/WritingRunner.tsx`)
+  - `SpeakingRunner` (`src/features/exam-runner/components/SpeakingRunner.tsx`)
+  - `ExamBottomPalette` (`src/features/exam-runner/components/ExamBottomPalette.tsx`)
+- **Purpose & UX Intent**:
+  - Delivers a dedicated mobile-first, distraction-free IELTS exam runner on viewports `< 768px` that resolves split-pane failure, virtual keyboard intrusions, touch highlighting collisions, and Safari iOS microphone lockouts.
+  - **Reading**: Resizable Question Bottom Sheet with 3 ergonomic snap states (15% Peek, 45% Split, 90% Full), touch drag handle, and quick snap buttons over an independent full-width passage layer.
+  - **Listening**: Mobile sticky top audio player keeping track time and controls visible above the keyboard, combined with safe-zone `scrollIntoView({ behavior: 'smooth', block: 'center' })` auto-centering on input focus.
+  - **Writing**: Expandable Task 1 accordion prompt/chart drawer, full-screen focus writing mode, debounced 3-second auto-save to localStorage, and dynamic floating word counter pinned above the mobile virtual keyboard via `window.visualViewport`.
+  - **Speaking**: 2-stage pre-permission microphone onboarding modal preventing Safari iOS permanent lockout, responsive SVG circular countdown timer for Part 2 prep, and real-time audio waveform visualizers.
+  - **Navigation**: Universal horizontal swipe ribbon with color status badges (emerald answered, amber flagged, slate unanswered) preserving strict 0px layout shift.
+- **Usage Example**:
+  ```tsx
+  import { ReadingRunner } from '@/features/exam-runner/components/ReadingRunner'
+  import { ListeningRunner } from '@/features/exam-runner/components/ListeningRunner'
+  import { WritingRunner } from '@/features/exam-runner/components/WritingRunner'
+  import { SpeakingRunner } from '@/features/exam-runner/components/SpeakingRunner'
+  ```
+- **Constraints & Invariants**:
+  - Strict 0px layout shift across bottom sheet snaps, keyboard intrusions, and question ribbon navigation.
+  - Desktop view (`>= 768px`) remains 100% untouched and pixel-perfect with dual-pane `react-resizable-panels`.
+  - Hardware-accelerated CSS transitions (`transition-[height] duration-200 ease-out`).
+  - No external drag or modal libraries; built with native touch events, `window.visualViewport`, and semantic Tailwind tokens.

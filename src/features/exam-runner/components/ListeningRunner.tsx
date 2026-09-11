@@ -94,6 +94,28 @@ export const ListeningRunner: React.FC<ListeningRunnerProps> = ({ skillData, onS
 
   const progressPct = duration > 0 ? (currentTime / duration) * 100 : 0
 
+  // Auto-scroll safe-zone: center focused input fields above virtual keyboard on mobile
+  useEffect(() => {
+    const workspace = document.getElementById('listening-scroll-workspace')
+    if (!workspace) return
+
+    const handleFocusIn = (e: FocusEvent) => {
+      const target = e.target as HTMLElement
+      if (
+        target &&
+        (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)
+      ) {
+        // Wait 150ms for mobile virtual keyboard animation to settle
+        setTimeout(() => {
+          target.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }, 150)
+      }
+    }
+
+    workspace.addEventListener('focusin', handleFocusIn)
+    return () => workspace.removeEventListener('focusin', handleFocusIn)
+  }, [])
+
   return (
     <div className="flex h-full flex-col overflow-hidden bg-white selection:bg-emerald-100 selection:text-emerald-900">
       {/* ── Hidden HTML5 Audio Element for live stream support ──────── */}
@@ -118,10 +140,49 @@ export const ListeningRunner: React.FC<ListeningRunnerProps> = ({ skillData, onS
         />
       )}
 
+      {/* ── Mobile Sticky Top Audio Bar (< 768px: Stays visible above keyboard) ── */}
+      <div className="sm:hidden sticky top-0 z-20 shrink-0 border-b border-slate-200 bg-white shadow-xs px-4 py-2.5">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <span className="flex h-2 w-2 rounded-full bg-red-600 animate-pulse" />
+            <span className="text-xs font-bold text-slate-800">
+              Section {currentSection.sectionNumber}
+            </span>
+          </div>
+
+          <span className="text-xs font-mono font-bold text-red-600 bg-red-50 px-2.5 py-0.5 rounded-full border border-red-200">
+            {formatTime(currentTime)} / {formatTime(duration)}
+          </span>
+
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => setIsMuted(!isMuted)}
+              aria-label={isMuted ? 'Bật âm thanh' : 'Tắt âm thanh'}
+              className="text-slate-600 hover:text-slate-900"
+            >
+              {isMuted || volume === 0 ? (
+                <VolumeX className="h-4 w-4 text-red-500" />
+              ) : (
+                <Volume2 className="h-4 w-4 text-slate-700" />
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Mini Audio Progress Track */}
+        <div className="relative w-full h-1.5 bg-slate-100 rounded-full mt-2 overflow-hidden">
+          <div
+            className="h-full bg-red-600 transition-all duration-300 rounded-full"
+            style={{ width: `${progressPct}%` }}
+          />
+        </div>
+      </div>
+
       {/* ── 1. SCROLLABLE QUESTIONS WORKSPACE (FULL HEIGHT) ─────────── */}
       <div
         id="listening-scroll-workspace"
-        className="flex-1 overflow-y-auto px-4 sm:px-6 pt-6 sm:pt-10 pb-36 custom-scrollbar"
+        className="flex-1 overflow-y-auto px-4 sm:px-6 pt-4 sm:pt-10 pb-36 custom-scrollbar"
       >
         <div className="mx-auto w-full max-w-2xl space-y-6">
           {/* Modular Section View (Supports Multiple Choice, Completion, Table Completion, etc.) */}
@@ -138,8 +199,8 @@ export const ListeningRunner: React.FC<ListeningRunnerProps> = ({ skillData, onS
 
       {/* ── 2. SIGNATURE DOL BOTTOM NAVIGATION BAR (MATCHES SCREENSHOT) ── */}
       <footer className="sticky bottom-0 z-30 shrink-0 border-t border-slate-200 bg-white shadow-lg">
-        {/* Red Line Audio Progress Track with Sliding Timestamp Capsule Pill */}
-        <div className="relative w-full h-1 bg-slate-100 overflow-visible">
+        {/* Red Line Audio Progress Track with Sliding Timestamp Capsule Pill (Desktop) */}
+        <div className="hidden sm:block relative w-full h-1 bg-slate-100 overflow-visible">
           <div
             className="h-full bg-red-600 transition-all duration-300"
             style={{ width: `${progressPct}%` }}
@@ -153,9 +214,9 @@ export const ListeningRunner: React.FC<ListeningRunnerProps> = ({ skillData, onS
           </div>
         </div>
 
-        {/* Row A: Centered Question Jump Pills (1, 2, 3... 10) */}
+        {/* Row A: Swipeable Question Jump Ribbon (1, 2, 3... 10) */}
         {showQuestionPills && (
-          <div className="flex items-center justify-center gap-2 border-b border-slate-100 py-3 px-4 overflow-x-auto custom-scrollbar">
+          <div className="flex items-center justify-start sm:justify-center gap-1.5 sm:gap-2 border-b border-slate-100 py-2.5 sm:py-3 px-3 sm:px-4 overflow-x-auto custom-scrollbar scroll-smooth">
             {currentSection.questions.map((q) => {
               const isAns = listeningAnswers[q.id] && listeningAnswers[q.id].trim() !== ''
               const isFlag = !!flaggedQuestions[`LISTENING_${q.id}`]
@@ -166,10 +227,12 @@ export const ListeningRunner: React.FC<ListeningRunnerProps> = ({ skillData, onS
                   type="button"
                   onClick={() => scrollToQuestion(q.id)}
                   title={`Câu ${q.id} - ${isAns ? 'Đã làm' : 'Chưa làm'}`}
-                  className={`btn-interactive relative flex h-9 min-w-9 items-center justify-center rounded-lg px-3 text-sm font-bold transition-all border ${
-                    isAns
-                      ? 'border-slate-900 bg-slate-900 text-white shadow-sm'
-                      : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50'
+                  className={`btn-interactive relative flex h-8 sm:h-9 min-w-8 sm:min-w-9 shrink-0 items-center justify-center rounded-lg px-2.5 sm:px-3 text-xs sm:text-sm font-bold transition-all border ${
+                    isFlag
+                      ? 'border-amber-400 bg-amber-50 text-amber-800 shadow-2xs'
+                      : isAns
+                        ? 'border-emerald-400 bg-emerald-50 text-emerald-700 font-bold'
+                        : 'border-slate-200 bg-slate-100 text-slate-600 hover:bg-slate-200'
                   }`}
                 >
                   <span>{q.id}</span>

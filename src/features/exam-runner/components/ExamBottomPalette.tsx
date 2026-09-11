@@ -98,9 +98,9 @@ export const ExamBottomPalette: React.FC = () => {
 
   return (
     <footer className="sticky bottom-0 z-30 shrink-0 border-t border-slate-200 bg-white shadow-lg select-none">
-      {/* ── Row 1: Centered Question Jump Pills (Collapsible) ────────── */}
+      {/* ── Row 1: Mobile-Optimized Question Jump Ribbon (Swipeable & Color-Coded) ── */}
       {showQuestionPills && (
-        <div className="flex items-center justify-center gap-1.5 border-b border-slate-100 py-2 px-4 overflow-x-auto custom-scrollbar">
+        <div className="flex items-center justify-start sm:justify-center gap-1.5 border-b border-slate-100 py-2 px-3 sm:px-4 overflow-x-auto custom-scrollbar scroll-smooth">
           {questionsInCurrentPassage.map((q) => {
             const isAnswered = typeof answers[q.id] === 'string' && answers[q.id].trim() !== ''
             const isFlagged = !!flaggedQuestions[q.id]
@@ -112,17 +112,19 @@ export const ExamBottomPalette: React.FC = () => {
                 type="button"
                 onClick={() => handleSelectQuestion(q.id)}
                 title={`Câu ${q.id} - ${isAnswered ? 'Đã làm' : 'Chưa làm'}${isFlagged ? ' (Gắn cờ)' : ''}`}
-                className={`btn-interactive relative flex h-7 min-w-8 items-center justify-center rounded-xl px-2 text-xs font-bold transition-all border border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50 ${
-                  isActive ? 'ring-2 ring-red-600 border-red-500 text-red-700' : ''
+                className={`btn-interactive relative flex h-7 sm:h-8 min-w-8 shrink-0 items-center justify-center rounded-xl px-2 text-xs font-bold transition-all border ${
+                  isActive ? 'ring-2 ring-red-600 ring-offset-1 z-10' : ''
                 } ${
-                  isAnswered
-                    ? 'text-slate-900 underline decoration-2 underline-offset-4 decoration-slate-900'
-                    : 'text-slate-700'
+                  isFlagged
+                    ? 'border-amber-400 bg-amber-50 text-amber-800 shadow-2xs'
+                    : isAnswered
+                      ? 'border-emerald-400 bg-emerald-50 text-emerald-700 font-bold'
+                      : 'border-slate-200 bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-800'
                 }`}
               >
                 <span>{q.id}</span>
                 {isFlagged && (
-                  <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-amber-500 ring-1 ring-white" />
+                  <span className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-amber-500 ring-2 ring-white" />
                 )}
               </button>
             )
