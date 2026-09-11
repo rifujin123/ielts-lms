@@ -265,3 +265,4 @@ The single source of truth for all visual design is:
 - **Branch strategy**: `main` is stable; features developed on `feature/*` branches
 - **Tech stack decision log**: `docs/SPEC.md`
 - **Architecture reference**: `docs/ARCHITECTURE.md`
+- **IELTS CBT Exam Runner PRD**: [`docs/PRD_IELTS_CBT_EXAM.md`](PRD_IELTS_CBT_EXAM.md)
