@@ -161,7 +161,52 @@ export const ExamBottomPalette: React.FC = () => {
 
         {/* Center: 3 Passage Switcher Pills (Pass 1, Pass 2, Pass 3) ───── */}
         <div className="flex items-center justify-center min-w-0 px-1 md:absolute md:left-1/2 md:-translate-x-1/2 md:top-1/2 md:-translate-y-1/2">
-          <div className="flex items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200 shadow-2xs overflow-x-auto custom-scrollbar">
+          {/* Mobile (< md): Single Active Passage with Half-Inset Circular Chevrons (50% in, 50% out) */}
+          <div className="relative flex md:hidden items-center select-none mx-3.5">
+            <button
+              type="button"
+              onClick={() => handlePassageSwitch((activePassageId - 1) as 1 | 2 | 3)}
+              disabled={activePassageId <= 1}
+              aria-label="Passage trước"
+              title={
+                activePassageId > 1
+                  ? `Chuyển về Passage ${activePassageId - 1}`
+                  : 'Đã ở Passage đầu tiên'
+              }
+              className="btn-interactive absolute -left-3.5 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-800 shadow-sm ring-1 ring-slate-900/10 hover:bg-slate-50 hover:border-slate-400 disabled:opacity-20 disabled:cursor-not-allowed transition-all active:scale-95"
+            >
+              <ChevronLeft className="h-3.5 w-3.5" />
+            </button>
+
+            <div className="flex items-center gap-1.5 rounded-full bg-slate-900 pl-6 pr-6 py-1 text-xs font-bold text-white shadow-xs border border-slate-800">
+              <BookOpen className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+              <span>Passage {activePassageId}</span>
+              <span className="rounded-full px-1.5 py-0.2 text-[10px] bg-white/20 text-white shrink-0">
+                {answeredInCurrent}/{endQ - startQ + 1}
+              </span>
+              <span className="text-[10px] text-slate-400 font-mono">
+                {activePassageId}/{manifest.passages.length}
+              </span>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => handlePassageSwitch((activePassageId + 1) as 1 | 2 | 3)}
+              disabled={activePassageId >= manifest.passages.length}
+              aria-label="Passage sau"
+              title={
+                activePassageId < manifest.passages.length
+                  ? `Chuyển sang Passage ${activePassageId + 1}`
+                  : 'Đã ở Passage cuối cùng'
+              }
+              className="btn-interactive absolute -right-3.5 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-800 shadow-sm ring-1 ring-slate-900/10 hover:bg-slate-50 hover:border-slate-400 disabled:opacity-20 disabled:cursor-not-allowed transition-all active:scale-95"
+            >
+              <ChevronRight className="h-3.5 w-3.5" />
+            </button>
+          </div>
+
+          {/* Desktop (>= md): Full 3 Passages Horizontal Tabs */}
+          <div className="hidden md:flex items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200 shadow-2xs overflow-x-auto custom-scrollbar">
             {manifest.passages.map((p) => {
               const isActive = activePassageId === p.id
               const [pStart, pEnd] = p.questionRange

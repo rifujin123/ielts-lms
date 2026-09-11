@@ -382,7 +382,52 @@ export const WritingRunner: React.FC<WritingRunnerProps> = ({ skillData }) => {
 
           {/* Center: 2 Task Switcher Pills (Task 1, Task 2) ─────────── */}
           <div className="flex items-center justify-center min-w-0 px-1 md:absolute md:left-1/2 md:-translate-x-1/2 md:top-1/2 md:-translate-y-1/2">
-            <div className="flex items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200 shadow-2xs overflow-x-auto custom-scrollbar">
+            {/* Mobile (< md): Single Active Task with Half-Inset Circular Chevrons (50% in, 50% out) */}
+            <div className="relative flex md:hidden items-center select-none mx-3.5">
+              <button
+                type="button"
+                onClick={() => setActiveTaskIndex(0)}
+                disabled={activeTaskIndex === 0}
+                aria-label="Task trước"
+                title={activeTaskIndex > 0 ? 'Chuyển về Task 1' : 'Đã ở Task đầu tiên'}
+                className="btn-interactive absolute -left-3.5 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-800 shadow-sm ring-1 ring-slate-900/10 hover:bg-slate-50 hover:border-slate-400 disabled:opacity-20 disabled:cursor-not-allowed transition-all active:scale-95"
+              >
+                <ChevronLeft className="h-3.5 w-3.5" />
+              </button>
+
+              <div className="flex items-center gap-1.5 rounded-full bg-slate-900 pl-6 pr-6 py-1 text-xs font-bold text-white shadow-xs border border-slate-800">
+                <FileText className="h-3.5 w-3.5 text-purple-400 shrink-0" />
+                <span>Task {currentTask.taskNumber}</span>
+                <span
+                  className={`rounded-full px-1.5 py-0.2 text-[10px] shrink-0 ${
+                    isWordCountSufficient ? 'bg-emerald-500 text-white' : 'bg-white/20 text-white'
+                  }`}
+                >
+                  {wordCount}/{currentTask.minWords}
+                </span>
+                <span className="text-[10px] text-slate-400 font-mono">
+                  {activeTaskIndex + 1}/{skillData.tasks.length}
+                </span>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setActiveTaskIndex(1)}
+                disabled={activeTaskIndex >= skillData.tasks.length - 1}
+                aria-label="Task sau"
+                title={
+                  activeTaskIndex < skillData.tasks.length - 1
+                    ? 'Chuyển sang Task 2'
+                    : 'Đã ở Task cuối cùng'
+                }
+                className="btn-interactive absolute -right-3.5 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-800 shadow-sm ring-1 ring-slate-900/10 hover:bg-slate-50 hover:border-slate-400 disabled:opacity-20 disabled:cursor-not-allowed transition-all active:scale-95"
+              >
+                <ChevronRight className="h-3.5 w-3.5" />
+              </button>
+            </div>
+
+            {/* Desktop (>= md): Full 2 Tasks Horizontal Tabs */}
+            <div className="hidden md:flex items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200 shadow-2xs overflow-x-auto custom-scrollbar">
               {skillData.tasks.map((task, idx) => {
                 const isActive = activeTaskIndex === idx
                 const taskKey = idx === 0 ? 'task1' : 'task2'

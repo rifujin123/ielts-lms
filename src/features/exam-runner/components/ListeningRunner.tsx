@@ -1,5 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { Volume2, VolumeX, ChevronDown, ArrowRight, CheckCircle2 } from 'lucide-react'
+import {
+  Volume2,
+  VolumeX,
+  ChevronDown,
+  ArrowRight,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  Headphones,
+} from 'lucide-react'
 import type { ListeningExamSkill } from '../types/fullExam.types'
 import { useFullExamStore } from '../store/fullExamStore'
 import { ListeningSectionView } from './ListeningSectionView'
@@ -271,8 +280,8 @@ export const ListeningRunner: React.FC<ListeningRunnerProps> = ({ skillData, onS
               </span>
             </div>
 
-            {/* Audio Volume Control */}
-            <div className="flex items-center gap-1.5 pl-2 border-l border-slate-200 shrink-0">
+            {/* Audio Volume Control (Desktop only, mobile relies on hardware buttons) */}
+            <div className="hidden sm:flex items-center gap-1.5 pl-2 border-l border-slate-200 shrink-0">
               <button
                 type="button"
                 onClick={() => setIsMuted(!isMuted)}
@@ -306,7 +315,60 @@ export const ListeningRunner: React.FC<ListeningRunnerProps> = ({ skillData, onS
 
           {/* Center: 4 Section Pills with Mini Progress Bars */}
           <div className="flex items-center justify-center min-w-0 px-1 md:absolute md:left-1/2 md:-translate-x-1/2 md:top-1/2 md:-translate-y-1/2">
-            <div className="flex items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200 shadow-2xs overflow-x-auto custom-scrollbar">
+            {/* Mobile (< md): Single Active Section with Half-Inset Circular Chevrons (50% in, 50% out) */}
+            <div className="relative flex md:hidden items-center select-none mx-3.5">
+              <button
+                type="button"
+                onClick={() => {
+                  if (activeSectionIndex > 0) {
+                    setActiveSectionIndex(activeSectionIndex - 1)
+                  }
+                }}
+                disabled={activeSectionIndex <= 0}
+                aria-label="Section trước"
+                title={
+                  activeSectionIndex > 0
+                    ? `Chuyển về Section ${skillData.sections[activeSectionIndex - 1].sectionNumber}`
+                    : 'Đã ở Section đầu tiên'
+                }
+                className="btn-interactive absolute -left-3.5 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-800 shadow-sm ring-1 ring-slate-900/10 hover:bg-slate-50 hover:border-slate-400 disabled:opacity-20 disabled:cursor-not-allowed transition-all active:scale-95"
+              >
+                <ChevronLeft className="h-3.5 w-3.5" />
+              </button>
+
+              <div className="flex items-center gap-1.5 rounded-full bg-slate-900 pl-6 pr-6 py-1 text-xs font-bold text-white shadow-xs border border-slate-800">
+                <Headphones className="h-3.5 w-3.5 text-blue-400 shrink-0" />
+                <span>Section {currentSection.sectionNumber}</span>
+                <span className="rounded-full px-1.5 py-0.2 text-[10px] bg-white/20 text-white shrink-0">
+                  {answeredInCurrent}/{endQ - startQ + 1}
+                </span>
+                <span className="text-[10px] text-slate-400 font-mono">
+                  {activeSectionIndex + 1}/{skillData.sections.length}
+                </span>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  if (activeSectionIndex < skillData.sections.length - 1) {
+                    setActiveSectionIndex(activeSectionIndex + 1)
+                  }
+                }}
+                disabled={activeSectionIndex >= skillData.sections.length - 1}
+                aria-label="Section sau"
+                title={
+                  activeSectionIndex < skillData.sections.length - 1
+                    ? `Chuyển sang Section ${skillData.sections[activeSectionIndex + 1].sectionNumber}`
+                    : 'Đã ở Section cuối cùng'
+                }
+                className="btn-interactive absolute -right-3.5 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-800 shadow-sm ring-1 ring-slate-900/10 hover:bg-slate-50 hover:border-slate-400 disabled:opacity-20 disabled:cursor-not-allowed transition-all active:scale-95"
+              >
+                <ChevronRight className="h-3.5 w-3.5" />
+              </button>
+            </div>
+
+            {/* Desktop (>= md): Full 4 Sections Horizontal Tabs */}
+            <div className="hidden md:flex items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200 shadow-2xs overflow-x-auto custom-scrollbar">
               {skillData.sections.map((sec, idx) => {
                 const isActive = activeSectionIndex === idx
                 const [s, e] = sec.questionRange
