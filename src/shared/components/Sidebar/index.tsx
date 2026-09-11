@@ -75,7 +75,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, onItemClick }) => {
                   cn(
                     'group relative flex items-center gap-2.5 rounded-full px-3 py-2 text-body-sm transition-all duration-200 ease-out border border-l-4',
                     isActive
-                      ? 'bg-red-50 text-primary font-bold shadow-xs border-red-200 border-l-primary scale-[1.01]'
+                      ? 'bg-slate-100 text-slate-900 font-bold shadow-xs border-slate-200 border-l-slate-900 scale-[1.01]'
                       : 'border-transparent text-secondary hover:bg-surface-container-low hover:text-on-surface hover:translate-x-0.5',
                   )
                 }
@@ -86,7 +86,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, onItemClick }) => {
                       className={cn(
                         'material-symbols-outlined text-[20px] transition-transform duration-200',
                         isActive
-                          ? 'text-primary scale-110'
+                          ? 'text-slate-900 scale-110'
                           : 'text-secondary group-hover:text-on-surface',
                       )}
                     >

@@ -301,10 +301,11 @@ The portal adheres to a **Subtle & Academic** motion philosophy (150–250ms, GP
 
 ### 2. Sidebar Navigation Pill Pattern
 
-Sidebar active items are designed as **full pills** (`rounded-full`) with active state transitions:
+Sidebar active items are designed as **full pills** (`rounded-full`) with **Deep Slate / Ink** active state transitions (inspired by Linear and Notion UI):
 
-- **Active state**: `bg-red-50 text-primary font-bold rounded-full shadow-xs border border-red-200 border-l-4 border-l-primary scale-[1.01]` + icon micro-scale (`scale-110`).
+- **Active state**: `bg-slate-100 text-slate-900 font-bold rounded-full shadow-xs border border-slate-200 border-l-4 border-l-slate-900 scale-[1.01]` + icon micro-scale (`text-slate-900 scale-110`).
 - **Inactive state**: `rounded-full border border-l-4 border-transparent text-secondary hover:bg-surface-container-low hover:text-on-surface hover:translate-x-0.5 transition-all duration-200 ease-out`.
+- **Zero Pixel Shift (0px)**: The container maintains `border border-l-4` across both active and inactive states (`border-transparent` vs `border-slate-200 border-l-slate-900`) to guarantee zero layout shift during navigation transitions.
 
 ### 3. Rules for Agents Building New Features
 
