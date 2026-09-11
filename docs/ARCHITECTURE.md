@@ -361,22 +361,62 @@ Whenever any agent adds, modifies, or extracts a **reusable asset** (UI componen
 
 ### 📦 Current Reusable Asset Registry
 
-| Asset Name            | Location                              | Type      | Description & Purpose                                                                                                                   |
-| --------------------- | ------------------------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `.card-interactive`   | `src/styles/globals.css`              | CSS Class | Lifts card by 3px (`translateY(-3px)`), softens shadow, and adds subtle crimson hover ring. Apply to all clickable / interactive cards. |
-| `.btn-interactive`    | `src/styles/globals.css`              | CSS Class | Tactile click micro-compression (`scale(0.97)`) on `:active`. Apply to all interactive buttons.                                         |
-| `.animate-fade-in-up` | `src/styles/globals.css`              | CSS Class | GPU-accelerated entrance animation (opacity 0 → 1, translateY 12px → 0 in 400ms).                                                       |
-| `.stagger-1`..`5`     | `src/styles/globals.css`              | CSS Class | Progressive 50ms delay steps (50ms–250ms) to stagger entrance across grid / list children.                                              |
-| `.animate-pop-in`     | `src/styles/globals.css`              | CSS Class | Micro-bounce scale animation for status badges, tags, and active checkmarks.                                                            |
-| `.badge-minimal`      | `src/styles/globals.css`              | CSS Class | Minimal Modern status badge (Linear/Notion style). Slate-100 base, slate-200 border, and semantic micro-dot (emerald/red/amber/slate).  |
-| `.badge-tag`          | `src/styles/globals.css`              | CSS Class | Clean desaturated metadata/skill tag for Reading, Writing, and course modules.                                                          |
-| `.badge-score`        | `src/styles/globals.css`              | CSS Class | High-contrast deep slate (slate-900) score badge for IELTS band scores and primary counters.                                            |
-| `.nav-item-active`    | `src/styles/globals.css`              | CSS Class | Deep Slate / Ink pill active styling with 4px slate-900 indicator and 0px shift border.                                                 |
-| `<Sidebar />`         | `src/shared/components/Sidebar`       | Component | Slim 224px navigation sidebar with categorized groups and Deep Slate active pills.                                                      |
-| `<Header />`          | `src/shared/components/Header`        | Component | Standard top navbar with branding logo, left-chevron back button, user profile, and notifications.                                      |
-| `<MobileSidebar />`   | `src/shared/components/MobileSidebar` | Component | Mobile responsive drawer wrapper with backdrop blur and route-change auto-close.                                                        |
-| `<ErrorBoundary />`   | `src/shared/components/ErrorBoundary` | Component | React error boundary catching render exceptions and showing a user-friendly retry screen.                                               |
-| `<PageLoader />`      | `src/shared/components/PageLoader`    | Component | Centered brand loading skeleton indicator.                                                                                              |
+| Asset Name               | Location                                  | Type      | Description & Purpose                                                                                                                   |
+| ------------------------ | ----------------------------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `.card-interactive`      | `src/styles/globals.css`                  | CSS Class | Lifts card by 3px (`translateY(-3px)`), softens shadow, and adds subtle crimson hover ring. Apply to all clickable / interactive cards. |
+| `.btn-interactive`       | `src/styles/globals.css`                  | CSS Class | Tactile click micro-compression (`scale(0.97)`) on `:active`. Apply to all interactive buttons.                                         |
+| `.animate-fade-in-up`    | `src/styles/globals.css`                  | CSS Class | GPU-accelerated entrance animation (opacity 0 → 1, translateY 12px → 0 in 400ms).                                                       |
+| `.stagger-1`..`5`        | `src/styles/globals.css`                  | CSS Class | Progressive 50ms delay steps (50ms–250ms) to stagger entrance across grid / list children.                                              |
+| `.animate-pop-in`        | `src/styles/globals.css`                  | CSS Class | Micro-bounce scale animation for status badges, tags, and active checkmarks.                                                            |
+| `.badge-minimal`         | `src/styles/globals.css`                  | CSS Class | Minimal Modern status badge (Linear/Notion style). Slate-100 base, slate-200 border, and semantic micro-dot (emerald/red/amber/slate).  |
+| `.badge-tag`             | `src/styles/globals.css`                  | CSS Class | Clean desaturated metadata/skill tag for Reading, Writing, and course modules.                                                          |
+| `.badge-score`           | `src/styles/globals.css`                  | CSS Class | High-contrast deep slate (slate-900) score badge for IELTS band scores and primary counters.                                            |
+| `.animate-toast-in`      | `src/styles/globals.css`                  | CSS Class | Toast entrance animation (slide left + spring scale in 220ms with cubic-bezier(0.16, 1, 0.3, 1)).                                       |
+| `.animate-toast-out`     | `src/styles/globals.css`                  | CSS Class | Toast exit animation (slide right + fade out in 180ms ease-out).                                                                        |
+| `.nav-item-active`       | `src/styles/globals.css`                  | CSS Class | Deep Slate / Ink pill active styling with 4px slate-900 indicator and 0px shift border.                                                 |
+| `<ToastContainer />`     | `src/shared/components/Toast`             | Component | Top-right fixed viewport container rendering active toasts with hover-pause countdown and accessible live region.                       |
+| `toast`                  | `src/shared/components/Toast/toastStore`  | Utility   | Imperative toast dispatcher: `toast.error()`, `toast.warning()`, `toast.success()`, `toast.info()`, `toast.dismiss()`.                  |
+| `<GlobalErrorHandler />` | `src/shared/providers/GlobalErrorHandler` | Component | Window lifecycle listener catching uncaught exceptions and unhandled promise rejections, triggering actionable toasts.                  |
+| `<Sidebar />`            | `src/shared/components/Sidebar`           | Component | Slim 224px navigation sidebar with categorized groups and Deep Slate active pills.                                                      |
+| `<Header />`             | `src/shared/components/Header`            | Component | Standard top navbar with branding logo, left-chevron back button, user profile, and notifications.                                      |
+| `<MobileSidebar />`      | `src/shared/components/MobileSidebar`     | Component | Mobile responsive drawer wrapper with backdrop blur and route-change auto-close.                                                        |
+| `<ErrorBoundary />`      | `src/shared/components/ErrorBoundary`     | Component | Dual-layer error boundary (`FeatureErrorBoundary` + `GlobalErrorBoundary`) catching render exceptions with toast alerts & retry UI.     |
+| `<PageLoader />`         | `src/shared/components/PageLoader`        | Component | Centered brand loading skeleton indicator.                                                                                              |
+
+### 4. Toast & System-Wide Error Handling Specification
+
+```tsx
+// Usage Example — Triggering Toasts from Anywhere:
+import { toast } from '@/shared/components/Toast/toastStore'
+
+// Error with description and action button:
+toast.error('Không thể nộp bài tập', {
+  description: 'Kết nối mạng bị gián đoạn trong khi tải tệp tin lên máy chủ.',
+  action: {
+    label: 'Thử lại',
+    onClick: () => handleRetrySubmission(),
+  },
+  duration: 5500,
+})
+
+// Success notification:
+toast.success('Đã lưu bài học vào danh sách yêu thích')
+
+// Warning notification:
+toast.warning('Phiên học sắp kết thúc', {
+  description: 'Vui lòng kiểm tra lại câu trả lời trước khi hệ thống tự động thu bài.',
+})
+```
+
+- **Motion Invariants**:
+  - `toastSlideIn`: 220ms `cubic-bezier(0.16, 1, 0.3, 1)` (respects 150–250ms motion budget).
+  - `toastSlideOut`: 180ms `ease-out`.
+  - Countdown progress bar pauses automatically on `:hover`.
+- **System Integration Points**:
+  - **Axios (`src/lib/axios.ts`)**: Automatically translates HTTP status codes (400, 401, 403, 404, 429, 500+) and network disconnects into contextual error toasts.
+  - **TanStack Query (`src/lib/queryClient.ts`)**: Global `QueryCache` and `MutationCache` emit error toasts with a "Thử lại" retry action upon failure.
+  - **Global Window (`src/shared/providers/GlobalErrorHandler.tsx`)**: Listens to unhandled runtime errors and promise rejections.
+  - **React Boundaries (`src/shared/components/ErrorBoundary`)**: Emits toast alerts and displays resilient recovery fallbacks.
 
 ---
 

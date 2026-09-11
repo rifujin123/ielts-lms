@@ -2,6 +2,8 @@ import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AppLayout } from '@/shared/layouts/AppLayout'
 import { PageLoader } from '@/shared/components/PageLoader'
+import { GlobalErrorBoundary } from '@/shared/components/ErrorBoundary'
+import { GlobalErrorHandler } from '@/shared/providers/GlobalErrorHandler'
 
 // ── Lazy-loaded feature pages ─────────────────────────────────────
 // Each feature is code-split at the route level for lean bundles.
@@ -23,53 +25,58 @@ const PracticePage = lazy(() => import('@/features/practice'))
 
 /**
  * App — root router tree.
+ * Wrapped with GlobalErrorBoundary and GlobalErrorHandler.
  * All feature routes are children of AppLayout (header + sidebar shell).
  * Suspense boundary at this level handles lazy-load fallbacks.
  */
 export default function App() {
   return (
-    <BrowserRouter>
-      <Suspense fallback={<PageLoader />}>
-        <Routes>
-          <Route path="/" element={<AppLayout />}>
-            {/* ── Course Info (ROOT) ── screen 16 */}
-            <Route index element={<CourseInfoPage />} />
+    <GlobalErrorBoundary>
+      <GlobalErrorHandler>
+        <BrowserRouter>
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              <Route path="/" element={<AppLayout />}>
+                {/* ── Course Info (ROOT) ── screen 16 */}
+                <Route index element={<CourseInfoPage />} />
 
-            {/* ── Dashboard ── screen 02 */}
-            <Route path="dashboard" element={<DashboardPage />} />
+                {/* ── Dashboard ── screen 02 */}
+                <Route path="dashboard" element={<DashboardPage />} />
 
-            {/* ── Roadmap ── screens 03, 08 */}
-            <Route path="roadmap" element={<RoadmapPage />} />
-            <Route path="roadmap/personal" element={<PersonalRoadmapPage />} />
+                {/* ── Roadmap ── screens 03, 08 */}
+                <Route path="roadmap" element={<RoadmapPage />} />
+                <Route path="roadmap/personal" element={<PersonalRoadmapPage />} />
 
-            {/* ── Exercises ── screens 01, 09 */}
-            <Route path="exercises" element={<ExercisesPage />} />
+                {/* ── Exercises ── screens 01, 09 */}
+                <Route path="exercises" element={<ExercisesPage />} />
 
-            {/* ── Vocabulary ── screens 04, 11 */}
-            <Route path="vocabulary" element={<VocabularyPage />} />
+                {/* ── Vocabulary ── screens 04, 11 */}
+                <Route path="vocabulary" element={<VocabularyPage />} />
 
-            {/* ── Materials ── screens 05, 15 */}
-            <Route path="materials" element={<MaterialsPage />} />
-            <Route path="materials/books" element={<BooksPage />} />
+                {/* ── Materials ── screens 05, 15 */}
+                <Route path="materials" element={<MaterialsPage />} />
+                <Route path="materials/books" element={<BooksPage />} />
 
-            {/* ── Homework / Syllabus ── screen 07 */}
-            <Route path="homework" element={<HomeworkPage />} />
+                {/* ── Homework / Syllabus ── screen 07 */}
+                <Route path="homework" element={<HomeworkPage />} />
 
-            {/* ── Final Test ── screen 06 */}
-            <Route path="final-test" element={<FinalTestPage />} />
+                {/* ── Final Test ── screen 06 */}
+                <Route path="final-test" element={<FinalTestPage />} />
 
-            {/* ── Online Tests ── screen 12 */}
-            <Route path="tests" element={<TestsPage />} />
+                {/* ── Online Tests ── screen 12 */}
+                <Route path="tests" element={<TestsPage />} />
 
-            {/* ── Classroom & Attendance ── screens 13, 14 */}
-            <Route path="classroom" element={<ClassroomPage />} />
-            <Route path="attendance" element={<AttendancePage />} />
+                {/* ── Classroom & Attendance ── screens 13, 14 */}
+                <Route path="classroom" element={<ClassroomPage />} />
+                <Route path="attendance" element={<AttendancePage />} />
 
-            {/* ── Interactive Practice Player ── screen 10 */}
-            <Route path="practice" element={<PracticePage />} />
-          </Route>
-        </Routes>
-      </Suspense>
-    </BrowserRouter>
+                {/* ── Interactive Practice Player ── screen 10 */}
+                <Route path="practice" element={<PracticePage />} />
+              </Route>
+            </Routes>
+          </Suspense>
+        </BrowserRouter>
+      </GlobalErrorHandler>
+    </GlobalErrorBoundary>
   )
 }

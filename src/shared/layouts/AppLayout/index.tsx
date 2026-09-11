@@ -5,6 +5,7 @@ import { Sidebar } from '@/shared/components/Sidebar'
 import { MobileSidebar } from '@/shared/components/MobileSidebar'
 import { PageLoader } from '@/shared/components/PageLoader'
 import { FeatureErrorBoundary } from '@/shared/components/ErrorBoundary'
+import { ToastContainer } from '@/shared/components/Toast'
 
 export const AppLayout: React.FC = () => {
   return (
@@ -29,6 +30,9 @@ export const AppLayout: React.FC = () => {
           </FeatureErrorBoundary>
         </main>
       </div>
+
+      {/* Global Toast Container for Animated Notifications */}
+      <ToastContainer />
     </div>
   )
 }
