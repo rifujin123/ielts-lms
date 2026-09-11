@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { homeworkService } from '@/services/homeworkService'
-import { PageLoader } from '@/shared/components/PageLoader'
+import { homeworkMock } from '@/mocks/homework.mock'
 
 /**
  * HomeworkPage — Homework Assignments & Syllabus (screen 07).
@@ -12,12 +12,13 @@ import { PageLoader } from '@/shared/components/PageLoader'
 export const HomeworkPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'homework' | 'syllabus'>('homework')
 
-  const { data: homeworkList, isLoading } = useQuery({
+  const { data: homeworkList = homeworkMock, isLoading: _isLoading } = useQuery({
     queryKey: ['homework-list'],
     queryFn: () => homeworkService.getHomeworkList(),
   })
 
-  if (isLoading) return <PageLoader />
+  // ⏸️ Skip spinner for now:
+  // if (_isLoading) return <PageLoader />
 
   const syllabusUnits = [
     {

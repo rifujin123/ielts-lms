@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { useDebounce } from 'use-debounce'
 import { roadmapService } from '@/services/roadmapService'
-import { PageLoader } from '@/shared/components/PageLoader'
+import { roadmapMock } from '@/mocks/roadmap.mock'
 
 /**
  * PersonalRoadmapPage — Personalized Student Roadmap (screen 08).
@@ -15,12 +15,13 @@ export const PersonalRoadmapPage: React.FC = () => {
   const [search, setSearch] = useState('')
   const [debouncedSearch] = useDebounce(search, 300)
 
-  const { data: items, isLoading } = useQuery({
+  const { data: items = roadmapMock, isLoading: _isLoading } = useQuery({
     queryKey: ['roadmap-items'],
     queryFn: () => roadmapService.getRoadmapItems(),
   })
 
-  if (isLoading) return <PageLoader />
+  // ⏸️ Skip spinner for now:
+  // if (_isLoading) return <PageLoader />
 
   const filteredItems = (items ?? []).filter((item) => {
     if (filter === 'pending' && item.status === 'completed') return false

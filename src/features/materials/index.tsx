@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { materialService } from '@/services/materialService'
-import { PageLoader } from '@/shared/components/PageLoader'
+import { booksMock } from '@/mocks/books.mock'
 
 /**
  * MaterialsPage — Course Materials & Textbooks (screen 05).
@@ -12,12 +12,13 @@ import { PageLoader } from '@/shared/components/PageLoader'
 export const MaterialsPage: React.FC = () => {
   const [filterType, setFilterType] = useState<'all' | 'main' | 'supplementary'>('all')
 
-  const { data: books, isLoading } = useQuery({
+  const { data: books = booksMock, isLoading: _isLoading } = useQuery({
     queryKey: ['course-books'],
     queryFn: () => materialService.getBooks(),
   })
 
-  if (isLoading) return <PageLoader />
+  // ⏸️ Skip spinner for now:
+  // if (_isLoading) return <PageLoader />
 
   const filteredBooks = (books ?? []).filter((book) =>
     filterType === 'all' ? true : book.type === filterType,

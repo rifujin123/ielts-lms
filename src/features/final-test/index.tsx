@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { homeworkService } from '@/services/homeworkService'
-import { PageLoader } from '@/shared/components/PageLoader'
+import { finalTestMock } from '@/mocks/homework.mock'
 
 /**
  * FinalTestPage — Course Final Test & Graduation (screen 06).
@@ -10,12 +10,13 @@ import { PageLoader } from '@/shared/components/PageLoader'
  * Line count budget: 200-300 lines.
  */
 export const FinalTestPage: React.FC = () => {
-  const { data: finalTest, isLoading } = useQuery({
+  const { data: finalTest = finalTestMock, isLoading: _isLoading } = useQuery({
     queryKey: ['final-test'],
     queryFn: () => homeworkService.getFinalTest(),
   })
 
-  if (isLoading) return <PageLoader />
+  // ⏸️ Skip spinner for now:
+  // if (_isLoading) return <PageLoader />
 
   return (
     <div className="flex flex-col gap-6">

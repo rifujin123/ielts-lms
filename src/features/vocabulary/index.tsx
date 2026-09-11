@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useDebounce } from 'use-debounce'
 import { vocabularyService } from '@/services/vocabularyService'
 import { calcProgressPercent } from '@/lib/utils'
-import { PageLoader } from '@/shared/components/PageLoader'
+import { vocabularyMock } from '@/mocks/vocabulary.mock'
 
 /**
  * VocabularyPage — Vocabulary Sets & Flashcards (screens 04, 11).
@@ -16,12 +16,13 @@ export const VocabularyPage: React.FC = () => {
   const [search, setSearch] = useState('')
   const [debouncedSearch] = useDebounce(search, 300)
 
-  const { data: sets, isLoading } = useQuery({
+  const { data: sets = vocabularyMock, isLoading: _isLoading } = useQuery({
     queryKey: ['vocabulary-sets'],
     queryFn: () => vocabularyService.getVocabularySets(),
   })
 
-  if (isLoading) return <PageLoader />
+  // ⏸️ Skip spinner for now:
+  // if (_isLoading) return <PageLoader />
 
   const filteredSets = (sets ?? []).filter((item) =>
     debouncedSearch ? item.title.toLowerCase().includes(debouncedSearch.toLowerCase()) : true,

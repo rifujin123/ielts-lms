@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useDebounce } from 'use-debounce'
 import { courseService } from '@/services/courseService'
 import { calcProgressPercent } from '@/lib/utils'
-import { PageLoader } from '@/shared/components/PageLoader'
+import { activeCoursesMock } from '@/mocks/course.mock'
 
 /**
  * DashboardPage — LMS Student Overview (screen 02).
@@ -15,12 +15,13 @@ export const DashboardPage: React.FC = () => {
   const [search, setSearch] = useState('')
   const [debouncedSearch] = useDebounce(search, 300)
 
-  const { data: courses, isLoading } = useQuery({
+  const { data: courses = activeCoursesMock, isLoading: _isLoading } = useQuery({
     queryKey: ['active-courses'],
     queryFn: () => courseService.getActiveCourses(),
   })
 
-  if (isLoading) return <PageLoader />
+  // ⏸️ Skip spinner for now:
+  // if (_isLoading) return <PageLoader />
 
   const filteredCourses = (courses ?? []).filter((c) =>
     debouncedSearch ? c.name.toLowerCase().includes(debouncedSearch.toLowerCase()) : true,

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { materialService } from '@/services/materialService'
-import { PageLoader } from '@/shared/components/PageLoader'
+import { booksMock } from '@/mocks/books.mock'
 
 /**
  * BooksPage — Book Unit Explorer (screen 15).
@@ -12,12 +12,13 @@ import { PageLoader } from '@/shared/components/PageLoader'
 export const BooksPage: React.FC = () => {
   const [expandedUnitId, setExpandedUnitId] = useState<string>('UNIT-01')
 
-  const { data: books, isLoading } = useQuery({
+  const { data: books = booksMock, isLoading: _isLoading } = useQuery({
     queryKey: ['course-books'],
     queryFn: () => materialService.getBooks(),
   })
 
-  if (isLoading) return <PageLoader />
+  // ⏸️ Skip spinner for now:
+  // if (_isLoading) return <PageLoader />
 
   const currentBook = books?.[0]
 

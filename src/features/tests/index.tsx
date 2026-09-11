@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { testService } from '@/services/testService'
 import type { TestType } from '@/types/api.types'
-import { PageLoader } from '@/shared/components/PageLoader'
+import { testsMock } from '@/mocks/tests.mock'
 
 /**
  * TestsPage — Online Tests & Mock Exams (screen 12).
@@ -13,12 +13,13 @@ import { PageLoader } from '@/shared/components/PageLoader'
 export const TestsPage: React.FC = () => {
   const [testType, setTestType] = useState<'all' | TestType>('all')
 
-  const { data: tests, isLoading } = useQuery({
+  const { data: tests = testsMock, isLoading: _isLoading } = useQuery({
     queryKey: ['online-tests'],
     queryFn: () => testService.getOnlineTests(),
   })
 
-  if (isLoading) return <PageLoader />
+  // ⏸️ Skip spinner for now:
+  // if (_isLoading) return <PageLoader />
 
   const filteredTests = (tests ?? []).filter((test) =>
     testType === 'all' ? true : test.type === testType,

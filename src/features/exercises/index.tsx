@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useDebounce } from 'use-debounce'
 import { exerciseService } from '@/services/exerciseService'
 import type { ExerciseSkill, ExerciseStatus } from '@/types/api.types'
-import { PageLoader } from '@/shared/components/PageLoader'
+import { exercisesMock } from '@/mocks/exercises.mock'
 
 /**
  * ExercisesPage — Practice Exercises List (screens 01, 09).
@@ -19,7 +19,7 @@ export const ExercisesPage: React.FC = () => {
   const [search, setSearch] = useState('')
   const [debouncedSearch] = useDebounce(search, 300)
 
-  const { data: exercises, isLoading } = useQuery({
+  const { data: exercises = exercisesMock, isLoading: _isLoading } = useQuery({
     queryKey: ['exercises', skill, status, debouncedSearch],
     queryFn: () =>
       exerciseService.getExercises({
@@ -29,7 +29,8 @@ export const ExercisesPage: React.FC = () => {
       }),
   })
 
-  if (isLoading) return <PageLoader />
+  // ⏸️ Skip spinner for now:
+  // if (_isLoading) return <PageLoader />
 
   const skillOptions: { label: string; value: 'all' | ExerciseSkill }[] = [
     { label: 'Tất cả kỹ năng', value: 'all' },

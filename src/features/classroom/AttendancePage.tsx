@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { attendanceService } from '@/services/attendanceService'
-import { PageLoader } from '@/shared/components/PageLoader'
+import { attendanceMock } from '@/mocks/attendance.mock'
 
 /**
  * AttendancePage — Attendance Summary & Session History (screen 14).
@@ -10,12 +10,13 @@ import { PageLoader } from '@/shared/components/PageLoader'
  * Line count budget: 200-300 lines.
  */
 export const AttendancePage: React.FC = () => {
-  const { data: sessions, isLoading } = useQuery({
+  const { data: sessions = attendanceMock, isLoading: _isLoading } = useQuery({
     queryKey: ['attendance-summary'],
     queryFn: () => attendanceService.getAttendance(),
   })
 
-  if (isLoading) return <PageLoader />
+  // ⏸️ Skip spinner for now:
+  // if (_isLoading) return <PageLoader />
 
   const attendedCount = (sessions ?? []).filter((s) => s.status === 'attended').length
   const total = (sessions ?? []).length

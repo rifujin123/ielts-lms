@@ -6,7 +6,7 @@ import { InstructorCard } from './components/InstructorCard'
 import { ScheduleGrid } from './components/ScheduleGrid'
 import { ObjectivesCard } from './components/ObjectivesCard'
 import { ClassRulesCard } from './components/ClassRulesCard'
-import { PageLoader } from '@/shared/components/PageLoader'
+import { courseInfoMock } from '@/mocks/course.mock'
 
 /**
  * CourseInfoPage — Entry point for the Course Information & Class Rules (Root route `/`).
@@ -15,11 +15,14 @@ import { PageLoader } from '@/shared/components/PageLoader'
  * Line count budget: 200-300 lines.
  */
 export const CourseInfoPage: React.FC = () => {
-  const { data: courseInfo, isLoading, error } = useCourseInfo('IELTS-6.5-2026')
+  const {
+    data: courseInfo = courseInfoMock,
+    isLoading: _isLoading,
+    error,
+  } = useCourseInfo('IELTS-6.5-2026')
 
-  if (isLoading) {
-    return <PageLoader />
-  }
+  // ⏸️ Skip spinner for now:
+  // if (_isLoading) return <PageLoader />
 
   if (error || !courseInfo) {
     return (

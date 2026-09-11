@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { roadmapService } from '@/services/roadmapService'
-import { PageLoader } from '@/shared/components/PageLoader'
+import { roadmapMock } from '@/mocks/roadmap.mock'
 
 /**
  * RoadmapPage — Course Phase Overview (screen 03).
@@ -10,12 +10,13 @@ import { PageLoader } from '@/shared/components/PageLoader'
  * Line count budget: 200-300 lines.
  */
 export const RoadmapPage: React.FC = () => {
-  const { data: items, isLoading } = useQuery({
+  const { data: items = roadmapMock, isLoading: _isLoading } = useQuery({
     queryKey: ['roadmap-items'],
     queryFn: () => roadmapService.getRoadmapItems(),
   })
 
-  if (isLoading) return <PageLoader />
+  // ⏸️ Skip spinner for now:
+  // if (_isLoading) return <PageLoader />
 
   const phases = [
     {
