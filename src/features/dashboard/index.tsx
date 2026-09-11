@@ -111,10 +111,10 @@ export const DashboardPage: React.FC = () => {
               >
                 <div>
                   <div className="flex items-center justify-between">
-                    <span className="rounded-md bg-red-100 px-2.5 py-0.5 text-label-sm font-bold text-primary">
+                    <span className="animate-pop-in rounded-md bg-red-100 px-2.5 py-0.5 text-label-sm font-bold text-primary">
                       {course.level}
                     </span>
-                    <span className="inline-flex items-center gap-1 text-label-sm font-semibold text-tertiary">
+                    <span className="animate-pop-in inline-flex items-center gap-1 text-label-sm font-semibold text-tertiary">
                       <span className="h-2 w-2 rounded-full bg-tertiary" />
                       Đang diễn ra
                     </span>
@@ -146,7 +146,7 @@ export const DashboardPage: React.FC = () => {
                     </div>
                     <div className="mt-1.5 h-2.5 w-full overflow-hidden rounded-full bg-surface-container">
                       <div
-                        className="h-full bg-primary rounded-full transition-all duration-300"
+                        className="h-full bg-primary rounded-full transition-all duration-700 ease-out"
                         style={{ width: `${percent}%` }}
                       />
                     </div>
@@ -161,14 +161,14 @@ export const DashboardPage: React.FC = () => {
                     href={course.zoomLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-primary py-2 text-label-md font-semibold text-on-primary hover:bg-primary-hover transition-colors shadow-xs"
+                    className="btn-interactive inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-primary py-2 text-label-md font-semibold text-on-primary hover:bg-primary-hover shadow-xs"
                   >
                     <span className="material-symbols-outlined text-lg">videocam</span>
                     Vào phòng học
                   </a>
                   <Link
                     to="/"
-                    className="inline-flex items-center justify-center rounded-lg border border-outline-variant bg-surface-container-low px-4 py-2 text-label-md font-semibold text-on-surface hover:bg-surface-container transition-colors"
+                    className="btn-interactive inline-flex items-center justify-center rounded-lg border border-outline-variant bg-surface-container-low px-4 py-2 text-label-md font-semibold text-on-surface hover:bg-surface-container"
                   >
                     Chi tiết khóa học
                   </Link>

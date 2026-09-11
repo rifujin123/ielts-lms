@@ -1,5 +1,5 @@
 ---
-title: "Architecture Reference — DOL IELTS LMS"
+title: 'Architecture Reference — DOL IELTS LMS'
 created: 2026-09-11
 updated: 2026-09-11
 adopted_by: SPEC.md
@@ -13,29 +13,29 @@ adopted_by: SPEC.md
 
 ## Stack
 
-| Layer | Technology | Decision Rationale |
-|---|---|---|
-| Framework | React 18 | Team standard |
-| Language | TypeScript `strict: true` | Production app; catches bugs early |
-| Build tool | Vite 5 | Fast HMR, native ESM |
-| Package manager | pnpm | Faster, disk-efficient, workspace-ready |
-| Routing | React Router v6 nested routes | Single `AppLayout` shell; no role-based routing needed |
-| Server state | TanStack Query v5 | Declarative async data, cache, stale-while-revalidate |
-| UI state | Zustand v5 | Lightweight, minimal boilerplate for sidebar/phase/user |
-| HTTP | Axios instance | Interceptors for auth tokens + error handling; familiar to team |
-| Styling | Tailwind CSS v3 | Matches stitch assets (already Tailwind-based) |
-| Design tokens | `src/styles/tokens.css` → `tailwind.config.ts` | Single CSS file; semantic class generation |
-| UI components | shadcn/ui (Radix primitives) | Accessible, Tailwind-native, copy-owned (no runtime dep) |
-| Forms | React Hook Form + Zod | Schema reuse across form validation and API typing |
-| Debounce | use-debounce | `useDebounce(value, 300)` on all search/filter inputs |
-| Code splitting | React.lazy + Suspense per feature route | Lean bundles; one boundary per feature |
-| Error handling | react-error-boundary per feature | Feature crash does not kill the app |
-| Linting | ESLint v9 + eslint-config-prettier | Consistent rules |
-| Formatting | Prettier | Auto-format |
-| Pre-commit | Husky + lint-staged | No broken code lands in git |
-| Testing | Vitest (configured, no test files) | Runner ready; tests written when features stabilize |
-| Icons | Material Symbols Outlined (Google CDN) | Matches stitch assets exactly |
-| Fonts | Plus Jakarta Sans + Inter (Google CDN) | Matches stitch design system |
+| Layer           | Technology                                     | Decision Rationale                                              |
+| --------------- | ---------------------------------------------- | --------------------------------------------------------------- |
+| Framework       | React 18                                       | Team standard                                                   |
+| Language        | TypeScript `strict: true`                      | Production app; catches bugs early                              |
+| Build tool      | Vite 5                                         | Fast HMR, native ESM                                            |
+| Package manager | pnpm                                           | Faster, disk-efficient, workspace-ready                         |
+| Routing         | React Router v6 nested routes                  | Single `AppLayout` shell; no role-based routing needed          |
+| Server state    | TanStack Query v5                              | Declarative async data, cache, stale-while-revalidate           |
+| UI state        | Zustand v5                                     | Lightweight, minimal boilerplate for sidebar/phase/user         |
+| HTTP            | Axios instance                                 | Interceptors for auth tokens + error handling; familiar to team |
+| Styling         | Tailwind CSS v3                                | Matches stitch assets (already Tailwind-based)                  |
+| Design tokens   | `src/styles/tokens.css` → `tailwind.config.ts` | Single CSS file; semantic class generation                      |
+| UI components   | shadcn/ui (Radix primitives)                   | Accessible, Tailwind-native, copy-owned (no runtime dep)        |
+| Forms           | React Hook Form + Zod                          | Schema reuse across form validation and API typing              |
+| Debounce        | use-debounce                                   | `useDebounce(value, 300)` on all search/filter inputs           |
+| Code splitting  | React.lazy + Suspense per feature route        | Lean bundles; one boundary per feature                          |
+| Error handling  | react-error-boundary per feature               | Feature crash does not kill the app                             |
+| Linting         | ESLint v9 + eslint-config-prettier             | Consistent rules                                                |
+| Formatting      | Prettier                                       | Auto-format                                                     |
+| Pre-commit      | Husky + lint-staged                            | No broken code lands in git                                     |
+| Testing         | Vitest (configured, no test files)             | Runner ready; tests written when features stabilize             |
+| Icons           | Material Symbols Outlined (Google CDN)         | Matches stitch assets exactly                                   |
+| Fonts           | Plus Jakarta Sans + Inter (Google CDN)         | Matches stitch design system                                    |
 
 ---
 
@@ -115,22 +115,22 @@ ielts-lms/
 
 ## Routing Map
 
-| Route | Component | Stitch Screen(s) |
-|---|---|---|
-| `/` | `CourseInfoPage` | 16 — ROOT |
-| `/dashboard` | `DashboardPage` | 02 |
-| `/roadmap` | `RoadmapPage` | 03 |
-| `/roadmap/personal` | `PersonalRoadmapPage` | 08 |
-| `/exercises` | `ExercisesPage` | 01, 09 |
-| `/vocabulary` | `VocabularyPage` | 04, 11 |
-| `/materials` | `MaterialsPage` | 05 |
-| `/materials/books` | `BooksPage` | 15 |
-| `/homework` | `HomeworkPage` | 07 |
-| `/final-test` | `FinalTestPage` | 06 |
-| `/tests` | `TestsPage` | 12 |
-| `/classroom` | `ClassroomPage` | 13 |
-| `/attendance` | `AttendancePage` | 14 |
-| `/practice` | `PracticePage` | 10 |
+| Route               | Component             | Stitch Screen(s) |
+| ------------------- | --------------------- | ---------------- |
+| `/`                 | `CourseInfoPage`      | 16 — ROOT        |
+| `/dashboard`        | `DashboardPage`       | 02               |
+| `/roadmap`          | `RoadmapPage`         | 03               |
+| `/roadmap/personal` | `PersonalRoadmapPage` | 08               |
+| `/exercises`        | `ExercisesPage`       | 01, 09           |
+| `/vocabulary`       | `VocabularyPage`      | 04, 11           |
+| `/materials`        | `MaterialsPage`       | 05               |
+| `/materials/books`  | `BooksPage`           | 15               |
+| `/homework`         | `HomeworkPage`        | 07               |
+| `/final-test`       | `FinalTestPage`       | 06               |
+| `/tests`            | `TestsPage`           | 12               |
+| `/classroom`        | `ClassroomPage`       | 13               |
+| `/attendance`       | `AttendancePage`      | 14               |
+| `/practice`         | `PracticePage`        | 10               |
 
 All routes are children of the `AppLayout` route, which renders `<Header>`, `<Sidebar>` (or `<MobileSidebar>`), and `<Outlet>`.
 
@@ -138,24 +138,25 @@ All routes are children of the `AppLayout` route, which renders `<Header>`, `<Si
 
 ## Naming Conventions
 
-| Type | Convention | Example |
-|---|---|---|
-| Components | PascalCase, barrel | `CourseInfoCard/index.tsx` |
-| Hooks | `use` prefix, camelCase | `useCourseInfo.ts` |
-| Services | `Service` suffix, camelCase | `courseInfoService.ts` |
-| Types / Interfaces | PascalCase, no `I` prefix | `CourseInfo`, `Exercise` |
-| Zod schemas | `Schema` suffix | `courseInfoSchema` |
-| Constants | SCREAMING_SNAKE_CASE | `DEFAULT_STALE_TIME` |
-| CSS variables | `--category-name` kebab-case | `--color-primary`, `--space-md` |
-| Route paths | kebab-case | `/final-test`, `/personal-roadmap` |
-| Feature folders | kebab-case | `course-info/`, `final-test/` |
-| Env variables | `VITE_` prefix, SCREAMING_SNAKE | `VITE_USE_MOCK`, `VITE_API_URL` |
+| Type               | Convention                      | Example                            |
+| ------------------ | ------------------------------- | ---------------------------------- |
+| Components         | PascalCase, barrel              | `CourseInfoCard/index.tsx`         |
+| Hooks              | `use` prefix, camelCase         | `useCourseInfo.ts`                 |
+| Services           | `Service` suffix, camelCase     | `courseInfoService.ts`             |
+| Types / Interfaces | PascalCase, no `I` prefix       | `CourseInfo`, `Exercise`           |
+| Zod schemas        | `Schema` suffix                 | `courseInfoSchema`                 |
+| Constants          | SCREAMING_SNAKE_CASE            | `DEFAULT_STALE_TIME`               |
+| CSS variables      | `--category-name` kebab-case    | `--color-primary`, `--space-md`    |
+| Route paths        | kebab-case                      | `/final-test`, `/personal-roadmap` |
+| Feature folders    | kebab-case                      | `course-info/`, `final-test/`      |
+| Env variables      | `VITE_` prefix, SCREAMING_SNAKE | `VITE_USE_MOCK`, `VITE_API_URL`    |
 
 ---
 
 ## Patterns
 
 ### API Service Pattern
+
 ```ts
 // src/features/course-info/services/courseInfoService.ts
 import { apiClient } from '@/lib/axios'
@@ -176,6 +177,7 @@ export const courseInfoService = {
 ```
 
 ### TanStack Query Hook Pattern
+
 ```ts
 // src/features/course-info/hooks/useCourseInfo.ts
 import { useQuery } from '@tanstack/react-query'
@@ -192,6 +194,7 @@ export const useCourseInfo = (courseId: string) => {
 ```
 
 ### Debounce Pattern (search/filter inputs)
+
 ```ts
 import { useDebounce } from 'use-debounce'
 
@@ -201,6 +204,7 @@ const [debouncedSearch] = useDebounce(search, 300)
 ```
 
 ### Page Entry Point Pattern (~200–300 lines)
+
 ```tsx
 // src/features/course-info/index.tsx
 import { Suspense } from 'react'
@@ -219,6 +223,7 @@ export default CourseInfoPage
 ```
 
 ### Component Pattern (barrel export)
+
 ```tsx
 // src/features/course-info/components/CourseInfoCard/index.tsx
 import type { CourseInfo } from '../../types'
@@ -231,7 +236,12 @@ interface CourseInfoCardProps {
 
 export const CourseInfoCard: React.FC<CourseInfoCardProps> = ({ data, className }) => {
   return (
-    <section className={cn('bg-surface-container-lowest rounded-2xl border border-outline-variant p-6 shadow-sm', className)}>
+    <section
+      className={cn(
+        'bg-surface-container-lowest rounded-2xl border border-outline-variant p-6 shadow-sm',
+        className,
+      )}
+    >
       {/* content */}
     </section>
   )
@@ -256,22 +266,53 @@ JSX                            ← Uses semantic classes: text-primary, bg-surfa
 
 ## shadcn/ui Components
 
-| Component | Used In |
-|---|---|
-| `Button` | Every screen |
-| `Badge` | Course status tags, exercise states |
-| `Card` | All info/data cards |
-| `Sheet` | Mobile sidebar drawer |
-| `Tabs` | Exercise/test filters |
-| `Select` | Phase selector, sort dropdowns |
-| `DropdownMenu` | User profile menu |
-| `Separator` | Sidebar group dividers |
-| `Avatar` | Student + instructor profiles |
-| `Progress` | Session progress bars |
-| `Table` | Attendance & session summary |
-| `Dialog` | Confirmation modals |
-| `Tooltip` | Icon labels |
-| `ScrollArea` | Sidebar, vocabulary lists |
+| Component      | Used In                             |
+| -------------- | ----------------------------------- |
+| `Button`       | Every screen                        |
+| `Badge`        | Course status tags, exercise states |
+| `Card`         | All info/data cards                 |
+| `Sheet`        | Mobile sidebar drawer               |
+| `Tabs`         | Exercise/test filters               |
+| `Select`       | Phase selector, sort dropdowns      |
+| `DropdownMenu` | User profile menu                   |
+| `Separator`    | Sidebar group dividers              |
+| `Avatar`       | Student + instructor profiles       |
+| `Progress`     | Session progress bars               |
+| `Table`        | Attendance & session summary        |
+| `Dialog`       | Confirmation modals                 |
+| `Tooltip`      | Icon labels                         |
+| `ScrollArea`   | Sidebar, vocabulary lists           |
+
+---
+
+## UX & Micro-Interaction Animation System
+
+The portal adheres to a **Subtle & Academic** motion philosophy (150–250ms, GPU-accelerated CSS, 0 KB JS bundle penalty). All agents building or refactoring UI features MUST reuse the standard micro-interaction utilities defined in `src/styles/globals.css`.
+
+### 1. Reusable Utility Classes
+
+| Utility Class                | Purpose & Effect                                                                                                            | Where to Apply                                                 |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| `.card-interactive`          | Lifts card by 3px (`translateY(-3px)`), softens shadow, and glows with subtle crimson border (`border-primary/45`) on hover | Bento grid cards, stat summary boxes, course cards, test cards |
+| `.btn-interactive`           | Tactile click feedback (`active:scale-[0.97]`) with smooth color transition (150ms)                                         | All primary, secondary, and ghost action buttons               |
+| `.animate-fade-in-up`        | Smooth staggered entrance animation (opacity 0 → 1, translateY 12px → 0 in 400ms)                                           | Page hero banners, main section containers on initial mount    |
+| `.stagger-1` to `.stagger-5` | Progressive animation delay (50ms increments: 50ms, 100ms, 150ms, 200ms, 250ms)                                             | Paired with `.animate-fade-in-up` across sibling cards         |
+| `.animate-pop-in`            | Subtle scale bounce (`scale(0.85)` → `scale(1.08)` → `scale(1.0)`) in 350ms                                                 | Badges, status tags, online dots, active checkmarks            |
+
+### 2. Sidebar Navigation Pill Pattern
+
+Sidebar active items are designed as **full pills** (`rounded-full`) with active state transitions:
+
+- **Active state**: `bg-red-50 text-primary font-bold rounded-full shadow-xs ring-1 ring-primary/20 scale-[1.01]` + crimson indicator dot (`animate-pop-in`) + icon micro-scale (`scale-110`).
+- **Inactive state**: `rounded-full text-secondary hover:bg-surface-container-low hover:text-on-surface hover:translate-x-0.5 transition-all duration-200 ease-out`.
+
+### 3. Rules for Agents Building New Features
+
+1. **Never import heavy JS animation libraries** for standard hover/entrance interactions — use the pre-built CSS utilities in `src/styles/globals.css`.
+2. **Always add `.card-interactive`** to clickable or interactive card components.
+3. **Always add `.btn-interactive`** to custom action buttons.
+4. **Always add `.animate-pop-in`** to dynamically rendered badges and completion chips.
+5. **Keep timing within 150–250ms** for hover/active feedback to maintain snappy, professional academic responsiveness.
 
 ---
 

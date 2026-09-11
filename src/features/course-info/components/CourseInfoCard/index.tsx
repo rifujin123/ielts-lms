@@ -11,7 +11,7 @@ export const CourseInfoCard: React.FC<CourseInfoCardProps> = ({ data }) => {
     <div className="rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 shadow-xs">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4">
         <div>
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-tertiary-container px-3 py-1 text-label-sm font-semibold text-on-tertiary-container">
+          <span className="animate-pop-in inline-flex items-center gap-1.5 rounded-full bg-tertiary-container px-3 py-1 text-label-sm font-semibold text-on-tertiary-container shadow-xs">
             <span className="h-2 w-2 rounded-full bg-tertiary"></span>
             Đang hoạt động
           </span>
@@ -23,7 +23,7 @@ export const CourseInfoCard: React.FC<CourseInfoCardProps> = ({ data }) => {
             href={data.zoomLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-label-md font-semibold text-on-primary hover:bg-primary-hover transition-colors shadow-xs"
+            className="btn-interactive inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-label-md font-semibold text-on-primary hover:bg-primary-hover shadow-xs"
           >
             <span className="material-symbols-outlined text-lg">videocam</span>
             Vào phòng Zoom

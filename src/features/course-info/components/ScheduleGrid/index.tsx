@@ -47,7 +47,7 @@ export const ScheduleGrid: React.FC<ScheduleGridProps> = ({ schedule }) => {
 
             {day.isClassDay ? (
               <div className="mt-1 flex flex-col items-center gap-1">
-                <span className="rounded bg-primary px-2 py-0.5 text-[10px] font-bold text-on-primary">
+                <span className="animate-pop-in rounded bg-primary px-2 py-0.5 text-[10px] font-bold text-on-primary shadow-xs">
                   Có lớp học
                 </span>
                 <span className="text-[11px] font-semibold text-secondary">{day.time}</span>

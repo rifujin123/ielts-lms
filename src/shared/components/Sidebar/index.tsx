@@ -73,19 +73,35 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, onItemClick }) => {
                 onClick={onItemClick}
                 className={({ isActive }) =>
                   cn(
-                    'flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-body-sm font-medium transition-colors',
+                    'group relative flex items-center gap-2.5 rounded-full px-3 py-2 text-body-sm transition-all duration-200 ease-out',
                     isActive
-                      ? 'bg-red-50 text-primary font-semibold border-l-4 border-primary rounded-l-none pl-2'
-                      : 'text-secondary hover:bg-surface-container-low hover:text-on-surface',
+                      ? 'bg-red-50 text-primary font-bold shadow-xs ring-1 ring-primary/20 scale-[1.01]'
+                      : 'text-secondary hover:bg-surface-container-low hover:text-on-surface hover:translate-x-0.5',
                   )
                 }
               >
-                <span className="material-symbols-outlined text-[19px]">{item.icon}</span>
-                <span className="truncate flex-1 text-[13px]">{item.label}</span>
-                {item.badge && (
-                  <span className="rounded bg-primary-container px-1.5 py-0.5 text-[10px] font-bold text-on-primary-container">
-                    {item.badge}
-                  </span>
+                {({ isActive }) => (
+                  <>
+                    <span
+                      className={cn(
+                        'material-symbols-outlined text-[20px] transition-transform duration-200',
+                        isActive
+                          ? 'text-primary scale-110'
+                          : 'text-secondary group-hover:text-on-surface',
+                      )}
+                    >
+                      {item.icon}
+                    </span>
+                    <span className="truncate flex-1 text-[13px]">{item.label}</span>
+                    {isActive && (
+                      <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pop-in shrink-0" />
+                    )}
+                    {item.badge && (
+                      <span className="rounded-full bg-primary-container px-2 py-0.5 text-[10px] font-bold text-on-primary-container animate-pop-in">
+                        {item.badge}
+                      </span>
+                    )}
+                  </>
                 )}
               </NavLink>
             ))}

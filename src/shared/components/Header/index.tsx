@@ -64,7 +64,7 @@ export const Header: React.FC = () => {
       {/* Right side */}
       <div className="flex items-center gap-3">
         {/* Phase Pill */}
-        <div className="hidden items-center gap-1.5 rounded-full border border-outline-variant bg-surface-container-low px-3 py-1 text-label-sm font-medium text-secondary sm:flex">
+        <div className="animate-pop-in hidden items-center gap-1.5 rounded-full border border-outline-variant bg-surface-container-low px-3 py-1 text-label-sm font-medium text-secondary sm:flex">
           <span className="h-2 w-2 rounded-full bg-tertiary"></span>
           <span>{activePhase.label}</span>
         </div>
@@ -72,10 +72,10 @@ export const Header: React.FC = () => {
         {/* Notifications */}
         <button
           aria-label="Thông báo"
-          className="relative flex h-10 w-10 items-center justify-center rounded-full text-secondary hover:bg-surface-container"
+          className="relative flex h-10 w-10 items-center justify-center rounded-full text-secondary hover:bg-surface-container transition-colors"
         >
           <span className="material-symbols-outlined text-2xl">notifications</span>
-          <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-primary" />
+          <span className="animate-pop-in absolute right-2 top-2 h-2 w-2 rounded-full bg-primary" />
         </button>
 
         {/* User avatar */}
