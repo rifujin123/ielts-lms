@@ -8,7 +8,6 @@ import {
   Mic,
   Clock,
   Send,
-  GraduationCap,
   Award,
   CheckCircle2,
   ShieldAlert,
@@ -161,15 +160,19 @@ export const ExamRunnerPage: React.FC = () => {
             <ArrowLeft className="h-5 w-5" strokeWidth={2} />
           </button>
 
-          <div className="hidden xl:flex items-center gap-2 pr-3 border-r border-slate-200">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-600 text-white shadow-xs">
-              <GraduationCap className="h-5 w-5" strokeWidth={2} />
-            </div>
+          <div className="hidden xl:flex items-center gap-2.5 pr-3 border-r border-slate-200">
+            <img
+              src="/branding.png"
+              alt="IELTS Hồ Thành"
+              className="h-8 w-auto max-w-[100px] object-contain"
+            />
             <div>
               <div className="text-[10px] font-bold text-red-600 uppercase tracking-wider">
                 IELTS Hồ Thành
               </div>
-              <div className="text-xs font-bold text-slate-800 line-clamp-1">{manifest.title}</div>
+              <div className="text-xs font-bold text-slate-800 line-clamp-1 max-w-[220px]">
+                {manifest.title}
+              </div>
             </div>
           </div>
 

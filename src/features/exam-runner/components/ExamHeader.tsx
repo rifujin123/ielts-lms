@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Clock, Eye, EyeOff, Send, ArrowLeft, GraduationCap } from 'lucide-react'
+import { Clock, Eye, EyeOff, Send, ArrowLeft } from 'lucide-react'
 import { useIeltsExamStore } from '../store/ieltsExamStore'
 
 interface ExamHeaderProps {
@@ -67,15 +67,17 @@ export const ExamHeader: React.FC<ExamHeaderProps> = ({ onOpenSubmitModal, onExi
           <ArrowLeft className="h-5 w-5" strokeWidth={2} />
         </button>
 
-        <div className="hidden lg:flex items-center gap-2 pr-2 border-r border-slate-200">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-600 text-white shadow-xs">
-            <GraduationCap className="h-5 w-5" strokeWidth={2} />
-          </div>
+        <div className="hidden lg:flex items-center gap-2.5 pr-2.5 border-r border-slate-200">
+          <img
+            src="/branding.png"
+            alt="IELTS Hồ Thành"
+            className="h-8 w-auto max-w-[100px] object-contain"
+          />
           <div>
             <div className="text-[11px] font-bold text-red-600 uppercase tracking-wider">
               IELTS Hồ Thành
             </div>
-            <div className="text-xs font-semibold text-slate-800 line-clamp-1">
+            <div className="text-xs font-semibold text-slate-800 line-clamp-1 max-w-[220px]">
               {manifest.title}
             </div>
           </div>
