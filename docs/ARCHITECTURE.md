@@ -582,3 +582,54 @@ Whenever an engineer or AI agent introduces a reusable component, hook, or layou
   import { useIeltsExamStore } from '@/features/exam-runner/store/ieltsExamStore'
   const { answers, setAnswer, submitExam, scoreResult } = useIeltsExamStore()
   ```
+
+### 6. IELTS Listening 4-Section Runner
+
+- **Asset Name & File Path**: `ListeningRunner` (`src/features/exam-runner/components/ListeningRunner.tsx`)
+- **Purpose & UX Intent**: Standard 4-section IELTS listening exam player with locked audio playback (no seek/pause during real exam), section switcher tabs, and real-time response capture across form completion, note completion, map labeling, and multiple choice questions.
+- **Usage Example**:
+  ```tsx
+  import { ListeningRunner } from '@/features/exam-runner/components/ListeningRunner'
+  ;<ListeningRunner skillData={manifest.skills.listening!} />
+  ```
+
+### 7. IELTS Writing Dual-Pane Task Runner
+
+- **Asset Name & File Path**: `WritingRunner` (`src/features/exam-runner/components/WritingRunner.tsx`)
+- **Purpose & UX Intent**: Resizable split-pane layout for Task 1 (visual chart + 150 words) and Task 2 (discursive essay + 250 words). Features real-time word counting with status badge (amber when below minimum, emerald when sufficient) and auto-save.
+- **Usage Example**:
+  ```tsx
+  import { WritingRunner } from '@/features/exam-runner/components/WritingRunner'
+  ;<WritingRunner skillData={manifest.skills.writing!} />
+  ```
+
+### 8. IELTS Speaking 3-Part Voice Recorder
+
+- **Asset Name & File Path**: `SpeakingRunner` (`src/features/exam-runner/components/SpeakingRunner.tsx`)
+- **Purpose & UX Intent**: Complete 3-part speaking test room. Part 1 interview Q&A; Part 2 Cue card with automated 60-second prep countdown, scratchpad notes, and 2-minute speech timer; Part 3 in-depth discussion. Uses native browser `MediaRecorder` API to capture and playback student speech.
+- **Usage Example**:
+  ```tsx
+  import { SpeakingRunner } from '@/features/exam-runner/components/SpeakingRunner'
+  ;<SpeakingRunner skillData={manifest.skills.speaking!} />
+  ```
+
+### 9. Unified 4-Skill Exam Store
+
+- **Asset Name & File Path**: `useFullExamStore` (`src/features/exam-runner/store/fullExamStore.ts`)
+- **Purpose & UX Intent**: Central state coordinator across all 4 IELTS skills. Maintains individual skill timers, question answers, writing texts, audio recording blobs, and full session persistence in `localStorage`.
+- **Usage Example**:
+  ```tsx
+  import { useFullExamStore } from '@/features/exam-runner/store/fullExamStore'
+  const { activeSkill, setActiveSkill, setListeningAnswer, setWritingTaskAnswer } =
+    useFullExamStore()
+  ```
+
+### 10. Schema-Driven Universal Exam Service
+
+- **Asset Name & File Path**: `ieltsExamService` (`src/features/exam-runner/services/ieltsExamService.ts`)
+- **Purpose & UX Intent**: Strongly typed data access layer connecting Frontend to Backend via `GET /api/exams/:examId` and `POST /api/exams/:examId/submit`. Any exam JSON sent by the BE conforming to `FullIeltsExamManifest` (`src/features/exam-runner/types/fullExam.types.ts`) automatically renders on the UI without frontend code alterations.
+- **Usage Example**:
+  ```tsx
+  import { ieltsExamService } from '@/features/exam-runner/services/ieltsExamService'
+  const manifest = await ieltsExamService.getExamManifest(examId)
+  ```
