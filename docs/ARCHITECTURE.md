@@ -1143,3 +1143,40 @@ Whenever an engineer or AI agent introduces a reusable component, hook, or layou
   - Strict `font-sans antialiased` container.
   - Responsive canvas scaling via container resize listener (`width={Math.min(containerWidth - 48, 900)}`).
   - Zero pixel layout shift.
+
+### 26. Personal Mistake Log & Exam Trap Analytics
+
+- **Asset Names & File Paths**:
+  - Store: `useMistakeLogStore` (`src/store/mistakeLogStore.ts`, with `src/store/errorLogStore.ts` alias)
+  - Dashboard Widget: `MistakeLogWidget` (`src/features/dashboard/components/MistakeLogWidget.tsx`)
+  - Dedicated Page: `MistakeLogPage` (`src/features/mistake-log/index.tsx`, route `/mistake-log`, `/error-log`)
+- **Purpose & UX Intent**:
+  - Pedagogical mistake tracking engine (Sổ tay lỗi sai & Bẫy đề thi) capturing student exam mistakes during mock tests.
+  - Renamed from "Error Log" to **Mistake Log** to align with academic IELTS learning terminology (IELTS Mistake Journal) and clearly distinguish pedagogical learning mistakes from software system/HTTP errors.
+  - Categorizes mistakes into 5 high-frequency IELTS trap archetypes (`TRAP_NOT_GIVEN`, `VOCAB_UNKNOWN`, `TIME_PRESSURE`, `AUDIO_DISTRACTION`, `SPELLING_ERROR`).
+  - Visual stacked distribution bar with live percentage calculation and actionable advice.
+  - Interactive flashcard-style review modal allowing students to self-test, reveal answers, inspect diagnostic notes, and mark questions as mastered.
+- **Usage Example**:
+  ```tsx
+  import { MistakeLogWidget } from '@/features/dashboard/components'
+  import { useMistakeLogStore } from '@/store/mistakeLogStore'
+
+  // Log a mistake when student fails a question
+  const { logMistake } = useMistakeLogStore.getState()
+  logMistake({
+    questionId: 'Q14',
+    testTitle: 'Cambridge 18 Reading Test 1',
+    skill: 'reading',
+    trapType: 'TRAP_NOT_GIVEN',
+    questionPrompt: 'The research team anticipated...',
+    correctAnswer: 'NOT GIVEN',
+    studentAnswer: 'FALSE',
+    notes: 'Đoạn văn không đề cập đến việc dự đoán trước tác động.',
+  })
+
+  // Render widget on Dashboard
+  ;<MistakeLogWidget />
+  ```
+- **Constraints & Invariants**:
+  - Persisted in `localStorage` under `mistake_log_storage_v1`.
+  - Zero layout shift with robust empty states and instant academic seed data.

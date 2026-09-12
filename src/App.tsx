@@ -35,7 +35,7 @@ const ExamRunnerPage = lazy(() => import('@/features/exam-runner'))
 const DictationPage = lazy(() => import('@/features/dictation'))
 const TopicsPage = lazy(() => import('@/features/topics'))
 const ProfilePage = lazy(() => import('@/features/profile'))
-const ErrorLogPage = lazy(() => import('@/features/error-log'))
+const MistakeLogPage = lazy(() => import('@/features/mistake-log'))
 
 /**
  * App — root router tree.
@@ -100,8 +100,9 @@ export default function App() {
                 {/* ── Student Profile & Account Settings ── */}
                 <Route path="profile" element={<ProfilePage />} />
 
-                {/* ── Personal Error Log & Trap Analytics (Epic 4) ── */}
-                <Route path="error-log" element={<ErrorLogPage />} />
+                {/* ── Personal Mistake Log & Trap Analytics (Epic 4) ── */}
+                <Route path="mistake-log" element={<MistakeLogPage />} />
+                <Route path="error-log" element={<MistakeLogPage />} />
               </Route>
             </Routes>
           </Suspense>

@@ -16,7 +16,7 @@ import { courseService } from '@/services/courseService'
 import { calcProgressPercent } from '@/lib/utils'
 import { activeCoursesMock } from '@/mocks/course.mock'
 import { ProgressBar } from '@/shared/components'
-import { ErrorLogWidget } from './components'
+import { MistakeLogWidget } from './components'
 
 /**
  * DashboardPage — LMS Student Overview (screen 02).
@@ -105,9 +105,9 @@ export const DashboardPage: React.FC = () => {
         </div>
       </div>
 
-      {/* ── Personal Error Log & Exam Trap Analytics (Epic 4) ───── */}
+      {/* ── Personal Mistake Log & Exam Trap Analytics (Epic 4) ─── */}
       <div className="animate-fade-in-up stagger-5">
-        <ErrorLogWidget />
+        <MistakeLogWidget />
       </div>
 
       {/* ── Active Courses Section ──────────────────────────────── */}

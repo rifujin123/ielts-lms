@@ -49,7 +49,7 @@ const navGroups: NavGroupDef[] = [
       { label: 'Dictation', to: '/topics', icon: Film },
       { label: 'Exercises', to: '/exercises', icon: PenLine },
       { label: 'Study Roadmap', to: '/roadmap/personal', icon: Route },
-      { label: 'Error Log', to: '/error-log', icon: AlertTriangle },
+      { label: 'Mistake Log', to: '/mistake-log', icon: AlertTriangle },
     ],
   },
   {
