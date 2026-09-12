@@ -64,8 +64,9 @@ pnpm build
    - Standard interactions must use pure CSS utilities from `src/styles/globals.css` without importing heavy runtime JS animation libraries.
 3. **Mock Data Fallbacks**:
    - All feature hooks must provide instant fallback data defaults so pages render immediately without spinner hangs during offline/mock modes.
-4. **Barrel Exports**:
-   - Every shared component and feature component must export via `index.tsx`.
+4. **Clean Component Organization & Barrel Exports (Tránh Over-nesting index.tsx)**:
+   - Các component con của một feature phải được đặt trực tiếp dưới dạng tệp phẳng mang tên component trong thư mục `components/` (ví dụ `src/features/course-info/components/ClassRulesCard.tsx`, `CourseInfoCard.tsx`) và xuất khẩu qua một file `components/index.ts` duy nhất.
+   - **Tuyệt đối KHÔNG tạo thư mục riêng chỉ để chứa một tệp index.tsx đơn lẻ** (ví dụ `components/ClassRulesCard/index.tsx`). Anti-pattern này làm sâu cây thư mục vô ích và gây nghẽn tab khi mở code trên IDE (mở nhiều file đều thấy tên `index.tsx`).
 5. **SVG Icon Standard (`lucide-react`)**:
    - Never use `<span className="material-symbols-outlined">`. Always import vector SVG components from `lucide-react` with `strokeWidth={1.75}` (idle) and `strokeWidth={2.2}` (active).
 6. **Anti-Overdecoration & Scalable UI (Tránh lạm dụng Icon & Status Badge gắn chặt vào dữ liệu động)**:
