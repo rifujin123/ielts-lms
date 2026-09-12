@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { ChevronRight, BookMarked, BookOpen } from 'lucide-react'
 import { materialService } from '@/services/materialService'
 import { booksMock } from '@/mocks/books.mock'
+import { queryKeys } from '@/lib/queryKeys'
 
 /**
  * MaterialsPage — Course Materials & Textbooks (screen 05).
@@ -14,7 +15,7 @@ export const MaterialsPage: React.FC = () => {
   const [filterType, setFilterType] = useState<'all' | 'main' | 'supplementary'>('all')
 
   const { data: books = booksMock, isLoading: _isLoading } = useQuery({
-    queryKey: ['course-books'],
+    queryKey: queryKeys.materials.books(),
     queryFn: () => materialService.getBooks(),
   })
 

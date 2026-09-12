@@ -385,6 +385,7 @@ Whenever any agent adds, modifies, or extracts a **reusable asset** (UI componen
 | `<TeacherRubricModal />`       | `src/features/exam-runner/components/TeacherRubricModal`            | Component | Modal displaying Cambridge 4-criteria evaluation (TA/TR, CC, LR, GRA) for Writing & Speaking with examiner commentary & 0px shift.      |
 | `<QuestionExplanationModal />` | `src/features/exercises/runner/components/QuestionExplanationModal` | Component | Pop-up modal displaying question prompt, context, correct answer banner, and Linearthinking grammatical explanation.                    |
 | `roundToIeltsBand`             | `src/features/exam-runner/utils/ieltsScoring`                       | Utility   | Official IDP / British Council IELTS overall band rounding algorithm (.125, .25, .625, .75).                                            |
+| `queryKeys`                    | `src/lib/queryKeys`                                                 | Utility   | Centralized Query Key Factory for TanStack Query v5 with strictly typed tuple keys and hierarchical domain namespaces.                  |
 
 ### 4. Toast & System-Wide Error Handling Specification
 

@@ -19,6 +19,7 @@ import { homeworkService } from '@/services/homeworkService'
 import { homeworkMock } from '@/mocks/homework.mock'
 import type { HomeworkItem } from '@/types/api.types'
 import { EmptyState, NavigationTabs, ProgressBar } from '@/shared/components'
+import { queryKeys } from '@/lib/queryKeys'
 
 interface SyllabusUnit {
   id: string
@@ -43,7 +44,7 @@ export const HomeworkPage: React.FC = () => {
   const [selectedSubmittedHw, setSelectedSubmittedHw] = useState<HomeworkItem | null>(null)
 
   const { data: homeworkList = homeworkMock } = useQuery({
-    queryKey: ['homework-list'],
+    queryKey: queryKeys.homework.list(),
     queryFn: () => homeworkService.getHomeworkList(),
   })
 

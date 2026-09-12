@@ -12,6 +12,7 @@ import {
   Clock,
   Video,
 } from 'lucide-react'
+import { queryKeys } from '@/lib/queryKeys'
 import { courseService } from '@/services/courseService'
 import { calcProgressPercent } from '@/lib/utils'
 import { activeCoursesMock } from '@/mocks/course.mock'
@@ -28,7 +29,7 @@ export const DashboardPage: React.FC = () => {
   const [debouncedSearch] = useDebounce(search, 300)
 
   const { data: courses = activeCoursesMock, isLoading: _isLoading } = useQuery({
-    queryKey: ['active-courses'],
+    queryKey: queryKeys.courses.active(),
     queryFn: () => courseService.getActiveCourses(),
   })
 

@@ -7,6 +7,7 @@ import type { RoadmapStatus } from '@/types/api.types'
 import { roadmapMock } from '@/mocks/roadmap.mock'
 import { toast } from '@/shared/components/Toast/toastStore'
 import { EmptyState, FilterDropdown, SearchInput } from '@/shared/components'
+import { queryKeys } from '@/lib/queryKeys'
 
 /**
  * PersonalRoadmapPage — Personalized Student Roadmap (screen 08).
@@ -21,7 +22,7 @@ export const PersonalRoadmapPage: React.FC = () => {
   const [debouncedSearch] = useDebounce(search, 300)
 
   const { data: items = roadmapMock } = useQuery({
-    queryKey: ['roadmap-items'],
+    queryKey: queryKeys.roadmap.items(),
     queryFn: () => roadmapService.getRoadmapItems(),
   })
 

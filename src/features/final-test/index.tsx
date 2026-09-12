@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { ChevronRight, Play, Info, CheckCircle2 } from 'lucide-react'
 import { homeworkService } from '@/services/homeworkService'
 import { finalTestMock } from '@/mocks/homework.mock'
+import { queryKeys } from '@/lib/queryKeys'
 
 /**
  * FinalTestPage — Course Final Test & Graduation (screen 06).
@@ -12,7 +13,7 @@ import { finalTestMock } from '@/mocks/homework.mock'
  */
 export const FinalTestPage: React.FC = () => {
   const { data: finalTest = finalTestMock, isLoading: _isLoading } = useQuery({
-    queryKey: ['final-test'],
+    queryKey: queryKeys.homework.finalTest(),
     queryFn: () => homeworkService.getFinalTest(),
   })
 

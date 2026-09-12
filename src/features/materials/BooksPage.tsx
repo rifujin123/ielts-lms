@@ -12,6 +12,7 @@ import {
 } from 'lucide-react'
 import { materialService } from '@/services/materialService'
 import { booksMock } from '@/mocks/books.mock'
+import { queryKeys } from '@/lib/queryKeys'
 
 /**
  * BooksPage — Book Unit Explorer (screen 15).
@@ -23,7 +24,7 @@ export const BooksPage: React.FC = () => {
   const [expandedUnitId, setExpandedUnitId] = useState<string>('UNIT-01')
 
   const { data: books = booksMock, isLoading: _isLoading } = useQuery({
-    queryKey: ['course-books'],
+    queryKey: queryKeys.materials.books(),
     queryFn: () => materialService.getBooks(),
   })
 

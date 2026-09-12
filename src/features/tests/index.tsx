@@ -7,6 +7,7 @@ import { testService } from '@/services/testService'
 import type { TestType, TestStatus } from '@/types/api.types'
 import { testsMock } from '@/mocks/tests.mock'
 import { EmptyState, FilterDropdown, SearchInput } from '@/shared/components'
+import { queryKeys } from '@/lib/queryKeys'
 
 /**
  * TestsPage — Online Tests & Mock Exams (screen 12).
@@ -22,7 +23,7 @@ export const TestsPage: React.FC = () => {
   const [debouncedSearch] = useDebounce(search, 300)
 
   const { data: tests = testsMock } = useQuery({
-    queryKey: ['online-tests'],
+    queryKey: queryKeys.tests.list(),
     queryFn: () => testService.getOnlineTests(),
   })
 

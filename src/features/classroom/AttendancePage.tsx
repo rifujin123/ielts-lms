@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { ChevronRight, Download } from 'lucide-react'
 import { attendanceService } from '@/services/attendanceService'
 import { attendanceMock } from '@/mocks/attendance.mock'
+import { queryKeys } from '@/lib/queryKeys'
 
 /**
  * AttendancePage — Attendance Summary & Session History (screen 14).
@@ -12,7 +13,7 @@ import { attendanceMock } from '@/mocks/attendance.mock'
  */
 export const AttendancePage: React.FC = () => {
   const { data: sessions = attendanceMock, isLoading: _isLoading } = useQuery({
-    queryKey: ['attendance-summary'],
+    queryKey: queryKeys.attendance.summary(),
     queryFn: () => attendanceService.getAttendance(),
   })
 

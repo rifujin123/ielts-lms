@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { materialService } from '@/services/materialService'
 import { booksMock } from '@/mocks/books.mock'
 import { PdfMaterialViewer } from './components/PdfMaterialViewer'
+import { queryKeys } from '@/lib/queryKeys'
 
 export const PdfReaderPage: React.FC = () => {
   const navigate = useNavigate()
@@ -11,7 +12,7 @@ export const PdfReaderPage: React.FC = () => {
   const bookId = searchParams.get('bookId') || 'BOOK-01'
 
   const { data: books = booksMock } = useQuery({
-    queryKey: ['course-books'],
+    queryKey: queryKeys.materials.books(),
     queryFn: () => materialService.getBooks(),
   })
 

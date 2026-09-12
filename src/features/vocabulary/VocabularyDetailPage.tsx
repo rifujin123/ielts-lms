@@ -7,6 +7,7 @@ import { vocabularyService } from '@/services/vocabularyService'
 import { VocabularyWordCard } from './components/VocabularyWordCard'
 import { FlashcardModal } from './components/FlashcardModal'
 import { EmptyState } from '@/shared/components'
+import { queryKeys } from '@/lib/queryKeys'
 
 type FilterTab = 'all' | 'unmastered' | 'mastered' | 'starred'
 
@@ -21,7 +22,7 @@ export const VocabularyDetailPage: React.FC = () => {
 
   // Fetch vocabulary set detail
   const { data: setDetail, isLoading: _isLoading } = useQuery({
-    queryKey: ['vocabulary-detail', setId],
+    queryKey: queryKeys.vocabulary.detail(setId),
     queryFn: () => vocabularyService.getVocabularySetDetail(setId || 'VOCAB-01'),
     enabled: Boolean(setId),
   })
@@ -31,8 +32,8 @@ export const VocabularyDetailPage: React.FC = () => {
     mutationFn: (wordId: string) =>
       vocabularyService.toggleWordMastered(setId || 'VOCAB-01', wordId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['vocabulary-detail', setId] })
-      queryClient.invalidateQueries({ queryKey: ['vocabulary-sets'] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.vocabulary.detail(setId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.vocabulary.sets() })
     },
   })
 
@@ -40,7 +41,7 @@ export const VocabularyDetailPage: React.FC = () => {
     mutationFn: (wordId: string) =>
       vocabularyService.toggleWordStarred(setId || 'VOCAB-01', wordId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['vocabulary-detail', setId] })
+      queryClient.invalidateQueries({ queryKey: queryKeys.vocabulary.detail(setId) })
     },
   })
 

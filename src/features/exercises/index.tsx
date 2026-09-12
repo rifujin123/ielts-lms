@@ -8,6 +8,7 @@ import { exercisesMock } from '@/mocks/exercises.mock'
 import { ExerciseGamifiedRunner } from './runner'
 import { toast } from '@/shared/components/Toast/toastStore'
 import { EmptyState, FilterDropdown, SearchInput } from '@/shared/components'
+import { queryKeys } from '@/lib/queryKeys'
 
 /**
  * ExercisesPage — Practice Exercises List (matches reference design 1:1).
@@ -22,7 +23,7 @@ export const ExercisesPage: React.FC = () => {
   const [debouncedSearch] = useDebounce(search, 300)
 
   const { data: exercises = exercisesMock } = useQuery({
-    queryKey: ['exercises', skill, status, debouncedSearch],
+    queryKey: queryKeys.exercises.list({ skill, status, search: debouncedSearch }),
     queryFn: () =>
       exerciseService.getExercises({
         skill: skill === 'all' ? undefined : skill,

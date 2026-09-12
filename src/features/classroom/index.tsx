@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { ChevronRight, ClipboardCheck, Video, Flame, ShieldCheck, Check } from 'lucide-react'
 import { attendanceService } from '@/services/attendanceService'
 import { attendanceMock } from '@/mocks/attendance.mock'
+import { queryKeys } from '@/lib/queryKeys'
 
 /**
  * ClassroomPage — Online Classroom Hub (screen 13).
@@ -12,7 +13,7 @@ import { attendanceMock } from '@/mocks/attendance.mock'
  */
 export const ClassroomPage: React.FC = () => {
   const { data: sessions = attendanceMock, isLoading: _isLoading } = useQuery({
-    queryKey: ['classroom-sessions'],
+    queryKey: queryKeys.attendance.sessions(),
     queryFn: () => attendanceService.getAttendance(),
   })
 

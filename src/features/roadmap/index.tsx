@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { ChevronRight, Route, CheckCircle2, PlayCircle } from 'lucide-react'
 import { roadmapService } from '@/services/roadmapService'
 import { roadmapMock } from '@/mocks/roadmap.mock'
+import { queryKeys } from '@/lib/queryKeys'
 
 /**
  * RoadmapPage — Course Phase Overview (screen 03).
@@ -12,7 +13,7 @@ import { roadmapMock } from '@/mocks/roadmap.mock'
  */
 export const RoadmapPage: React.FC = () => {
   const { data: items = roadmapMock, isLoading: _isLoading } = useQuery({
-    queryKey: ['roadmap-items'],
+    queryKey: queryKeys.roadmap.items(),
     queryFn: () => roadmapService.getRoadmapItems(),
   })
 

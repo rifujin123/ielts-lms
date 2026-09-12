@@ -8,6 +8,7 @@ import { calcProgressPercent } from '@/lib/utils'
 import { vocabularyMock } from '@/mocks/vocabulary.mock'
 import { PersonalWordBank } from './components/PersonalWordBank'
 import { EmptyState, NavigationTabs, ProgressBar } from '@/shared/components'
+import { queryKeys } from '@/lib/queryKeys'
 
 /**
  * VocabularyPage — Vocabulary Sets & Flashcards (screens 04, 11).
@@ -23,7 +24,7 @@ export const VocabularyPage: React.FC = () => {
   const [debouncedSearch] = useDebounce(search, 300)
 
   const { data: sets = vocabularyMock, isLoading: _isLoading } = useQuery({
-    queryKey: ['vocabulary-sets', debouncedSearch],
+    queryKey: queryKeys.vocabulary.sets(debouncedSearch),
     queryFn: () => vocabularyService.getVocabularySets(),
   })
 
