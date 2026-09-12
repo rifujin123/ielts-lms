@@ -25,7 +25,7 @@ import {
   type LoggedMistake,
 } from '@/store/mistakeLogStore'
 import { toast } from '@/shared/components/Toast/toastStore'
-import { EmptyState } from '@/shared/components/EmptyState'
+import { EmptyState } from '@/shared/components'
 
 /**
  * Pedagogical advice per trap type

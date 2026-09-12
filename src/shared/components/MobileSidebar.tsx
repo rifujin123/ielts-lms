@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { X } from 'lucide-react'
 import { useUIStore } from '@/store/uiStore'
-import { Sidebar } from '@/shared/components/Sidebar'
+import { Sidebar } from './Sidebar'
 
 export const MobileSidebar: React.FC = () => {
   const { isSidebarOpen, closeSidebar } = useUIStore()

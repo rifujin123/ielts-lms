@@ -377,11 +377,11 @@ Whenever any agent adds, modifies, or extracts a **reusable asset** (UI componen
 | `<ToastContainer />`           | `src/shared/components/Toast`                                       | Component | Top-right fixed viewport container rendering active toasts with hover-pause countdown and accessible live region.                       |
 | `toast`                        | `src/shared/components/Toast/toastStore`                            | Utility   | Imperative toast dispatcher: `toast.error()`, `toast.warning()`, `toast.success()`, `toast.info()`, `toast.dismiss()`.                  |
 | `<GlobalErrorHandler />`       | `src/shared/providers/GlobalErrorHandler`                           | Component | Window lifecycle listener catching uncaught exceptions and unhandled promise rejections, triggering actionable toasts.                  |
-| `<Sidebar />`                  | `src/shared/components/Sidebar`                                     | Component | Slim 224px navigation sidebar with categorized groups and Deep Slate active pills.                                                      |
+| `<Sidebar />`                  | `src/shared/components/Sidebar.tsx`                                 | Component | Slim 224px navigation sidebar with categorized groups and Deep Slate active pills.                                                      |
 | `<Header />`                   | `src/shared/components/Header`                                      | Component | Standard top navbar with branding logo, left-chevron back button, user profile, and notifications.                                      |
-| `<MobileSidebar />`            | `src/shared/components/MobileSidebar`                               | Component | Mobile responsive drawer wrapper with backdrop blur and route-change auto-close.                                                        |
-| `<ErrorBoundary />`            | `src/shared/components/ErrorBoundary`                               | Component | Dual-layer error boundary (`FeatureErrorBoundary` + `GlobalErrorBoundary`) catching render exceptions with toast alerts & retry UI.     |
-| `<PageLoader />`               | `src/shared/components/PageLoader`                                  | Component | Centered brand loading skeleton indicator.                                                                                              |
+| `<MobileSidebar />`            | `src/shared/components/MobileSidebar.tsx`                           | Component | Mobile responsive drawer wrapper with backdrop blur and route-change auto-close.                                                        |
+| `<ErrorBoundary />`            | `src/shared/components/ErrorBoundary.tsx`                           | Component | Dual-layer error boundary (`FeatureErrorBoundary` + `GlobalErrorBoundary`) catching render exceptions with toast alerts & retry UI.     |
+| `<PageLoader />`               | `src/shared/components/PageLoader.tsx`                              | Component | Centered brand loading skeleton indicator.                                                                                              |
 | `<TeacherRubricModal />`       | `src/features/exam-runner/components/TeacherRubricModal`            | Component | Modal displaying Cambridge 4-criteria evaluation (TA/TR, CC, LR, GRA) for Writing & Speaking with examiner commentary & 0px shift.      |
 | `<QuestionExplanationModal />` | `src/features/exercises/runner/components/QuestionExplanationModal` | Component | Pop-up modal displaying question prompt, context, correct answer banner, and Linearthinking grammatical explanation.                    |
 | `roundToIeltsBand`             | `src/features/exam-runner/utils/ieltsScoring`                       | Utility   | Official IDP / British Council IELTS overall band rounding algorithm (.125, .25, .625, .75).                                            |
@@ -427,7 +427,7 @@ toast.warning('Phiên học sắp kết thúc', {
   - In TanStack Query: pass `meta: { suppressToast: true }`.
 
 - **Container Mounting Rule**:
-  - `<ToastContainer />` is mounted **once globally** in `src/shared/layouts/AppLayout/index.tsx` at `fixed top-5 right-5 z-50`.
+  - `<ToastContainer />` is mounted **once globally** in `src/shared/layouts/AppLayout.tsx` at `fixed top-5 right-5 z-50`.
   - **DO NOT** mount `<ToastContainer />` inside individual sub-pages or feature components.
 
 ---

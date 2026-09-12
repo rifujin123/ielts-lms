@@ -1,11 +1,13 @@
 import React, { Suspense } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
-import { Header } from '@/shared/components/Header'
-import { Sidebar } from '@/shared/components/Sidebar'
-import { MobileSidebar } from '@/shared/components/MobileSidebar'
-import { PageLoader } from '@/shared/components/PageLoader'
-import { FeatureErrorBoundary } from '@/shared/components/ErrorBoundary'
-import { ToastContainer } from '@/shared/components/Toast'
+import {
+  Header,
+  Sidebar,
+  MobileSidebar,
+  PageLoader,
+  FeatureErrorBoundary,
+  ToastContainer,
+} from '@/shared/components'
 
 export const AppLayout: React.FC = () => {
   const location = useLocation()

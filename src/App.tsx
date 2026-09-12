@@ -1,8 +1,7 @@
 import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AppLayout } from '@/shared/layouts/AppLayout'
-import { PageLoader } from '@/shared/components/PageLoader'
-import { GlobalErrorBoundary } from '@/shared/components/ErrorBoundary'
+import { PageLoader, GlobalErrorBoundary } from '@/shared/components'
 import { GlobalErrorHandler } from '@/shared/providers/GlobalErrorHandler'
 
 // ── Lazy-loaded feature pages ─────────────────────────────────────
