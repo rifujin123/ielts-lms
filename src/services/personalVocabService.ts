@@ -1,4 +1,7 @@
-﻿import type {
+import { apiClient } from '@/lib/axios'
+import { getMock } from '@/mocks'
+import { initialPersonalWordsMock } from '@/mocks/personalVocab.mock'
+import type {
   PersonalWordEntry,
   CreatePersonalWordPayload,
   WordMastery,
@@ -6,95 +9,14 @@
 
 const PERSONAL_VOCAB_STORAGE_KEY = 'ielts_lms_personal_vocab_entries'
 
-const initialPersonalWords: PersonalWordEntry[] = [
-  {
-    id: 'pw-1',
-    word: 'ephemeral',
-    phonetic: '/ɪˈfem.ər.əl/',
-    partOfSpeech: 'adjective',
-    meaningVi: 'Phù du, chóng tàn, tồn tại trong thời gian rất ngắn',
-    contextSentence: 'Fame in the age of social media is often fleeting and ephemeral.',
-    sourceSkill: 'reading',
-    sourceReference: 'Cam 18 - Reading Test 1 Passage 2',
-    collocations: ['ephemeral nature', 'ephemeral pleasures', 'ephemeral fame'],
-    personalNote: 'Rất hay dùng thay cho short-lived hoặc momentary trong Writing Task 2.',
-    masteryStatus: 'learning',
-    isStarred: true,
-    createdAt: '2026-09-01T10:00:00Z',
-    updatedAt: '2026-09-05T14:30:00Z',
-  },
-  {
-    id: 'pw-2',
-    word: 'ubiquitous',
-    phonetic: '/juːˈbɪk.wɪ.təs/',
-    partOfSpeech: 'adjective',
-    meaningVi: 'Phổ biến khắp nơi, có mặt ở mọi nơi',
-    contextSentence:
-      'Smartphones have become ubiquitous across all demographics in modern society.',
-    sourceSkill: 'writing',
-    sourceReference: 'Thầy Hồ Thành sửa Writing Task 2 - Tech topic',
-    collocations: ['ubiquitous presence', 'ubiquitous influence'],
-    personalNote: 'Từ band 8.0 nâng cấp cho từ omnipresent hoặc very common.',
-    masteryStatus: 'mastered',
-    isStarred: false,
-    createdAt: '2026-08-28T09:15:00Z',
-    updatedAt: '2026-09-02T16:00:00Z',
-  },
-  {
-    id: 'pw-3',
-    word: 'mitigate',
-    phonetic: '/ˈmɪt.ɪ.ɡeɪt/',
-    partOfSpeech: 'verb',
-    meaningVi: 'Giảm thiểu, làm nhẹ bớt mức độ nghiêm trọng',
-    contextSentence:
-      'Governments must introduce strict policies to mitigate the adverse effects of climate change.',
-    sourceSkill: 'reading',
-    sourceReference: 'Cam 17 - Reading Test 3 Passage 1',
-    collocations: ['mitigate the risk', 'mitigate the impact', 'mitigate damage'],
-    personalNote: 'Đi kèm với damage/risk/effect, nhớ không nhầm với militate.',
-    masteryStatus: 'mastered',
-    isStarred: false,
-    createdAt: '2026-08-25T11:00:00Z',
-    updatedAt: '2026-09-08T08:00:00Z',
-  },
-  {
-    id: 'pw-4',
-    word: 'deteriorate',
-    phonetic: '/dɪˈtɪə.ri.ə.reɪt/',
-    partOfSpeech: 'verb',
-    meaningVi: 'Xuống cấp, xấu đi, suy giảm trầm trọng',
-    contextSentence: 'Air quality in major metropolises continues to deteriorate rapidly.',
-    sourceSkill: 'dictation',
-    sourceReference: 'Video Dictation: Global Warming Report',
-    collocations: ['deteriorate rapidly', 'deteriorating condition'],
-    personalNote: 'Phát âm hay bị nuốt âm ri-o. Nghe kĩ trong bài Listening Section 4.',
-    masteryStatus: 'needs_review',
-    isStarred: true,
-    createdAt: '2026-09-08T15:20:00Z',
-    updatedAt: '2026-09-08T15:20:00Z',
-  },
-  {
-    id: 'pw-5',
-    word: 'plausible',
-    phonetic: '/ˈplɔː.zə.bəl/',
-    partOfSpeech: 'adjective',
-    meaningVi: 'Hợp lý, đáng tin cậy, có vẻ khả thi',
-    contextSentence:
-      'The researchers proposed a plausible explanation for the sudden population decline.',
-    sourceSkill: 'listening',
-    sourceReference: 'Cam 16 - Listening Part 3 Ecology Project',
-    collocations: ['plausible explanation', 'plausible scenario'],
-    personalNote: 'Trái nghĩa là implausible. Hay gặp trong dạng bài Multiple Choice.',
-    masteryStatus: 'needs_review',
-    isStarred: false,
-    createdAt: '2026-09-10T14:10:00Z',
-    updatedAt: '2026-09-10T14:10:00Z',
-  },
-]
-
 export const personalVocabService = {
   getWords: async (): Promise<PersonalWordEntry[]> => {
     // 🔌 WIRE: GET /api/personal-vocab
+    if (!getMock()) {
+      const { data } = await apiClient.get<PersonalWordEntry[]>('/personal-vocab')
+      return data
+    }
+
     const raw = localStorage.getItem(PERSONAL_VOCAB_STORAGE_KEY)
     if (raw) {
       try {
@@ -103,12 +25,17 @@ export const personalVocabService = {
         // fallback
       }
     }
-    localStorage.setItem(PERSONAL_VOCAB_STORAGE_KEY, JSON.stringify(initialPersonalWords))
-    return initialPersonalWords
+    localStorage.setItem(PERSONAL_VOCAB_STORAGE_KEY, JSON.stringify(initialPersonalWordsMock))
+    return initialPersonalWordsMock
   },
 
   addWord: async (payload: CreatePersonalWordPayload): Promise<PersonalWordEntry> => {
     // 🔌 WIRE: POST /api/personal-vocab
+    if (!getMock()) {
+      const { data } = await apiClient.post<PersonalWordEntry>('/personal-vocab', payload)
+      return data
+    }
+
     const words = await personalVocabService.getWords()
     const newEntry: PersonalWordEntry = {
       id: `pw-${Date.now()}`,
@@ -133,6 +60,11 @@ export const personalVocabService = {
 
   updateMastery: async (id: string, status: WordMastery): Promise<void> => {
     // 🔌 WIRE: PATCH /api/personal-vocab/:id/mastery
+    if (!getMock()) {
+      await apiClient.patch(`/personal-vocab/${id}/mastery`, { status })
+      return
+    }
+
     const words = await personalVocabService.getWords()
     const updatedList = words.map((w) =>
       w.id === id ? { ...w, masteryStatus: status, updatedAt: new Date().toISOString() } : w,
@@ -142,6 +74,11 @@ export const personalVocabService = {
 
   toggleStar: async (id: string): Promise<boolean> => {
     // 🔌 WIRE: PATCH /api/personal-vocab/:id/star
+    if (!getMock()) {
+      const { data } = await apiClient.patch<{ isStarred: boolean }>(`/personal-vocab/${id}/star`)
+      return data.isStarred
+    }
+
     const words = await personalVocabService.getWords()
     let newStar = false
     const updatedList = words.map((w) => {
@@ -157,6 +94,11 @@ export const personalVocabService = {
 
   updateNote: async (id: string, note: string): Promise<void> => {
     // 🔌 WIRE: PATCH /api/personal-vocab/:id/note
+    if (!getMock()) {
+      await apiClient.patch(`/personal-vocab/${id}/note`, { note })
+      return
+    }
+
     const words = await personalVocabService.getWords()
     const updatedList = words.map((w) =>
       w.id === id ? { ...w, personalNote: note, updatedAt: new Date().toISOString() } : w,
@@ -166,6 +108,11 @@ export const personalVocabService = {
 
   deleteWord: async (id: string): Promise<void> => {
     // 🔌 WIRE: DELETE /api/personal-vocab/:id
+    if (!getMock()) {
+      await apiClient.delete(`/personal-vocab/${id}`)
+      return
+    }
+
     const words = await personalVocabService.getWords()
     const updatedList = words.filter((w) => w.id !== id)
     localStorage.setItem(PERSONAL_VOCAB_STORAGE_KEY, JSON.stringify(updatedList))

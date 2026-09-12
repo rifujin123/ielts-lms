@@ -1,20 +1,9 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
+import { initialMistakeLogsMock } from '@/mocks/mistakeLog.mock'
+import type { TrapType, TrapTypeMeta, LoggedMistake } from '@/types/mistakeLog.types'
 
-/**
- * Supported IELTS trap and mistake categories
- */
-export type TrapType =
-  'TRAP_NOT_GIVEN' | 'VOCAB_UNKNOWN' | 'TIME_PRESSURE' | 'AUDIO_DISTRACTION' | 'SPELLING_ERROR'
-
-export interface TrapTypeMeta {
-  key: TrapType
-  label: string
-  shortLabel: string
-  description: string
-  badgeClass: string
-  barColor: string
-}
+export * from '@/types/mistakeLog.types'
 
 export const TRAP_TYPE_MAP: Record<TrapType, TrapTypeMeta> = {
   TRAP_NOT_GIVEN: {
@@ -59,105 +48,7 @@ export const TRAP_TYPE_MAP: Record<TrapType, TrapTypeMeta> = {
   },
 }
 
-export interface LoggedMistake {
-  id: string
-  questionId: string
-  testTitle: string
-  skill: 'reading' | 'listening' | 'writing' | 'speaking' | string
-  trapType: TrapType
-  questionPrompt: string
-  correctAnswer: string
-  studentAnswer: string
-  loggedAt: string
-  notes?: string
-}
-
-// Alias for backwards-compatibility
-export type LoggedError = LoggedMistake
-
-/** Realistic seed data of past student mistakes for instant academic rendering */
-export const INITIAL_MISTAKE_LOGS: LoggedMistake[] = [
-  {
-    id: 'mistake-mock-1',
-    questionId: 'Q14',
-    testTitle: 'Cambridge 18 Academic Reading Test 1',
-    skill: 'reading',
-    trapType: 'TRAP_NOT_GIVEN',
-    questionPrompt:
-      'The research team anticipated the negative environmental consequences before launching the pilot plant.',
-    correctAnswer: 'NOT GIVEN',
-    studentAnswer: 'FALSE',
-    loggedAt: '2026-09-10T09:30:00.000Z',
-    notes:
-      'Đoạn văn chỉ mô tả quá trình xây dựng trạm thử nghiệm, hoàn toàn không đề cập đến việc nhóm nghiên cứu có dự đoán trước tác động hay không.',
-  },
-  {
-    id: 'mistake-mock-2',
-    questionId: 'Q28',
-    testTitle: 'Cambridge 18 Academic Reading Test 1',
-    skill: 'reading',
-    trapType: 'TRAP_NOT_GIVEN',
-    questionPrompt:
-      'Traditional farming techniques have completely ceased across northern provinces.',
-    correctAnswer: 'NOT GIVEN',
-    studentAnswer: 'FALSE',
-    loggedAt: '2026-09-10T10:15:00.000Z',
-    notes:
-      'Tác giả chỉ nói phương pháp cơ giới hóa đang lan rộng, không hề khẳng định phương pháp truyền thống đã hoàn toàn biến mất.',
-  },
-  {
-    id: 'mistake-mock-3',
-    questionId: 'Q08',
-    testTitle: 'Cambridge 17 Academic Reading Test 3',
-    skill: 'reading',
-    trapType: 'VOCAB_UNKNOWN',
-    questionPrompt: 'The municipal council decided to ______ the historic canal expansion scheme.',
-    correctAnswer: 'abandon',
-    studentAnswer: 'prolong',
-    loggedAt: '2026-09-09T14:20:00.000Z',
-    notes:
-      'Không nhận diện được cụm từ đồng nghĩa "relinquish / discard" trong bài đọc tương ứng với "abandon" trong câu hỏi.',
-  },
-  {
-    id: 'mistake-mock-4',
-    questionId: 'Q23',
-    testTitle: 'Cambridge 18 Listening Practice Test 2',
-    skill: 'listening',
-    trapType: 'AUDIO_DISTRACTION',
-    questionPrompt: 'What caused the unexpected delay during the geotechnical survey?',
-    correctAnswer: 'Inclement weather conditions',
-    studentAnswer: 'Instrument malfunction',
-    loggedAt: '2026-09-08T16:45:00.000Z',
-    notes:
-      'Bị phân tâm bởi người nói nhắc đến sự cố thiết bị đo vào tuần trước, trước khi chốt lại lý do hoãn là do bão tuyết kéo dài.',
-  },
-  {
-    id: 'mistake-mock-5',
-    questionId: 'Q36',
-    testTitle: 'Cambridge 16 Academic Reading Test 4',
-    skill: 'reading',
-    trapType: 'TIME_PRESSURE',
-    questionPrompt: 'The principal factor that prompted the mass relocation was...',
-    correctAnswer: 'Escalating resource scarcity',
-    studentAnswer: 'Cultural assimilation',
-    loggedAt: '2026-09-07T11:00:00.000Z',
-    notes:
-      'Còn 2 phút cuối giờ nên quét vội từ khóa "culture" ở đoạn C thay vì đọc kỹ câu kết luận nguyên nhân gốc rễ ở đoạn D.',
-  },
-  {
-    id: 'mistake-mock-6',
-    questionId: 'Q04',
-    testTitle: 'Cambridge 17 Listening Test 1',
-    skill: 'listening',
-    trapType: 'SPELLING_ERROR',
-    questionPrompt: 'Student rental requirements: type of ________',
-    correctAnswer: 'accommodation',
-    studentAnswer: 'accomodation',
-    loggedAt: '2026-09-06T15:10:00.000Z',
-    notes: 'Sai chính tả từ vựng phổ biến: accommodation có hai chữ c (cc) và hai chữ m (mm).',
-  },
-]
-
+export const INITIAL_MISTAKE_LOGS: LoggedMistake[] = initialMistakeLogsMock
 export const INITIAL_ERROR_LOGS = INITIAL_MISTAKE_LOGS
 
 export interface MistakeLogState {
@@ -180,7 +71,7 @@ export interface MistakeLogState {
 export const useMistakeLogStore = create<MistakeLogState>()(
   persist(
     (set) => ({
-      mistakes: INITIAL_MISTAKE_LOGS,
+      mistakes: initialMistakeLogsMock,
       get errors() {
         return this.mistakes
       },
@@ -210,7 +101,8 @@ export const useMistakeLogStore = create<MistakeLogState>()(
 
       clearMistakes: () => set({ mistakes: [], errors: [] }),
 
-      resetToDefault: () => set({ mistakes: INITIAL_MISTAKE_LOGS, errors: INITIAL_MISTAKE_LOGS }),
+      resetToDefault: () =>
+        set({ mistakes: initialMistakeLogsMock, errors: initialMistakeLogsMock }),
 
       // Aliases
       logError: (err) =>

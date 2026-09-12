@@ -1,4 +1,7 @@
-﻿import type {
+import { apiClient } from '@/lib/axios'
+import { getMock } from '@/mocks'
+import { initialProfileMock } from '@/mocks/profile.mock'
+import type {
   StudentProfile,
   ChangePasswordPayload,
   UpdatePhonePayload,
@@ -6,41 +9,17 @@
 
 const PROFILE_STORAGE_KEY = 'ielts_lms_student_profile'
 
-const initialProfile: StudentProfile = {
-  id: 'HT-8829',
-  name: 'Trần Thảo',
-  initials: 'TT',
-  phone: '0912345678',
-  email: 'thaotran@example.com',
-  membershipStatus: 'active',
-  expiryDate: '15/10/2026',
-  remainingDays: 45,
-  enrolledCourse: {
-    id: 'course-master-65',
-    title: 'IELTS Master 6.5+ Intensive',
-    targetBand: '6.5 - 7.0 Overall',
-    classCode: 'Online-IELTS-6.5-12.08.2026-20:00',
-    schedule: 'Thứ 2 - Thứ 4 - Thứ 6 (19:30 - 21:00)',
-    leadInstructor: {
-      name: 'Thầy Hồ Thành',
-      role: 'Head Instructor (M.A TESOL)',
-    },
-    teachingAssistant: {
-      name: 'Cô Minh Anh',
-      role: 'Teaching Assistant (IELTS 8.0)',
-    },
-    totalSessions: 24,
-    completedSessions: 18,
-    roomUrl: '/classroom',
-  },
-}
-
 export const studentProfileService = {
   /**
    * Lấy thông tin tài khoản và gói học học viên
    */
   getProfile: async (): Promise<StudentProfile> => {
     // 🔌 WIRE: GET /api/student/profile
+    if (!getMock()) {
+      const { data } = await apiClient.get<StudentProfile>('/student/profile')
+      return data
+    }
+
     const stored = localStorage.getItem(PROFILE_STORAGE_KEY)
     if (stored) {
       try {
@@ -49,8 +28,8 @@ export const studentProfileService = {
         // fallback
       }
     }
-    localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(initialProfile))
-    return initialProfile
+    localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(initialProfileMock))
+    return initialProfileMock
   },
 
   /**
@@ -58,6 +37,11 @@ export const studentProfileService = {
    */
   updatePhone: async (payload: UpdatePhonePayload): Promise<StudentProfile> => {
     // 🔌 WIRE: PUT /api/student/profile/phone
+    if (!getMock()) {
+      const { data } = await apiClient.put<StudentProfile>('/student/profile/phone', payload)
+      return data
+    }
+
     const current = await studentProfileService.getProfile()
     const updated: StudentProfile = {
       ...current,
@@ -74,6 +58,14 @@ export const studentProfileService = {
     payload: ChangePasswordPayload,
   ): Promise<{ success: boolean; message: string }> => {
     // 🔌 WIRE: POST /api/student/security/change-password
+    if (!getMock()) {
+      const { data } = await apiClient.post<{ success: boolean; message: string }>(
+        '/student/security/change-password',
+        payload,
+      )
+      return data
+    }
+
     await new Promise((resolve) => setTimeout(resolve, 600))
 
     if (!payload.currentPassword) {
