@@ -11,11 +11,13 @@ import {
   Layers,
 } from 'lucide-react'
 import { useCourseInfo } from './hooks/useCourseInfo'
-import { CourseInfoCard } from './components/CourseInfoCard'
-import { InstructorCard } from './components/InstructorCard'
-import { ScheduleGrid } from './components/ScheduleGrid'
-import { ObjectivesCard } from './components/ObjectivesCard'
-import { ClassRulesCard } from './components/ClassRulesCard'
+import {
+  CourseInfoCard,
+  InstructorCard,
+  ScheduleGrid,
+  ObjectivesCard,
+  ClassRulesCard,
+} from './components'
 import { courseInfoMock } from '@/mocks/course.mock'
 
 /**

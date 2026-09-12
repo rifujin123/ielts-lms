@@ -8,7 +8,7 @@ import {
   ClipboardList,
   ShieldCheck,
 } from 'lucide-react'
-import type { CourseInfo } from '../../types'
+import type { CourseInfo } from '../types'
 import { formatDate } from '@/lib/utils'
 
 interface CourseInfoCardProps {

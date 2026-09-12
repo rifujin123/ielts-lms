@@ -1,6 +1,6 @@
 import React from 'react'
 import { Clock } from 'lucide-react'
-import type { ScheduleDay } from '../../types'
+import type { ScheduleDay } from '../types'
 import { cn } from '@/lib/utils'
 
 interface ScheduleGridProps {

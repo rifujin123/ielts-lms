@@ -1,6 +1,6 @@
 import React from 'react'
 import { Scale, AlertTriangle } from 'lucide-react'
-import type { ClassRule } from '../../types'
+import type { ClassRule } from '../types'
 
 interface ClassRulesCardProps {
   rules: ClassRule[]

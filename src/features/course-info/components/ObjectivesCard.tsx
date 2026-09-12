@@ -1,6 +1,6 @@
 import React from 'react'
 import { Target, CheckCircle2 } from 'lucide-react'
-import type { CourseObjective } from '../../types'
+import type { CourseObjective } from '../types'
 
 interface ObjectivesCardProps {
   description: string

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Mail, Calendar } from 'lucide-react'
-import type { Instructor } from '../../types'
+import type { Instructor } from '../types'
 
 interface InstructorCardProps {
   instructor: Instructor
