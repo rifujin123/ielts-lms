@@ -8,7 +8,6 @@ import {
   Languages,
   PenLine,
   Route,
-  PlayCircle,
   Award,
   Library,
   Video,
@@ -16,6 +15,7 @@ import {
   Headset,
   Film,
   ExternalLink,
+  AlertTriangle,
   type LucideIcon,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -34,31 +34,31 @@ interface NavGroupDef {
 
 const navGroups: NavGroupDef[] = [
   {
-    title: 'TỔNG QUAN',
+    title: 'GENERAL',
     items: [
       { label: 'Overview', to: '/dashboard', icon: LayoutDashboard },
-      { label: 'Syllabus & Bài học', to: '/homework', icon: BookOpen },
-      { label: 'Điểm danh & Buổi học', to: '/attendance', icon: CalendarDays },
+      { label: 'Syllabus', to: '/homework', icon: BookOpen },
+      { label: 'Attendance', to: '/attendance', icon: CalendarDays },
     ],
   },
   {
-    title: 'BÀI TẬP TRONG KHOÁ',
+    title: 'PRACTICE',
     items: [
-      { label: 'Online tests', to: '/tests', icon: FileCheck },
+      { label: 'Mock Tests', to: '/tests', icon: FileCheck },
       { label: 'Vocabulary', to: '/vocabulary', icon: Languages },
-      { label: 'Topics', to: '/topics', icon: Film },
+      { label: 'Dictation', to: '/topics', icon: Film },
       { label: 'Exercises', to: '/exercises', icon: PenLine },
-      { label: 'Roadmap cá nhân hóa', to: '/roadmap/personal', icon: Route },
-      { label: 'Luyện tập tương tác', to: '/practice', icon: PlayCircle },
+      { label: 'Study Roadmap', to: '/roadmap/personal', icon: Route },
+      { label: 'Error Log', to: '/error-log', icon: AlertTriangle },
     ],
   },
   {
-    title: 'THỐNG KÊ & THÔNG TIN',
+    title: 'RESOURCES & INFO',
     items: [
-      { label: 'Final Test', to: '/final-test', icon: Award },
-      { label: 'Tài liệu & Sách', to: '/materials', icon: Library },
-      { label: 'Lớp học trực tuyến', to: '/classroom', icon: Video },
-      { label: 'Thông tin khóa học', to: '/', icon: Info },
+      { label: 'Final Assessment', to: '/final-test', icon: Award },
+      { label: 'Course Materials', to: '/materials', icon: Library },
+      { label: 'Virtual Class', to: '/classroom', icon: Video },
+      { label: 'Course Info', to: '/', icon: Info },
     ],
   },
 ]

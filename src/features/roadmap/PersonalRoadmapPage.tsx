@@ -1,20 +1,12 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useDebounce } from 'use-debounce'
-import {
-  Search,
-  ChevronDown,
-  Target,
-  CornerDownRight,
-  SearchX,
-  Check,
-  PlayCircle,
-  CheckCircle2,
-} from 'lucide-react'
+import { Target, CornerDownRight, PlayCircle, CheckCircle2 } from 'lucide-react'
 import { roadmapService } from '@/services/roadmapService'
 import type { RoadmapStatus } from '@/types/api.types'
 import { roadmapMock } from '@/mocks/roadmap.mock'
 import { toast } from '@/shared/components/Toast/toastStore'
+import { EmptyState, FilterDropdown, SearchInput } from '@/shared/components'
 
 /**
  * PersonalRoadmapPage — Personalized Student Roadmap (screen 08).
@@ -27,26 +19,6 @@ export const PersonalRoadmapPage: React.FC = () => {
   const [category, setCategory] = useState<string>('all')
   const [search, setSearch] = useState('')
   const [debouncedSearch] = useDebounce(search, 300)
-
-  // Dropdown open states
-  const [isStatusOpen, setIsStatusOpen] = useState(false)
-  const [isCategoryOpen, setIsCategoryOpen] = useState(false)
-  const statusRef = useRef<HTMLDivElement>(null)
-  const categoryRef = useRef<HTMLDivElement>(null)
-
-  // Close dropdowns on outside click
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (statusRef.current && !statusRef.current.contains(event.target as Node)) {
-        setIsStatusOpen(false)
-      }
-      if (categoryRef.current && !categoryRef.current.contains(event.target as Node)) {
-        setIsCategoryOpen(false)
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
 
   const { data: items = roadmapMock } = useQuery({
     queryKey: ['roadmap-items'],
@@ -68,16 +40,6 @@ export const PersonalRoadmapPage: React.FC = () => {
     { label: 'Listening Master', value: 'Listening Master' },
     { label: 'Vocabulary Booster', value: 'Vocabulary Booster' },
   ]
-
-  const currentStatusLabel =
-    status === 'all'
-      ? 'Trạng thái'
-      : statusOptions.find((o) => o.value === status)?.label || 'Trạng thái'
-
-  const currentCategoryLabel =
-    category === 'all'
-      ? 'Phân loại'
-      : categoryOptions.find((o) => o.value === category)?.label || 'Phân loại'
 
   const filteredItems = (items ?? []).filter((task) => {
     if (status !== 'all' && task.status !== status) return false
@@ -101,112 +63,25 @@ export const PersonalRoadmapPage: React.FC = () => {
 
       {/* ── Filter Bar: Search + Status Dropdown + Category Dropdown ── */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-        {/* Search input */}
-        <div className="relative flex-1">
-          <Search
-            className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400"
-            strokeWidth={2}
-          />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Tìm kiếm nhiệm vụ lộ trình..."
-            className="w-full h-11 pl-10 pr-4 rounded-xl bg-slate-100/90 hover:bg-slate-100 focus:bg-white text-sm text-slate-800 placeholder:text-slate-400 border border-transparent focus:border-slate-300 focus:outline-none transition-all shadow-2xs"
-          />
-        </div>
+        <SearchInput
+          value={search}
+          onChange={setSearch}
+          placeholder="Tìm kiếm nhiệm vụ lộ trình..."
+        />
 
-        {/* Dropdown Filters */}
         <div className="flex items-center gap-2.5">
-          {/* Trạng thái Dropdown */}
-          <div className="relative" ref={statusRef}>
-            <button
-              type="button"
-              onClick={() => {
-                setIsStatusOpen((prev) => !prev)
-                setIsCategoryOpen(false)
-              }}
-              className="h-11 px-4 rounded-xl bg-slate-100/90 hover:bg-slate-200/70 text-sm font-medium text-slate-700 flex items-center gap-2 border border-transparent transition-colors"
-            >
-              <span>{currentStatusLabel}</span>
-              <ChevronDown
-                className={`h-4 w-4 text-slate-500 transition-transform duration-150 ${
-                  isStatusOpen ? 'rotate-180' : ''
-                }`}
-                strokeWidth={2}
-              />
-            </button>
-
-            {isStatusOpen && (
-              <div className="absolute right-0 top-full mt-1.5 w-44 rounded-xl border border-slate-200 bg-white py-1.5 shadow-lg z-20 animate-pop-in">
-                {statusOptions.map((opt) => (
-                  <button
-                    key={opt.value}
-                    type="button"
-                    onClick={() => {
-                      setStatus(opt.value)
-                      setIsStatusOpen(false)
-                    }}
-                    className={`flex w-full items-center justify-between px-3.5 py-2 text-xs font-medium transition-colors ${
-                      status === opt.value
-                        ? 'bg-slate-100 text-slate-900 font-bold'
-                        : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-                    }`}
-                  >
-                    <span>{opt.label}</span>
-                    {status === opt.value && (
-                      <Check className="h-3.5 w-3.5 text-primary" strokeWidth={2.5} />
-                    )}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Phân loại Dropdown */}
-          <div className="relative" ref={categoryRef}>
-            <button
-              type="button"
-              onClick={() => {
-                setIsCategoryOpen((prev) => !prev)
-                setIsStatusOpen(false)
-              }}
-              className="h-11 px-4 rounded-xl bg-slate-100/90 hover:bg-slate-200/70 text-sm font-medium text-slate-700 flex items-center gap-2 border border-transparent transition-colors"
-            >
-              <span>{currentCategoryLabel}</span>
-              <ChevronDown
-                className={`h-4 w-4 text-slate-500 transition-transform duration-150 ${
-                  isCategoryOpen ? 'rotate-180' : ''
-                }`}
-                strokeWidth={2}
-              />
-            </button>
-
-            {isCategoryOpen && (
-              <div className="absolute right-0 top-full mt-1.5 w-48 rounded-xl border border-slate-200 bg-white py-1.5 shadow-lg z-20 animate-pop-in">
-                {categoryOptions.map((opt) => (
-                  <button
-                    key={opt.value}
-                    type="button"
-                    onClick={() => {
-                      setCategory(opt.value)
-                      setIsCategoryOpen(false)
-                    }}
-                    className={`flex w-full items-center justify-between px-3.5 py-2 text-xs font-medium transition-colors ${
-                      category === opt.value
-                        ? 'bg-slate-100 text-slate-900 font-bold'
-                        : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-                    }`}
-                  >
-                    <span>{opt.label}</span>
-                    {category === opt.value && (
-                      <Check className="h-3.5 w-3.5 text-primary" strokeWidth={2.5} />
-                    )}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+          <FilterDropdown
+            label="Trạng thái"
+            value={status}
+            options={statusOptions}
+            onChange={(val) => setStatus(val as 'all' | RoadmapStatus)}
+          />
+          <FilterDropdown
+            label="Phân loại"
+            value={category}
+            options={categoryOptions}
+            onChange={setCategory}
+          />
         </div>
       </div>
 
@@ -259,7 +134,7 @@ export const PersonalRoadmapPage: React.FC = () => {
                 {task.estimatedMinutes} phút
               </span>
 
-              <span className="inline-flex items-center gap-1.5 text-xs font-bold text-red-600 group-hover:text-red-700 transition-colors">
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold text-primary group-hover:text-primary-hover transition-colors">
                 {task.status === 'completed' ? (
                   <>
                     <CheckCircle2 className="h-4 w-4 text-emerald-600" />
@@ -267,12 +142,12 @@ export const PersonalRoadmapPage: React.FC = () => {
                   </>
                 ) : task.status === 'in_progress' ? (
                   <>
-                    <PlayCircle className="h-4 w-4 fill-red-100 text-red-600" />
+                    <PlayCircle className="h-4 w-4 fill-primary/10 text-primary" />
                     <span>Tiếp tục học</span>
                   </>
                 ) : (
                   <>
-                    <PlayCircle className="h-4 w-4 fill-red-100 text-red-600" />
+                    <PlayCircle className="h-4 w-4 fill-primary/10 text-primary" />
                     <span>Bắt đầu ngay</span>
                   </>
                 )}
@@ -284,13 +159,10 @@ export const PersonalRoadmapPage: React.FC = () => {
 
       {/* ── Empty State ─────────────────────────────────────────── */}
       {filteredItems.length === 0 && (
-        <div className="flex min-h-[260px] flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-white p-8 text-center">
-          <SearchX className="h-10 w-10 text-slate-400" strokeWidth={1.5} />
-          <h3 className="mt-3 text-sm font-bold text-slate-800">Không tìm thấy nhiệm vụ nào</h3>
-          <p className="mt-1 text-xs text-slate-500">
-            Vui lòng thử tìm kiếm bằng từ khóa khác hoặc thay đổi bộ lọc trạng thái / phân loại.
-          </p>
-        </div>
+        <EmptyState
+          title="Không tìm thấy nhiệm vụ nào"
+          description="Vui lòng thử tìm kiếm bằng từ khóa khác hoặc thay đổi bộ lọc trạng thái / phân loại."
+        />
       )}
     </div>
   )

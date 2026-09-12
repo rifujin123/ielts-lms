@@ -144,4 +144,5 @@ export const ClassroomPage: React.FC = () => {
   )
 }
 
+export { AttendancePage } from './AttendancePage'
 export default ClassroomPage

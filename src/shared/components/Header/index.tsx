@@ -2,13 +2,14 @@ import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Menu, ChevronLeft, Bell } from 'lucide-react'
 import { useUIStore } from '@/store/uiStore'
+import { UserDropdown } from './UserDropdown'
 
 /**
  * Header — Top navigation bar, unified across all routes with back chevron.
  */
 export const Header: React.FC = () => {
   const navigate = useNavigate()
-  const { toggleSidebar, activePhase, currentUser } = useUIStore()
+  const { toggleSidebar, activePhase } = useUIStore()
 
   const handleBack = () => {
     if (window.history.length > 1) {
@@ -79,18 +80,9 @@ export const Header: React.FC = () => {
           <span className="animate-pop-in absolute right-2.5 top-2.5 h-2 w-2 rounded-full bg-primary" />
         </button>
 
-        {/* User avatar */}
-        <div className="flex items-center gap-2 pl-2 border-l border-outline-variant">
-          <div className="relative flex h-9 w-9 items-center justify-center rounded-full bg-secondary-container text-label-md font-bold text-on-secondary-container">
-            {currentUser.initials}
-            <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-surface-container-lowest bg-tertiary" />
-          </div>
-          <div className="hidden text-left xl:block">
-            <div className="text-label-md font-semibold text-on-surface leading-tight">
-              {currentUser.name}
-            </div>
-            <div className="text-[11px] text-secondary leading-tight">{currentUser.role}</div>
-          </div>
+        {/* User Dropdown with Avatar */}
+        <div className="pl-2 border-l border-outline-variant">
+          <UserDropdown />
         </div>
       </div>
     </header>

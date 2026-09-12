@@ -57,7 +57,7 @@ export interface TextHighlight {
   id: string
   passageId: 1 | 2 | 3
   text: string
-  color: 'yellow' | 'emerald' | 'amber'
+  color: 'yellow' | 'emerald' | 'amber' | 'slate'
   createdAt: number
 }
 

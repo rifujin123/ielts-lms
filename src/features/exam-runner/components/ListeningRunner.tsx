@@ -126,7 +126,7 @@ export const ListeningRunner: React.FC<ListeningRunnerProps> = ({ skillData, onS
   }, [])
 
   return (
-    <div className="flex h-full flex-col overflow-hidden bg-white selection:bg-emerald-100 selection:text-emerald-900">
+    <div className="flex h-full flex-col overflow-hidden bg-white">
       {/* ── Hidden HTML5 Audio Element for live stream support ──────── */}
       {currentSection.audioUrl && (
         <audio
@@ -327,15 +327,15 @@ export const ListeningRunner: React.FC<ListeningRunnerProps> = ({ skillData, onS
                     ? `Chuyển về Section ${skillData.sections[activeSectionIndex - 1].sectionNumber}`
                     : 'Đã ở Section đầu tiên'
                 }
-                className="btn-interactive absolute -left-3.5 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-800 shadow-sm ring-1 ring-slate-900/10 hover:bg-slate-50 hover:border-slate-400 disabled:opacity-20 disabled:cursor-not-allowed transition-all active:scale-95"
+                className="btn-interactive absolute -left-3.5 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-2xs hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-95"
               >
-                <ChevronLeft className="h-3.5 w-3.5" />
+                <ChevronLeft className="h-3.5 w-3.5" strokeWidth={1.75} />
               </button>
 
-              <div className="flex items-center gap-1.5 rounded-full bg-slate-900 pl-6 pr-6 py-1 text-xs font-bold text-white shadow-xs border border-slate-800">
-                <Headphones className="h-3.5 w-3.5 text-blue-400 shrink-0" />
+              <div className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-white pl-6 pr-6 py-1 text-xs font-semibold text-slate-800 shadow-2xs">
+                <Headphones className="h-3.5 w-3.5 text-slate-600 shrink-0" strokeWidth={1.75} />
                 <span>Section {currentSection.sectionNumber}</span>
-                <span className="rounded-full px-1.5 py-0.2 text-[10px] bg-white/20 text-white shrink-0">
+                <span className="rounded-full px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-600 border border-slate-200/60 font-medium shrink-0">
                   {answeredInCurrent}/{endQ - startQ + 1}
                 </span>
                 <span className="text-[10px] text-slate-400 font-mono">
@@ -357,14 +357,14 @@ export const ListeningRunner: React.FC<ListeningRunnerProps> = ({ skillData, onS
                     ? `Chuyển sang Section ${skillData.sections[activeSectionIndex + 1].sectionNumber}`
                     : 'Đã ở Section cuối cùng'
                 }
-                className="btn-interactive absolute -right-3.5 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-800 shadow-sm ring-1 ring-slate-900/10 hover:bg-slate-50 hover:border-slate-400 disabled:opacity-20 disabled:cursor-not-allowed transition-all active:scale-95"
+                className="btn-interactive absolute -right-3.5 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-2xs hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-95"
               >
-                <ChevronRight className="h-3.5 w-3.5" />
+                <ChevronRight className="h-3.5 w-3.5" strokeWidth={1.75} />
               </button>
             </div>
 
             {/* Desktop (>= lg): Full 4 Sections Horizontal Tabs */}
-            <div className="hidden lg:flex items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200 shadow-2xs overflow-x-auto custom-scrollbar">
+            <div className="hidden lg:flex items-center gap-1 rounded-xl bg-slate-100/90 p-1 border border-slate-200/80 shadow-2xs overflow-x-auto custom-scrollbar">
               {skillData.sections.map((sec, idx) => {
                 const isActive = activeSectionIndex === idx
                 const [s, e] = sec.questionRange
@@ -382,30 +382,26 @@ export const ListeningRunner: React.FC<ListeningRunnerProps> = ({ skillData, onS
                     key={sec.sectionNumber}
                     type="button"
                     onClick={() => setActiveSectionIndex(idx)}
-                    className={`btn-interactive flex shrink-0 items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-bold transition-all border ${
+                    className={`btn-interactive flex shrink-0 items-center gap-2 rounded-lg px-3 py-1.5 text-xs transition-all border ${
                       isActive
-                        ? 'border-slate-900 bg-slate-900 text-white shadow-xs'
-                        : 'border-transparent text-slate-600 hover:text-slate-900 hover:bg-white/60'
+                        ? 'border-slate-300/90 bg-white font-semibold text-slate-900 shadow-2xs'
+                        : 'border-transparent font-medium text-slate-600 hover:text-slate-900 hover:bg-white/60'
                     }`}
                   >
                     <span>Section {sec.sectionNumber}</span>
                     <span
-                      className={`rounded-full px-1.5 py-0.2 text-[10px] ${
-                        isActive ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'
+                      className={`rounded-full px-1.5 py-0.2 text-[10px] font-medium ${
+                        isActive
+                          ? 'bg-slate-100 text-slate-700 border border-slate-200/80'
+                          : 'bg-slate-200/70 text-slate-600'
                       }`}
                     >
                       {count}/{total}
                     </span>
                     {/* Mini Progress Bar Line */}
-                    <div
-                      className={`h-1 w-7 rounded-full overflow-hidden ${
-                        isActive ? 'bg-white/30' : 'bg-slate-200'
-                      }`}
-                    >
+                    <div className="h-1 w-7 rounded-full overflow-hidden bg-slate-200">
                       <div
-                        className={`h-full transition-all duration-300 ${
-                          isActive ? 'bg-emerald-400' : 'bg-slate-400'
-                        }`}
+                        className="h-full transition-all duration-300 bg-slate-600"
                         style={{ width: `${pct}%` }}
                       />
                     </div>

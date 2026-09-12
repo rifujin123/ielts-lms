@@ -183,7 +183,7 @@ export const ExerciseGamifiedRunner: React.FC<ExerciseGamifiedRunnerProps> = ({
   }
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 flex flex-col justify-between selection:bg-emerald-100 selection:text-emerald-900">
+    <div className="min-h-screen bg-white text-slate-900 flex flex-col justify-between">
       {/* 1. Sticky Top Navigation & Progress Bar */}
       <ExerciseTopBar
         currentQuestionIndex={currentQuestionIndex}

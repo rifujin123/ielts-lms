@@ -87,7 +87,7 @@ export const WritingRunner: React.FC<WritingRunnerProps> = ({ skillData }) => {
   const isWordCountSufficient = wordCount >= currentTask.minWords
 
   return (
-    <div className="flex h-full flex-col overflow-hidden bg-white selection:bg-emerald-100 selection:text-emerald-900">
+    <div className="flex h-full flex-col overflow-hidden bg-white">
       {/* ── Main Writing Workspace ──────────────────────────────────── */}
       {isMobile ? (
         /* Mobile Ergonomic Layout: Accordion Prompt + Fullscreen Textarea */
@@ -193,6 +193,36 @@ export const WritingRunner: React.FC<WritingRunnerProps> = ({ skillData }) => {
 
           {/* Text Editor Area */}
           <div className="flex-1 flex flex-col p-4 bg-white relative">
+            {/* Top Editor Bar for Mobile */}
+            <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-100">
+              <span className="text-xs font-bold text-slate-700">Khung viết bài</span>
+              <div
+                className={`group relative flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-bold border transition-colors cursor-help select-none ${
+                  isWordCountSufficient
+                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                    : 'bg-amber-50 text-amber-700 border-amber-200'
+                }`}
+              >
+                {isWordCountSufficient ? (
+                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+                ) : (
+                  <AlertCircle className="h-3.5 w-3.5 text-amber-600" />
+                )}
+                <span>{wordCount} từ</span>
+
+                {/* Hover/Tap Tooltip */}
+                <div className="pointer-events-none absolute bottom-full right-0 mb-2 hidden group-hover:flex flex-col items-end z-30 animate-pop-in">
+                  <div className="whitespace-nowrap rounded-lg bg-slate-900 px-2.5 py-1 text-[11px] font-semibold text-white shadow-md">
+                    Tối thiểu {currentTask.minWords} từ{' '}
+                    {isWordCountSufficient
+                      ? '✓ Đã đạt'
+                      : `(thiếu ${Math.max(0, currentTask.minWords - wordCount)} từ)`}
+                  </div>
+                  <div className="h-1.5 w-1.5 -mt-0.5 mr-3 rotate-45 bg-slate-900" />
+                </div>
+              </div>
+            </div>
+
             <textarea
               disabled={isSubmitted}
               value={currentText}
@@ -216,7 +246,7 @@ export const WritingRunner: React.FC<WritingRunnerProps> = ({ skillData }) => {
               className="absolute right-6 z-30 flex items-center gap-1.5 rounded-xl bg-slate-900/90 backdrop-blur-md px-3 py-1.5 text-xs font-bold text-white shadow-lg pointer-events-none transition-[bottom] duration-150"
             >
               <span className={isWordCountSufficient ? 'text-emerald-400' : 'text-amber-400'}>
-                {wordCount} / {currentTask.minWords} từ
+                {wordCount} từ
               </span>
               {isWordCountSufficient ? (
                 <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
@@ -317,10 +347,37 @@ export const WritingRunner: React.FC<WritingRunnerProps> = ({ skillData }) => {
 
             {/* Right Pane: Essay Text Editor */}
             <Panel defaultSize="55%" minSize="35%" className="h-full flex flex-col bg-white p-8">
-              <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-200">
-                <span className="text-sm font-bold text-slate-800">
-                  Khung soạn thảo bài viết — IELTS Writing Task {currentTask.taskNumber}
-                </span>
+              <div className="flex flex-wrap items-center justify-between pb-3 mb-3 border-b border-slate-200 gap-2">
+                <div className="flex items-center gap-3">
+                  <span className="text-sm font-bold text-slate-800">
+                    Khung soạn thảo bài viết — IELTS Writing Task {currentTask.taskNumber}
+                  </span>
+                  <div
+                    className={`group relative flex items-center gap-1.5 rounded-xl px-3 py-1 text-xs font-bold border transition-colors shrink-0 cursor-help select-none ${
+                      isWordCountSufficient
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                        : 'bg-amber-50 text-amber-700 border-amber-200'
+                    }`}
+                  >
+                    {isWordCountSufficient ? (
+                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+                    ) : (
+                      <AlertCircle className="h-3.5 w-3.5 text-amber-600" />
+                    )}
+                    <span>{wordCount} từ</span>
+
+                    {/* Hover Tooltip */}
+                    <div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:flex flex-col items-center z-30 animate-pop-in">
+                      <div className="whitespace-nowrap rounded-lg bg-slate-900 px-2.5 py-1 text-[11px] font-semibold text-white shadow-md">
+                        Tối thiểu {currentTask.minWords} từ{' '}
+                        {isWordCountSufficient
+                          ? '✓ Đã đạt'
+                          : `(còn thiếu ${Math.max(0, currentTask.minWords - wordCount)} từ)`}
+                      </div>
+                      <div className="h-1.5 w-1.5 -mt-0.5 rotate-45 bg-slate-900" />
+                    </div>
+                  </div>
+                </div>
                 <span className="text-xs font-medium text-slate-400">
                   Tự động lưu bản nháp theo thời gian thực
                 </span>
@@ -350,7 +407,7 @@ export const WritingRunner: React.FC<WritingRunnerProps> = ({ skillData }) => {
       {/* ── Signature DOL Bottom Navigation Bar (Matches Listening & Reading Pattern) ── */}
       <footer className="sticky bottom-0 z-30 shrink-0 border-t border-slate-200 bg-white shadow-lg select-none">
         <div className="relative flex items-center justify-between gap-3 px-4 sm:px-6 py-2.5">
-          {/* Left: Task Indicator & Live Word Count Status */}
+          {/* Left: Task Indicator */}
           <div className="flex flex-1 items-center justify-start gap-3 min-w-0">
             <div className="hidden sm:flex flex-col shrink-0">
               <span className="text-xs font-bold text-slate-900 leading-tight">
@@ -358,24 +415,6 @@ export const WritingRunner: React.FC<WritingRunnerProps> = ({ skillData }) => {
               </span>
               <span className="text-[11px] text-slate-500 font-medium">
                 {currentTask.recommendedMinutes} phút đề xuất
-              </span>
-            </div>
-
-            <div
-              className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold border transition-colors shrink-0 ${
-                isWordCountSufficient
-                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                  : 'bg-amber-50 text-amber-700 border-amber-200'
-              }`}
-            >
-              {isWordCountSufficient ? (
-                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-              ) : (
-                <AlertCircle className="h-4 w-4 text-amber-600" />
-              )}
-              <span>
-                {wordCount} từ (
-                {isWordCountSufficient ? 'Đạt yêu cầu' : `Tối thiểu ${currentTask.minWords} từ`})
               </span>
             </div>
           </div>
@@ -390,17 +429,19 @@ export const WritingRunner: React.FC<WritingRunnerProps> = ({ skillData }) => {
                 disabled={activeTaskIndex === 0}
                 aria-label="Task trước"
                 title={activeTaskIndex > 0 ? 'Chuyển về Task 1' : 'Đã ở Task đầu tiên'}
-                className="btn-interactive absolute -left-3.5 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-800 shadow-sm ring-1 ring-slate-900/10 hover:bg-slate-50 hover:border-slate-400 disabled:opacity-20 disabled:cursor-not-allowed transition-all active:scale-95"
+                className="btn-interactive absolute -left-3.5 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-2xs hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-95"
               >
-                <ChevronLeft className="h-3.5 w-3.5" />
+                <ChevronLeft className="h-3.5 w-3.5" strokeWidth={1.75} />
               </button>
 
-              <div className="flex items-center gap-1.5 rounded-full bg-slate-900 pl-6 pr-6 py-1 text-xs font-bold text-white shadow-xs border border-slate-800">
-                <FileText className="h-3.5 w-3.5 text-purple-400 shrink-0" />
+              <div className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-white pl-6 pr-6 py-1 text-xs font-semibold text-slate-800 shadow-2xs">
+                <FileText className="h-3.5 w-3.5 text-slate-600 shrink-0" strokeWidth={1.75} />
                 <span>Task {currentTask.taskNumber}</span>
                 <span
-                  className={`rounded-full px-1.5 py-0.2 text-[10px] shrink-0 ${
-                    isWordCountSufficient ? 'bg-emerald-500 text-white' : 'bg-white/20 text-white'
+                  className={`rounded-full px-1.5 py-0.2 text-[10px] font-medium shrink-0 ${
+                    isWordCountSufficient
+                      ? 'bg-slate-100 text-slate-800 border border-slate-300'
+                      : 'bg-slate-100 text-slate-500 border border-slate-200/60'
                   }`}
                 >
                   {wordCount}/{currentTask.minWords}
@@ -420,14 +461,14 @@ export const WritingRunner: React.FC<WritingRunnerProps> = ({ skillData }) => {
                     ? 'Chuyển sang Task 2'
                     : 'Đã ở Task cuối cùng'
                 }
-                className="btn-interactive absolute -right-3.5 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-800 shadow-sm ring-1 ring-slate-900/10 hover:bg-slate-50 hover:border-slate-400 disabled:opacity-20 disabled:cursor-not-allowed transition-all active:scale-95"
+                className="btn-interactive absolute -right-3.5 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-2xs hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-95"
               >
-                <ChevronRight className="h-3.5 w-3.5" />
+                <ChevronRight className="h-3.5 w-3.5" strokeWidth={1.75} />
               </button>
             </div>
 
             {/* Desktop (>= lg): Full 2 Tasks Horizontal Tabs */}
-            <div className="hidden lg:flex items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200 shadow-2xs overflow-x-auto custom-scrollbar">
+            <div className="hidden lg:flex items-center gap-1 rounded-xl bg-slate-100/90 p-1 border border-slate-200/80 shadow-2xs overflow-x-auto custom-scrollbar">
               {skillData.tasks.map((task, idx) => {
                 const isActive = activeTaskIndex === idx
                 const taskKey = idx === 0 ? 'task1' : 'task2'
@@ -441,26 +482,29 @@ export const WritingRunner: React.FC<WritingRunnerProps> = ({ skillData }) => {
                     key={task.taskNumber}
                     type="button"
                     onClick={() => setActiveTaskIndex(idx as 0 | 1)}
-                    className={`btn-interactive flex shrink-0 items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-bold transition-all border ${
+                    className={`btn-interactive flex shrink-0 items-center gap-2 rounded-lg px-3 py-1.5 text-xs transition-all border ${
                       isActive
-                        ? 'border-slate-900 bg-slate-900 text-white shadow-xs'
-                        : 'border-transparent text-slate-600 hover:text-slate-900 hover:bg-white/60'
+                        ? 'border-slate-300/90 bg-white font-semibold text-slate-900 shadow-2xs'
+                        : 'border-transparent font-medium text-slate-600 hover:text-slate-900 hover:bg-white/60'
                     }`}
                   >
-                    <FileText className="h-3.5 w-3.5" />
+                    <FileText
+                      className="h-3.5 w-3.5 text-slate-600"
+                      strokeWidth={isActive ? 2 : 1.75}
+                    />
                     <span>Task {task.taskNumber}</span>
                     <span
-                      className={`rounded-full px-1.5 py-0.2 text-[10px] ${
+                      className={`rounded-full px-1.5 py-0.2 text-[10px] font-medium ${
                         isDone
-                          ? 'bg-emerald-500 text-white'
+                          ? 'bg-slate-100 text-slate-800 border border-slate-300'
                           : isActive
-                            ? 'bg-white/20 text-white'
-                            : 'bg-slate-200 text-slate-700'
+                            ? 'bg-slate-100 text-slate-700 border border-slate-200/80'
+                            : 'bg-slate-200/70 text-slate-600'
                       }`}
                     >
                       {count}/{task.minWords} từ
                     </span>
-                    {isDone && <CheckCircle2 className="h-3 w-3 text-emerald-400" />}
+                    {isDone && <CheckCircle2 className="h-3 w-3 text-slate-700" />}
                   </button>
                 )
               })}

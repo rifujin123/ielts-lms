@@ -173,4 +173,5 @@ export const RoadmapPage: React.FC = () => {
   )
 }
 
+export { PersonalRoadmapPage } from './PersonalRoadmapPage'
 export default RoadmapPage

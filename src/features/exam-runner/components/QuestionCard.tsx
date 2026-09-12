@@ -5,9 +5,13 @@ import { useIeltsExamStore } from '../store/ieltsExamStore'
 
 interface QuestionCardProps {
   question: IeltsQuestion
+  hideInstruction?: boolean
 }
 
-export const QuestionCard: React.FC<QuestionCardProps> = ({ question }) => {
+export const QuestionCard: React.FC<QuestionCardProps> = ({
+  question,
+  hideInstruction = false,
+}) => {
   const {
     activeQuestionId,
     setActiveQuestion,
@@ -66,11 +70,11 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ question }) => {
             >
               {isCorrect ? (
                 <>
-                  <CheckCircle2 className="h-3.5 w-3.5" /> Đúng
+                  <CheckCircle2 className="h-3.5 w-3.5" /> Correct
                 </>
               ) : (
                 <>
-                  <XCircle className="h-3.5 w-3.5" /> Sai
+                  <XCircle className="h-3.5 w-3.5" /> Incorrect
                 </>
               )}
             </span>
@@ -84,7 +88,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ question }) => {
                 e.stopPropagation()
                 toggleFlag(question.id)
               }}
-              title={isFlagged ? 'Bỏ đánh dấu xem lại' : 'Đánh dấu xem lại câu này'}
+              title={isFlagged ? 'Unmark review' : 'Flag question for review'}
               className={`btn-interactive flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-semibold transition-all border ${
                 isFlagged
                   ? 'border-slate-900 bg-slate-900 text-white shadow-xs'
@@ -95,18 +99,78 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ question }) => {
                 className={`h-3.5 w-3.5 ${isFlagged ? 'fill-white text-white' : 'text-slate-400'}`}
                 strokeWidth={2}
               />
-              <span>{isFlagged ? 'Đã gắn cờ' : 'Xem lại'}</span>
+              <span>{isFlagged ? 'Review (Flagged)' : 'Review'}</span>
             </button>
           )}
         </div>
       </div>
 
-      {/* ── Instruction if present ────────────────────────────────── */}
-      {question.instruction && (
-        <p className="mb-3 text-xs italic text-slate-500 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-          {question.instruction}
-        </p>
-      )}
+      {/* ── Authentic IELTS CBT Question Instruction & Legend ───────────────── */}
+      {!hideInstruction &&
+        (question.type === 'TRUE_FALSE_NOT_GIVEN' || question.type === 'YES_NO_NOT_GIVEN') && (
+          <div className="mb-4 rounded-xl border border-slate-200 bg-slate-50/90 p-3.5 text-xs text-slate-800">
+            <div className="font-semibold text-slate-900 mb-1 leading-snug">
+              {question.type === 'YES_NO_NOT_GIVEN'
+                ? 'Do the following statements agree with the views/claims of the writer in Reading Passage?'
+                : 'Do the following statements agree with the information given in Reading Passage?'}
+            </div>
+            <div className="text-slate-500 mb-2 italic text-[11px]">
+              In boxes on your answer sheet, choose:
+            </div>
+            <div className="space-y-1.5 rounded-lg border border-slate-200/90 bg-white p-2.5 text-[11px] sm:text-xs">
+              {question.type === 'YES_NO_NOT_GIVEN' ? (
+                <>
+                  <div className="grid grid-cols-[85px_1fr] items-baseline gap-2">
+                    <span className="font-bold text-slate-900 tracking-wide">YES</span>
+                    <span className="text-slate-600">
+                      if the statement agrees with the views/claims of the writer
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-[85px_1fr] items-baseline gap-2">
+                    <span className="font-bold text-slate-900 tracking-wide">NO</span>
+                    <span className="text-slate-600">
+                      if the statement contradicts the views/claims of the writer
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-[85px_1fr] items-baseline gap-2">
+                    <span className="font-bold text-slate-900 tracking-wide">NOT GIVEN</span>
+                    <span className="text-slate-600">
+                      if it is impossible to say what the writer thinks about this
+                    </span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="grid grid-cols-[85px_1fr] items-baseline gap-2">
+                    <span className="font-bold text-slate-900 tracking-wide">TRUE</span>
+                    <span className="text-slate-600">
+                      if the statement agrees with the information
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-[85px_1fr] items-baseline gap-2">
+                    <span className="font-bold text-slate-900 tracking-wide">FALSE</span>
+                    <span className="text-slate-600">
+                      if the statement contradicts the information
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-[85px_1fr] items-baseline gap-2">
+                    <span className="font-bold text-slate-900 tracking-wide">NOT GIVEN</span>
+                    <span className="text-slate-600">if there is no information on this</span>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+
+      {!hideInstruction &&
+        question.instruction &&
+        question.type !== 'TRUE_FALSE_NOT_GIVEN' &&
+        question.type !== 'YES_NO_NOT_GIVEN' && (
+          <p className="mb-3 text-xs italic text-slate-500 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
+            {question.instruction}
+          </p>
+        )}
 
       {/* ── Question Prompt ────────────────────────────────────────── */}
       <div className="text-sm font-medium text-slate-800 mb-4 leading-relaxed">
@@ -118,28 +182,41 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ question }) => {
 
       {/* ── Interactive Question Controls ─────────────────────────── */}
       <div className="mt-2">
-        {/* Case 1: True / False / Not Given & Yes / No / Not Given */}
+        {/* Case 1: Authentic IELTS on Computer (CBT) Radio Options */}
         {(question.type === 'TRUE_FALSE_NOT_GIVEN' || question.type === 'YES_NO_NOT_GIVEN') && (
-          <div className="grid grid-cols-3 gap-2">
+          <div
+            role="radiogroup"
+            aria-label={`Options for question ${question.id}`}
+            className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 sm:gap-4 pt-1"
+          >
             {(question.type === 'TRUE_FALSE_NOT_GIVEN'
               ? ['TRUE', 'FALSE', 'NOT GIVEN']
               : ['YES', 'NO', 'NOT GIVEN']
             ).map((val) => {
               const isSelected = currentAnswer === val
               return (
-                <button
+                <label
                   key={val}
-                  type="button"
-                  disabled={isSubmitted}
-                  onClick={() => setAnswer(question.id, val)}
-                  className={`btn-interactive flex items-center justify-center rounded-xl py-2.5 text-xs font-bold transition-all border ${
+                  onClick={() => !isSubmitted && setAnswer(question.id, val)}
+                  className={`group inline-flex items-center gap-2.5 cursor-pointer select-none py-2 px-3.5 rounded-lg border transition-all text-xs font-semibold ${
+                    isSubmitted ? 'cursor-default pointer-events-none' : 'hover:bg-slate-50'
+                  } ${
                     isSelected
-                      ? 'border-slate-900 bg-slate-900 text-white shadow-xs'
-                      : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50'
+                      ? 'border-slate-900 bg-slate-100/90 text-slate-900 shadow-2xs ring-1 ring-slate-900/10'
+                      : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300'
                   }`}
                 >
-                  {val}
-                </button>
+                  <span
+                    className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border transition-all ${
+                      isSelected
+                        ? 'border-slate-900 bg-white'
+                        : 'border-slate-400 bg-white group-hover:border-slate-600'
+                    }`}
+                  >
+                    {isSelected && <span className="h-2 w-2 rounded-full bg-slate-900" />}
+                  </span>
+                  <span className="tracking-wide">{val}</span>
+                </label>
               )
             })}
           </div>
@@ -186,7 +263,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ question }) => {
               disabled={isSubmitted}
               value={currentAnswer}
               onChange={(e) => setAnswer(question.id, e.target.value)}
-              placeholder="Nhập câu trả lời của bạn..."
+              placeholder="Type your answer here..."
               className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-xs font-semibold text-slate-800 placeholder-slate-400 focus:border-slate-900 focus:outline-hidden focus:ring-2 focus:ring-slate-900/10 disabled:bg-slate-100 transition-colors"
             />
           </div>
@@ -199,10 +276,10 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ question }) => {
               disabled={isSubmitted}
               value={currentAnswer}
               onChange={(e) => setAnswer(question.id, e.target.value)}
-              aria-label={`Chọn tiêu đề cho ${question.paragraphTarget || 'đoạn văn'}`}
+              aria-label={`Select heading for ${question.paragraphTarget || 'paragraph'}`}
               className="w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:border-slate-900 focus:outline-hidden focus:ring-2 focus:ring-slate-900/10 disabled:bg-slate-100 transition-colors"
             >
-              <option value="">-- Chọn tiêu đề phù hợp --</option>
+              <option value="">-- Choose matching heading --</option>
               {question.matchingHeadingsPool.map((h) => (
                 <option key={h.id} value={h.id}>
                   {h.title}
@@ -219,7 +296,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ question }) => {
           <div className="flex items-center gap-2 font-bold text-slate-800 mb-1">
             <Info className="h-4 w-4 text-blue-600" />
             <span>
-              Đáp án đúng:{' '}
+              Correct Answer:{' '}
               <span className="text-emerald-700 font-mono">
                 {Array.isArray(question.correctAnswer)
                   ? question.correctAnswer.join(' / ')
@@ -230,7 +307,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ question }) => {
           <p className="text-slate-600 mt-1 leading-relaxed">{question.explanation}</p>
           {question.referenceLocation && (
             <div className="mt-2 text-[11px] font-semibold text-slate-400">
-              Vị trí trong bài: {question.referenceLocation}
+              Passage Reference: {question.referenceLocation}
             </div>
           )}
         </div>

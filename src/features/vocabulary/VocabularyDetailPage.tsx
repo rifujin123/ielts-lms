@@ -2,10 +2,11 @@ import React, { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useDebounce } from 'use-debounce'
-import { ChevronRight, ArrowLeft, Search, Layers, SearchX } from 'lucide-react'
+import { ChevronRight, ArrowLeft, Search, Layers } from 'lucide-react'
 import { vocabularyService } from '@/services/vocabularyService'
 import { VocabularyWordCard } from './components/VocabularyWordCard'
 import { FlashcardModal } from './components/FlashcardModal'
+import { EmptyState } from '@/shared/components'
 
 type FilterTab = 'all' | 'unmastered' | 'mastered' | 'starred'
 
@@ -210,29 +211,25 @@ export const VocabularyDetailPage: React.FC = () => {
         </div>
       ) : (
         /* Empty State */
-        <div className="animate-fade-in-up flex min-h-[260px] flex-col items-center justify-center rounded-2xl border border-dashed border-outline-variant bg-surface-container-lowest p-8 text-center">
-          <SearchX className="h-12 w-12 text-secondary/60" strokeWidth={1.5} />
-          <h3 className="mt-3 text-headline-sm font-bold text-on-surface">
-            Không tìm thấy từ vựng phù hợp
-          </h3>
-          <p className="mt-1 text-body-sm text-secondary">
-            {search
+        <EmptyState
+          title="Không tìm thấy từ vựng phù hợp"
+          description={
+            search
               ? 'Thử tìm kiếm với từ khóa khác hoặc xóa ô tìm kiếm.'
-              : 'Bộ lọc hiện tại không có từ vựng nào.'}
-          </p>
-          {(search || activeFilter !== 'all') && (
-            <button
-              type="button"
-              onClick={() => {
-                setSearch('')
-                setActiveFilter('all')
-              }}
-              className="mt-4 btn-interactive rounded-xl bg-surface-container-high px-4 py-2 text-label-sm font-semibold text-on-surface hover:bg-surface-container-highest transition-colors"
-            >
-              Xóa bộ lọc
-            </button>
-          )}
-        </div>
+              : 'Bộ lọc hiện tại không có từ vựng nào.'
+          }
+          action={
+            search || activeFilter !== 'all'
+              ? {
+                  label: 'Xóa bộ lọc',
+                  onClick: () => {
+                    setSearch('')
+                    setActiveFilter('all')
+                  },
+                }
+              : undefined
+          }
+        />
       )}
 
       {/* ── Flashcard Modal ────────────────────────────────────── */}

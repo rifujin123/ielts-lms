@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
+import { createPortal } from 'react-dom'
 import {
   X,
   ChevronLeft,
@@ -57,6 +58,16 @@ export const FlashcardModal: React.FC<FlashcardModalProps> = ({
   const [showAllCollocations, setShowAllCollocations] = useState(false)
 
   const currentWord = words[currentIndex]
+
+  // Prevent background scrolling while modal is open
+  useEffect(() => {
+    if (!isOpen) return
+    const originalOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = originalOverflow
+    }
+  }, [isOpen])
 
   const handleNext = useCallback(() => {
     if (currentIndex < words.length - 1) {
@@ -149,9 +160,9 @@ export const FlashcardModal: React.FC<FlashcardModalProps> = ({
 
   const progressPercent = Math.round(((currentIndex + 1) / words.length) * 100)
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-fade-in-up">
-      <div className="relative flex w-full max-w-2xl flex-col rounded-3xl border border-outline-variant bg-surface-container-lowest p-6 shadow-2xl dark:bg-surface-container-lowest">
+  return createPortal(
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto">
+      <div className="relative flex w-full max-w-2xl max-h-[92vh] flex-col rounded-3xl border border-outline-variant bg-surface-container-lowest p-5 sm:p-6 shadow-2xl dark:bg-surface-container-lowest my-auto overflow-y-auto animate-pop-in">
         {/* ── Top Bar: Title, Auto-play toggle & Close ─────────── */}
         <div className="flex items-center justify-between border-b border-outline-variant pb-4">
           <div className="flex items-center gap-2">
@@ -449,6 +460,7 @@ export const FlashcardModal: React.FC<FlashcardModalProps> = ({
           </span>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }

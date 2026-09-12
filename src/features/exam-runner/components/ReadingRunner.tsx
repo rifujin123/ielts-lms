@@ -90,7 +90,7 @@ export const ReadingRunner: React.FC<ReadingRunnerProps> = () => {
   }
 
   return (
-    <div className="flex h-full flex-col overflow-hidden bg-white selection:bg-emerald-100 selection:text-emerald-900">
+    <div className="flex h-full flex-col overflow-hidden bg-white">
       {/* ── Main Workspace ──────────────────────────────────────────── */}
       {isMobile ? (
         /* Mobile Ergonomic Layout: Background Passage + Resizable Question Bottom Sheet */
@@ -169,9 +169,15 @@ export const ReadingRunner: React.FC<ReadingRunnerProps> = () => {
               id="reading-questions-panel"
               className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar"
             >
-              {currentQuestions.map((q) => (
-                <QuestionCard key={q.id} question={q} />
-              ))}
+              {currentQuestions.map((q, idx) => {
+                const prevQ = currentQuestions[idx - 1]
+                const hideInstruction = !!(
+                  prevQ &&
+                  prevQ.type === q.type &&
+                  (prevQ.type === 'TRUE_FALSE_NOT_GIVEN' || prevQ.type === 'YES_NO_NOT_GIVEN')
+                )
+                return <QuestionCard key={q.id} question={q} hideInstruction={hideInstruction} />
+              })}
             </div>
           </div>
         </div>
@@ -203,14 +209,22 @@ export const ReadingRunner: React.FC<ReadingRunnerProps> = () => {
                   </span>
                   <h3 className="text-lg font-bold text-slate-900">{currentPassage?.title}</h3>
                   <p className="text-sm text-slate-600 mt-2 leading-relaxed">
-                    Đọc kỹ đoạn văn ở khung bên trái và chọn đáp án tương ứng bên dưới.
+                    Read the text on the left and answer the questions below.
                   </p>
                 </div>
 
                 <div className="space-y-5">
-                  {currentQuestions.map((q) => (
-                    <QuestionCard key={q.id} question={q} />
-                  ))}
+                  {currentQuestions.map((q, idx) => {
+                    const prevQ = currentQuestions[idx - 1]
+                    const hideInstruction = !!(
+                      prevQ &&
+                      prevQ.type === q.type &&
+                      (prevQ.type === 'TRUE_FALSE_NOT_GIVEN' || prevQ.type === 'YES_NO_NOT_GIVEN')
+                    )
+                    return (
+                      <QuestionCard key={q.id} question={q} hideInstruction={hideInstruction} />
+                    )
+                  })}
                 </div>
               </div>
             </Panel>

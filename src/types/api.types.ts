@@ -215,6 +215,7 @@ export interface HomeworkItem {
   status: HomeworkStatus
   dueDate?: string
   score?: number
+  skill?: string
 }
 
 // ── Roadmap ───────────────────────────────────────────────────────
@@ -261,6 +262,8 @@ export interface CourseBook {
   type: 'main' | 'supplementary' | 'vocabulary'
   coverColor: string
   coverImage?: string
+  pdfUrl?: string
+  totalPages?: number
   units: BookUnit[]
 }
 

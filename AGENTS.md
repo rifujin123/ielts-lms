@@ -68,6 +68,12 @@ pnpm build
    - Every shared component and feature component must export via `index.tsx`.
 5. **SVG Icon Standard (`lucide-react`)**:
    - Never use `<span className="material-symbols-outlined">`. Always import vector SVG components from `lucide-react` with `strokeWidth={1.75}` (idle) and `strokeWidth={2.2}` (active).
+6. **Anti-Overdecoration & Scalable UI (Tránh lạm dụng Icon & Status Badge gắn chặt vào dữ liệu động)**:
+   - **Tư duy hướng Backend & Khả năng mở rộng (Scalable Data Modeling)**: Khi dựng giao diện dựa trên mock data (ví dụ danh mục/categories, tags, topics, stages...), tuyệt đối **KHÔNG hardcode hoặc sinh ra icon SVG / badge màu mè riêng cho từng phân loại tĩnh**.
+   - _Lý do_: Backend API thực tế chỉ lưu và trả về dữ liệu văn bản thuần (ví dụ `category_name`, `topic_name`), backend không lưu SVG icon hay màu sắc riêng cho từng danh mục. Nếu người dùng tạo thêm một danh mục mới từ trang quản trị (Admin/CMS), frontend sẽ bị gãy cấu trúc hiển thị hoặc lập trình viên phải sửa code thủ công để bổ sung icon mới.
+   - **Quy tắc hiển thị**:
+     - Áp dụng phong cách tối giản (academic & minimalist), dùng thiết kế trung tính (neutral semantic token) thống nhất cho mọi item trong danh sách phân loại.
+     - **Không spam badge vô nghĩa**: Hạn chế tối đa việc gắn các status badge nhỏ lẻ (như đếm số lượng video/bài học ngay bên cạnh tiêu đề, badge trạng thái thừa thãi) làm rối mắt người học, trừ khi người dùng yêu cầu rõ ràng hoặc thực sự cần cho luồng hành động chính.
 
 ---
 

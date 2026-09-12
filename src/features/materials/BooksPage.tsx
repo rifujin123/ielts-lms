@@ -1,7 +1,15 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { ChevronRight, Bookmark, ChevronDown, CheckCircle2, Circle, ArrowRight } from 'lucide-react'
+import {
+  ChevronRight,
+  Bookmark,
+  ChevronDown,
+  CheckCircle2,
+  Circle,
+  ArrowRight,
+  BookOpen,
+} from 'lucide-react'
 import { materialService } from '@/services/materialService'
 import { booksMock } from '@/mocks/books.mock'
 
@@ -11,6 +19,7 @@ import { booksMock } from '@/mocks/books.mock'
  * Line count budget: 200-300 lines.
  */
 export const BooksPage: React.FC = () => {
+  const navigate = useNavigate()
   const [expandedUnitId, setExpandedUnitId] = useState<string>('UNIT-01')
 
   const { data: books = booksMock, isLoading: _isLoading } = useQuery({
@@ -47,10 +56,14 @@ export const BooksPage: React.FC = () => {
         <div className="flex items-center gap-2">
           <button
             type="button"
-            className="btn-interactive inline-flex items-center gap-2 rounded-lg border border-outline-variant bg-surface-container-lowest px-3.5 py-2 text-label-sm font-semibold text-on-surface hover:bg-surface-container shadow-xs"
+            onClick={() => navigate(`/materials/reader?bookId=${currentBook?.id || 'BOOK-01'}`)}
+            className="btn-interactive inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2 text-xs font-bold text-white hover:bg-slate-800 shadow-xs transition-colors"
           >
-            <Bookmark className="h-4 w-4 text-secondary" strokeWidth={2} />
-            Bài đã lưu
+            <BookOpen className="h-4 w-4 text-amber-400" strokeWidth={2} />
+            <span>Đọc giáo trình PDF</span>
+            <span className="rounded-full bg-white/20 px-1.5 py-0.2 text-[10px]">
+              {currentBook?.totalPages || 3} trang
+            </span>
           </button>
         </div>
       </div>
@@ -70,15 +83,7 @@ export const BooksPage: React.FC = () => {
                 className="flex w-full items-center justify-between p-5 text-left hover:bg-surface-container-low transition-colors"
               >
                 <div className="flex items-center gap-4">
-                  <div
-                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl font-bold ${
-                      unit.status === 'completed'
-                        ? 'bg-tertiary-container text-tertiary'
-                        : unit.status === 'in_progress'
-                          ? 'bg-primary-container text-primary'
-                          : 'bg-surface-container text-secondary'
-                    }`}
-                  >
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-outline-variant bg-surface-container-low font-bold text-on-surface text-label-md">
                     {unit.number}
                   </div>
                   <div>
@@ -138,13 +143,28 @@ export const BooksPage: React.FC = () => {
                           </div>
                         </div>
 
-                        <Link
-                          to="/practice"
-                          className="btn-interactive inline-flex items-center gap-1.5 rounded-lg bg-surface-container-low px-3 py-1.5 text-label-sm font-semibold text-primary hover:bg-red-50 transition-colors"
-                        >
-                          Học bài
-                          <ArrowRight className="h-3.5 w-3.5" strokeWidth={2} />
-                        </Link>
+                        {lesson.type === 'reading' ? (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              navigate(
+                                `/materials/reader?bookId=${currentBook?.id || 'BOOK-01'}&unitId=${unit.id}`,
+                              )
+                            }
+                            className="btn-interactive inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-3 py-1.5 text-label-sm font-semibold text-white hover:bg-slate-800 transition-colors shadow-xs"
+                          >
+                            <span>Đọc tài liệu</span>
+                            <BookOpen className="h-3.5 w-3.5 text-amber-400" strokeWidth={2} />
+                          </button>
+                        ) : (
+                          <Link
+                            to="/exercises"
+                            className="btn-interactive inline-flex items-center gap-1.5 rounded-lg bg-surface-container-low px-3 py-1.5 text-label-sm font-semibold text-primary hover:bg-red-50 transition-colors"
+                          >
+                            <span>Học bài</span>
+                            <ArrowRight className="h-3.5 w-3.5" strokeWidth={2} />
+                          </Link>
+                        )}
                       </div>
                     ))}
                   </div>

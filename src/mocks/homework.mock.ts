@@ -8,6 +8,7 @@ export const homeworkMock: HomeworkItem[] = [
     status: 'submitted',
     dueDate: '2026-08-16',
     score: 8.5,
+    skill: 'Reading',
   },
   {
     id: 'HW-02',
@@ -15,6 +16,7 @@ export const homeworkMock: HomeworkItem[] = [
     practiceCount: 2,
     status: 'pending',
     dueDate: '2026-08-19',
+    skill: 'Writing Task 2',
   },
   {
     id: 'HW-03',
@@ -22,6 +24,7 @@ export const homeworkMock: HomeworkItem[] = [
     practiceCount: 5,
     status: 'pending',
     dueDate: '2026-08-23',
+    skill: 'Listening',
   },
 ]
 

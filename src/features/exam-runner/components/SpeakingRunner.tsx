@@ -126,7 +126,7 @@ export const SpeakingRunner: React.FC<SpeakingRunnerProps> = ({ skillData }) => 
   const existingRecording = speakingRecordings[activePart]
 
   return (
-    <div className="flex h-full flex-col overflow-hidden bg-white selection:bg-emerald-100 selection:text-emerald-900 relative">
+    <div className="flex h-full flex-col overflow-hidden bg-white relative">
       {/* ── 2-Stage Pre-Permission Gate Modal (Prevents Safari iOS Permanent Lockout) ── */}
       {!hasCompletedOnboarding && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 animate-fade-in">
@@ -562,8 +562,8 @@ export const SpeakingRunner: React.FC<SpeakingRunnerProps> = ({ skillData }) => 
           </div>
 
           {/* Center: 3 Part Switcher Pills (Part 1, Part 2, Part 3) ──── */}
-          <div className="flex items-center justify-center min-w-0 px-1 lg:absolute lg:left-1/2 lg:-translate-x-1/2 lg:top-1/2 lg:-translate-y-1/2">
-            {/* Mobile & Tablet (< lg): Single Active Part with Half-Inset Circular Chevrons (50% in, 50% out) */}
+          <div className="flex flex-1 items-center justify-center min-w-0 px-2">
+            {/* Mobile & Tablet (< lg): Single Active Part with Chevrons */}
             <div className="relative flex lg:hidden items-center select-none mx-3.5">
               <button
                 type="button"
@@ -571,17 +571,19 @@ export const SpeakingRunner: React.FC<SpeakingRunnerProps> = ({ skillData }) => 
                 disabled={activePart <= 1}
                 aria-label="Part trước"
                 title={activePart > 1 ? `Chuyển về Part ${activePart - 1}` : 'Đã ở Part đầu tiên'}
-                className="btn-interactive absolute -left-3.5 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-800 shadow-sm ring-1 ring-slate-900/10 hover:bg-slate-50 hover:border-slate-400 disabled:opacity-20 disabled:cursor-not-allowed transition-all active:scale-95"
+                className="btn-interactive absolute -left-3.5 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-2xs hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-95"
               >
-                <ChevronLeft className="h-3.5 w-3.5" />
+                <ChevronLeft className="h-3.5 w-3.5" strokeWidth={1.75} />
               </button>
 
-              <div className="flex items-center gap-1.5 rounded-full bg-slate-900 pl-6 pr-6 py-1 text-xs font-bold text-white shadow-xs border border-slate-800">
-                <Mic className="h-3.5 w-3.5 text-red-400 shrink-0" />
+              <div className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-white pl-6 pr-6 py-1 text-xs font-semibold text-slate-800 shadow-2xs">
+                <Mic className="h-3.5 w-3.5 text-slate-600 shrink-0" strokeWidth={1.75} />
                 <span>Part {activePart}</span>
                 <span
-                  className={`rounded-full px-1.5 py-0.2 text-[10px] shrink-0 ${
-                    existingRecording ? 'bg-emerald-500 text-white' : 'bg-white/20 text-white'
+                  className={`rounded-full px-1.5 py-0.2 text-[10px] font-medium shrink-0 ${
+                    existingRecording
+                      ? 'bg-slate-100 text-slate-800 border border-slate-300'
+                      : 'bg-slate-100 text-slate-500 border border-slate-200/60'
                   }`}
                 >
                   {existingRecording ? 'Đã thu' : 'Chưa thu'}
@@ -597,14 +599,14 @@ export const SpeakingRunner: React.FC<SpeakingRunnerProps> = ({ skillData }) => 
                 title={
                   activePart < 3 ? `Chuyển sang Part ${activePart + 1}` : 'Đã ở Part cuối cùng'
                 }
-                className="btn-interactive absolute -right-3.5 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-800 shadow-sm ring-1 ring-slate-900/10 hover:bg-slate-50 hover:border-slate-400 disabled:opacity-20 disabled:cursor-not-allowed transition-all active:scale-95"
+                className="btn-interactive absolute -right-3.5 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-2xs hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-95"
               >
-                <ChevronRight className="h-3.5 w-3.5" />
+                <ChevronRight className="h-3.5 w-3.5" strokeWidth={1.75} />
               </button>
             </div>
 
             {/* Desktop (>= lg): Full 3 Parts Horizontal Tabs */}
-            <div className="hidden lg:flex items-center gap-1 rounded-xl bg-slate-100 p-1 border border-slate-200 shadow-2xs overflow-x-auto custom-scrollbar">
+            <div className="hidden lg:flex items-center gap-1 rounded-xl bg-slate-100/90 p-1 border border-slate-200/80 shadow-2xs overflow-x-auto custom-scrollbar">
               {[1, 2, 3].map((partNum) => {
                 const isActive = activePart === partNum
                 const hasRecorded = !!speakingRecordings[partNum]
@@ -614,26 +616,26 @@ export const SpeakingRunner: React.FC<SpeakingRunnerProps> = ({ skillData }) => 
                     key={partNum}
                     type="button"
                     onClick={() => setActivePart(partNum as 1 | 2 | 3)}
-                    className={`btn-interactive flex shrink-0 items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-bold transition-all border ${
+                    className={`btn-interactive flex shrink-0 items-center gap-2 rounded-lg px-3 py-1.5 text-xs transition-all border ${
                       isActive
-                        ? 'border-slate-900 bg-slate-900 text-white shadow-xs'
-                        : 'border-transparent text-slate-600 hover:text-slate-900 hover:bg-white/60'
+                        ? 'border-slate-300/90 bg-white font-semibold text-slate-900 shadow-2xs'
+                        : 'border-transparent font-medium text-slate-600 hover:text-slate-900 hover:bg-white/60'
                     }`}
                   >
-                    <Mic className="h-3.5 w-3.5" />
+                    <Mic className="h-3.5 w-3.5 text-slate-600" strokeWidth={isActive ? 2 : 1.75} />
                     <span>Part {partNum}</span>
                     <span
-                      className={`rounded-full px-1.5 py-0.2 text-[10px] ${
+                      className={`rounded-full px-1.5 py-0.2 text-[10px] font-medium ${
                         hasRecorded
-                          ? 'bg-emerald-500 text-white'
+                          ? 'bg-slate-100 text-slate-800 border border-slate-300'
                           : isActive
-                            ? 'bg-white/20 text-white'
-                            : 'bg-slate-200 text-slate-700'
+                            ? 'bg-slate-100 text-slate-700 border border-slate-200/80'
+                            : 'bg-slate-200/70 text-slate-600'
                       }`}
                     >
                       {hasRecorded ? 'Đã thu' : 'Chưa thu'}
                     </span>
-                    {hasRecorded && <CheckCircle2 className="h-3 w-3 text-emerald-400" />}
+                    {hasRecorded && <CheckCircle2 className="h-3 w-3 text-slate-700" />}
                   </button>
                 )
               })}

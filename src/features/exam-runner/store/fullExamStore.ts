@@ -85,7 +85,27 @@ export const useFullExamStore = create<FullExamStoreState>((set, get) => ({
   isSubmitted: saved?.isSubmitted ?? false,
 
   setManifest: (manifest) => {
-    set({ manifest, examMode: manifest.mode ?? 'STRICT' })
+    const firstSkill: IeltsSkillType = manifest.skills.listening
+      ? 'LISTENING'
+      : manifest.skills.reading
+        ? 'READING'
+        : manifest.skills.writing
+          ? 'WRITING'
+          : manifest.skills.speaking
+            ? 'SPEAKING'
+            : 'LISTENING'
+
+    set({
+      manifest,
+      activeSkill: firstSkill,
+      examMode: manifest.mode ?? 'STRICT',
+      timeRemaining: {
+        LISTENING: (manifest.skills.listening?.durationMinutes ?? 32) * 60,
+        READING: (manifest.skills.reading?.durationMinutes ?? 60) * 60,
+        WRITING: (manifest.skills.writing?.durationMinutes ?? 60) * 60,
+        SPEAKING: (manifest.skills.speaking?.durationMinutes ?? 14) * 60,
+      },
+    })
   },
 
   setExamMode: (mode) => {

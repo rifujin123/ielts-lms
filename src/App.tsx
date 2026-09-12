@@ -11,21 +11,31 @@ import { GlobalErrorHandler } from '@/shared/providers/GlobalErrorHandler'
 const CourseInfoPage = lazy(() => import('@/features/course-info'))
 const DashboardPage = lazy(() => import('@/features/dashboard'))
 const RoadmapPage = lazy(() => import('@/features/roadmap'))
-const PersonalRoadmapPage = lazy(() => import('@/features/roadmap/PersonalRoadmapPage'))
+const PersonalRoadmapPage = lazy(() =>
+  import('@/features/roadmap').then((m) => ({ default: m.PersonalRoadmapPage })),
+)
 const ExercisesPage = lazy(() => import('@/features/exercises'))
 const VocabularyPage = lazy(() => import('@/features/vocabulary'))
-const VocabularyDetailPage = lazy(() => import('@/features/vocabulary/VocabularyDetailPage'))
+const VocabularyDetailPage = lazy(() =>
+  import('@/features/vocabulary').then((m) => ({ default: m.VocabularyDetailPage })),
+)
 const MaterialsPage = lazy(() => import('@/features/materials'))
-const BooksPage = lazy(() => import('@/features/materials/BooksPage'))
+const BooksPage = lazy(() => import('@/features/materials').then((m) => ({ default: m.BooksPage })))
+const PdfReaderPage = lazy(() =>
+  import('@/features/materials').then((m) => ({ default: m.PdfReaderPage })),
+)
 const HomeworkPage = lazy(() => import('@/features/homework'))
 const FinalTestPage = lazy(() => import('@/features/final-test'))
 const TestsPage = lazy(() => import('@/features/tests'))
 const ClassroomPage = lazy(() => import('@/features/classroom'))
-const AttendancePage = lazy(() => import('@/features/classroom/AttendancePage'))
-const PracticePage = lazy(() => import('@/features/practice'))
+const AttendancePage = lazy(() =>
+  import('@/features/classroom').then((m) => ({ default: m.AttendancePage })),
+)
 const ExamRunnerPage = lazy(() => import('@/features/exam-runner'))
 const DictationPage = lazy(() => import('@/features/dictation'))
 const TopicsPage = lazy(() => import('@/features/topics'))
+const ProfilePage = lazy(() => import('@/features/profile'))
+const ErrorLogPage = lazy(() => import('@/features/error-log'))
 
 /**
  * App — root router tree.
@@ -61,6 +71,7 @@ export default function App() {
                 {/* ── Materials ── screens 05, 15 */}
                 <Route path="materials" element={<MaterialsPage />} />
                 <Route path="materials/books" element={<BooksPage />} />
+                <Route path="materials/reader" element={<PdfReaderPage />} />
 
                 {/* ── Homework / Syllabus ── screen 07 */}
                 <Route path="homework" element={<HomeworkPage />} />
@@ -75,9 +86,6 @@ export default function App() {
                 <Route path="classroom" element={<ClassroomPage />} />
                 <Route path="attendance" element={<AttendancePage />} />
 
-                {/* ── Interactive Practice Player ── screen 10 */}
-                <Route path="practice" element={<PracticePage />} />
-
                 {/* ── Topics & Video Dictation (Movie Short Clips) ── */}
                 <Route path="topics" element={<TopicsPage />} />
                 <Route path="topics/dictation/:lessonId" element={<DictationPage />} />
@@ -88,6 +96,12 @@ export default function App() {
                 {/* ── Computer-Based Exam Runner (CBT) ── */}
                 <Route path="exam" element={<ExamRunnerPage />} />
                 <Route path="exam/:testId" element={<ExamRunnerPage />} />
+
+                {/* ── Student Profile & Account Settings ── */}
+                <Route path="profile" element={<ProfilePage />} />
+
+                {/* ── Personal Error Log & Trap Analytics (Epic 4) ── */}
+                <Route path="error-log" element={<ErrorLogPage />} />
               </Route>
             </Routes>
           </Suspense>

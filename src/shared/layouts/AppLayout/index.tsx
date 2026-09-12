@@ -9,9 +9,10 @@ import { ToastContainer } from '@/shared/components/Toast'
 
 export const AppLayout: React.FC = () => {
   const location = useLocation()
-  const isExamMode = location.pathname.startsWith('/exam')
+  const isDistractionFree =
+    location.pathname.startsWith('/exam') || location.pathname.startsWith('/materials/reader')
 
-  if (isExamMode) {
+  if (isDistractionFree) {
     return (
       <div className="flex h-screen w-screen flex-col overflow-hidden bg-slate-100 font-body text-slate-900">
         <FeatureErrorBoundary>

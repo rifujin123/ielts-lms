@@ -56,7 +56,7 @@ export const FinalTestPage: React.FC = () => {
           </div>
 
           <Link
-            to="/practice"
+            to="/exam"
             className="btn-interactive inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-label-md font-semibold text-on-primary hover:bg-primary-hover shadow-xs"
           >
             <Play className="h-4 w-4" strokeWidth={2} />

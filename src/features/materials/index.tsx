@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { ChevronRight, BookMarked } from 'lucide-react'
+import { ChevronRight, BookMarked, BookOpen } from 'lucide-react'
 import { materialService } from '@/services/materialService'
 import { booksMock } from '@/mocks/books.mock'
 
@@ -120,15 +120,19 @@ export const MaterialsPage: React.FC = () => {
               </div>
 
               <div className="mt-6 flex items-center justify-between border-t border-white/15 pt-4">
-                <span className="text-body-sm font-medium text-white/85 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
-                  Bản quyền IELTS Hồ Thành
-                </span>
+                <Link
+                  to={`/materials/reader?bookId=${book.id}`}
+                  className="btn-interactive inline-flex items-center gap-1.5 rounded-lg bg-white/20 backdrop-blur-md px-3 py-1.5 text-label-sm font-semibold text-white hover:bg-white/30 transition-colors shadow-xs border border-white/20"
+                >
+                  <BookOpen className="h-4 w-4 text-amber-300" strokeWidth={2} />
+                  <span>Đọc PDF</span>
+                </Link>
                 <Link
                   to="/materials/books"
-                  className="btn-interactive inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-label-sm font-semibold text-on-primary hover:bg-primary-hover transition-colors shadow-xs"
+                  className="btn-interactive inline-flex items-center gap-1.5 rounded-lg bg-primary px-3.5 py-1.5 text-label-sm font-semibold text-on-primary hover:bg-primary-hover transition-colors shadow-xs"
                 >
                   <BookMarked className="h-4 w-4" strokeWidth={2} />
-                  Đọc giáo trình
+                  <span>Chi tiết Units</span>
                 </Link>
               </div>
             </div>
@@ -139,4 +143,7 @@ export const MaterialsPage: React.FC = () => {
   )
 }
 
+export { BooksPage } from './BooksPage'
+export { PdfReaderPage } from './PdfReaderPage'
+export { PdfMaterialViewer } from './components/PdfMaterialViewer'
 export default MaterialsPage

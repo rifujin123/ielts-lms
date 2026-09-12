@@ -15,6 +15,8 @@ import {
 import { courseService } from '@/services/courseService'
 import { calcProgressPercent } from '@/lib/utils'
 import { activeCoursesMock } from '@/mocks/course.mock'
+import { ProgressBar } from '@/shared/components'
+import { ErrorLogWidget } from './components'
 
 /**
  * DashboardPage — LMS Student Overview (screen 02).
@@ -103,6 +105,11 @@ export const DashboardPage: React.FC = () => {
         </div>
       </div>
 
+      {/* ── Personal Error Log & Exam Trap Analytics (Epic 4) ───── */}
+      <div className="animate-fade-in-up stagger-5">
+        <ErrorLogWidget />
+      </div>
+
       {/* ── Active Courses Section ──────────────────────────────── */}
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
@@ -149,17 +156,12 @@ export const DashboardPage: React.FC = () => {
 
                   {/* Progress bar */}
                   <div className="mt-5">
-                    <div className="flex justify-between text-body-sm">
+                    <div className="mb-1.5 flex justify-between text-body-sm">
                       <span className="font-semibold text-on-surface">Tiến độ học tập</span>
                       <span className="font-bold text-primary">{percent}%</span>
                     </div>
-                    <div className="mt-1.5 h-2.5 w-full overflow-hidden rounded-full bg-surface-container">
-                      <div
-                        className="h-full bg-primary rounded-full transition-all duration-700 ease-out"
-                        style={{ width: `${percent}%` }}
-                      />
-                    </div>
-                    <div className="mt-1 text-[11px] text-secondary">
+                    <ProgressBar value={percent} size="lg" variant="primary" />
+                    <div className="mt-1.5 text-[11px] text-secondary">
                       Đã học {course.completedSessions} trên tổng số {course.totalSessions} buổi
                     </div>
                   </div>

@@ -550,15 +550,19 @@ Whenever an engineer or AI agent introduces a reusable component, hook, or layou
   ```
 - **Constraints & Invariants**: Full-viewport layout without LMS sidebar/header; handles touch & desktop resize via `react-resizable-panels`; persists answers across reloads.
 
-### 2. Reading Passage Viewer with Highlighting
+### 2. Reading Passage Viewer with Unified Minimalist Slate Highlighting & Vocab Collector
 
 - **Asset Name & File Path**: `ReadingPassageView` (`src/features/exam-runner/components/ReadingPassageView.tsx`)
-- **Purpose & UX Intent**: Renders IELTS reading passages with font scaling (`sm`, `base`, `lg`) and text selection listener for instant highlighting (yellow/emerald) and annotation tracking.
+- **Purpose & UX Intent**: Renders IELTS reading passages with font scaling (`sm`, `base`, `lg`) and unified minimalist academic text selection / highlighting (`.vocab-highlight` with `bg-slate-200 text-slate-900 border-b border-slate-400`). Integrated with `VocabFloatingTooltip` in Practice/Review mode, and provides seamless note-taking highlight in Strict mode without colorful green/red distractions.
 - **Usage Example**:
   ```tsx
   import { ReadingPassageView } from '@/features/exam-runner/components/ReadingPassageView'
   ;<ReadingPassageView />
   ```
+- **Constraints & Invariants**:
+  - Global `::selection` in `src/styles/globals.css` is strictly unified to `@apply bg-slate-200 text-slate-900;`.
+  - All highlights use `.vocab-highlight` (`bg-slate-200/90 text-slate-900 border-b border-slate-400`).
+  - No random green/red/yellow selection colors across the platform.
 
 ### 3. Universal IELTS Question Card Renderer
 
@@ -860,3 +864,282 @@ Whenever an engineer or AI agent introduces a reusable component, hook, or layou
   - Desktop view (`>= 768px`) remains 100% untouched and pixel-perfect with dual-pane `react-resizable-panels`.
   - Hardware-accelerated CSS transitions (`transition-[height] duration-200 ease-out`).
   - No external drag or modal libraries; built with native touch events, `window.visualViewport`, and semantic Tailwind tokens.
+
+### 18. Header User Dropdown (UserDropdown)
+
+- **Asset Name & File Path**: `UserDropdown` (`src/shared/components/Header/UserDropdown.tsx`)
+- **Purpose & UX Intent**:
+  - Replaces static avatar display with an accessible, interactive user settings menu in the application header.
+  - Displays student summary (Name, initials, student ID, email, active validity badge with remaining days countdown).
+  - Provides instant navigation to "Sổ từ vựng" (`/vocabulary?tab=personal`), "Tài khoản" (`/profile`), and "Đăng xuất" (with toast feedback).
+  - Handles outside clicks and <kbd>Escape</kbd> keyboard dismissals automatically.
+- **Usage Example**:
+  ```tsx
+  import { UserDropdown } from '@/shared/components/Header/UserDropdown'
+
+  // Inside AppHeader component:
+  ;<div className="pl-2 border-l border-outline-variant">
+    <UserDropdown />
+  </div>
+  ```
+- **Constraints & Invariants**:
+  - Motion Budget: 150ms-200ms `animate-pop-in` animation.
+  - Zero Layout Shift: `absolute right-0 top-full mt-2 z-50` positioning eliminates shift in the sticky header.
+  - Design tokens strictly respected: `bg-surface-container-lowest`, `border-outline-variant`, `text-primary`.
+
+### 19. Personal Vocabulary Notebook (PersonalWordBank) & Student Profile Feature
+
+- **Asset Name & File Path**:
+  - `PersonalWordBank` (`src/features/vocabulary/components/PersonalWordBank.tsx`)
+  - `PersonalWordCard` (`src/features/vocabulary/components/PersonalWordCard.tsx`)
+  - `AddPersonalWordModal` (`src/features/vocabulary/components/AddPersonalWordModal.tsx`)
+  - `PersonalFlashcardModal` (`src/features/vocabulary/components/PersonalFlashcardModal.tsx`)
+  - `ProfilePage` (`src/features/profile/index.tsx`)
+  - Services: `studentProfileService.ts`, `personalVocabService.ts`
+- **Purpose & UX Intent**:
+  - **Student Profile (`/profile`)**:
+    - Complete 3-section tabbed account dashboard: Account Information (editable phone number with Vietnam mobile regex validation, read-only email, countdown progress), Security (current password, new password with dynamic strength meter, confirmation match check), and Enrolled Course & Class (schedule, instructors, progress bar, quick actions).
+  - **Personal Vocabulary Notebook (`/vocabulary?tab=personal`)**:
+    - Seamlessly integrated as Tab 2 on `/vocabulary` alongside teacher curriculum topic sets.
+    - Word cards feature Web Speech API pronunciation, IPA transcription, context sentence highlighting, skill source tag, collocations, personal notes, and mastery level toggling (`needs_review`, `learning`, `mastered`).
+    - Includes interactive Flashcard study mode with keyboard shortcuts (<kbd>Space</kbd> to flip, <kbd>←</kbd> / <kbd>→</kbd> to navigate) and instant word addition modal.
+- **Usage Example**:
+  ```tsx
+  import { PersonalWordBank } from '@/features/vocabulary/components/PersonalWordBank'
+
+  // Rendered in VocabularyPage based on active tab:
+  {
+    activeTab === 'personal' ? <PersonalWordBank /> : <CurriculumTopicSets />
+  }
+  ```
+- **Constraints & Invariants**:
+  - Strict 0px layout shift between tab transitions and filter pills (`border` width maintained on active/inactive states).
+  - Offline-first persistence via `localStorage` with fallback initial IELTS academic mock seed.
+  - Ready for real backend API connection via explicit `// 🔌 WIRE:` points in `studentProfileService.ts` and `personalVocabService.ts`.
+
+### 20. Syllabus & Homework Card Grid Pattern (HomeworkPage)
+
+- **Asset Name & File Path**: `HomeworkPage` (`src/features/homework/index.tsx`)
+- **Purpose & UX Intent**:
+  - Replaces basic vertical table row strips with the signature **Vocabulary-style 2-column card grid** (`grid grid-cols-1 md:grid-cols-2 gap-6`).
+  - Standardizes learning item visualization across LMS:
+    - **Header**: Skill category badges (`badge-tag`) + live completion status dot (`badge-minimal`).
+    - **Body**: Bold academic headline (`text-headline-sm font-bold text-on-surface hover:text-primary transition-colors`), skill description, and animated progress percentage bar.
+    - **Footer**: Due date / instructor metadata + contextual action buttons (`Nộp bài ngay`, `Xem bài đã nộp`, `Xem bài tập buổi`).
+  - Features real-time search filtering and a portal-based Submission Detail modal (`selectedSubmittedHw`).
+- **Usage Example**:
+  ```tsx
+  import { HomeworkPage } from '@/features/homework'
+  ;<Route path="homework" element={<HomeworkPage />} />
+  ```
+- **Constraints & Invariants**:
+
+### 21. Standardized Reusable Shared Components Registry
+
+- **Asset Names & File Paths**:
+  - `EmptyState` (`src/shared/components/EmptyState/index.tsx`)
+  - `SearchInput` (`src/shared/components/FilterBar/SearchInput.tsx`)
+  - `FilterDropdown` (`src/shared/components/FilterBar/FilterDropdown.tsx`)
+  - `NavigationTabs` (`src/shared/components/NavigationTabs/index.tsx`)
+  - `ProgressBar` (`src/shared/components/ProgressBar/index.tsx`)
+  - `PageLoader` (`src/shared/components/PageLoader/index.tsx`)
+  - Aggregated barrel export: `src/shared/components/index.ts`
+- **Purpose & UX Intent**:
+  - **`EmptyState`**: Universal fallback view when search, filter, or list queries return 0 items. Displays centered Lucide icon, bold academic title, supportive description, and an optional call-to-action button.
+  - **`SearchInput`**: Standardized search field with embedded search icon, clear button, and semantic token hover/focus styles.
+  - **`FilterDropdown`**: Reusable select popover with built-in outside-click detection (`useRef` + `mousedown`), animated chevron rotation, and active item checkmarks.
+  - **`NavigationTabs`**: Enforces strict **0px layout shift** across all tabbed navigation bars (underline indicator `-mb-px` with `border-b-2`), academic motion (150ms), badge count pill, and semantic focus tokens.
+  - **`ProgressBar`**: Configurable linear percentage progress bar supporting `primary`, `emerald`, `amber`, and `secondary` color variants with smooth CSS transitions (`duration-500 ease-out`).
+  - **`PageLoader`**: Academic minimalist spinning indicator with optional Vietnamese progress message.
+- **Usage Example**:
+  ```tsx
+  import { EmptyState, FilterDropdown, SearchInput, NavigationTabs, ProgressBar, PageLoader } from '@/shared/components'
+
+  // NavigationTabs (0px shift):
+  <NavigationTabs
+    tabs={[
+      { id: 'homework', label: 'Bài tập về nhà', count: 12 },
+      { id: 'syllabus', label: 'Khung giáo trình', count: '8 Module' },
+    ]}
+    activeTab={activeTab}
+    onChange={setActiveTab}
+  />
+
+  // FilterBar:
+  <SearchInput value={search} onChange={setSearch} placeholder="Tìm kiếm..." />
+  <FilterDropdown label="Trạng thái" value={status} options={statusOptions} onChange={setStatus} />
+
+  // ProgressBar:
+  <ProgressBar value={75} variant="primary" size="md" />
+
+  // EmptyState:
+  <EmptyState
+    title="Không tìm thấy bài tập nào"
+    description="Vui lòng thử tìm kiếm bằng từ khóa khác."
+    action={{ label: 'Xóa bộ lọc', onClick: handleResetFilters }}
+  />
+  ```
+- **Constraints & Invariants**:
+  - Strict 0px layout shift guaranteed on tabs and dropdown triggers.
+  - Motion budget: 150ms-200ms `animate-pop-in` and `duration-150`.
+  - Design tokens strictly respected (`bg-surface-container-lowest`, `border-outline-variant`, `text-primary`).
+  - Zero raw hex codes and zero duplicate outside-click listeners across feature pages.
+
+### 22. Personal Error Log & Exam Trap Analytics (Epic 4)
+
+- **Asset Name & File Path**:
+  - `ErrorLogWidget` (`src/features/dashboard/components/ErrorLogWidget.tsx`)
+  - `useErrorLogStore` (`src/store/errorLogStore.ts`)
+  - Barrel export: `src/features/dashboard/components/index.ts`
+- **Purpose & UX Intent**:
+  - **Diagnostic Trap Analytics (`ErrorLogWidget`)**: Diagnostic dashboard widget analyzing student mistake patterns across 5 core IELTS trap archetypes (`TRAP_NOT_GIVEN`, `VOCAB_UNKNOWN`, `TIME_PRESSURE`, `AUDIO_DISTRACTION`, `SPELLING_ERROR`).
+  - **Dynamic Multi-Segment Progress Bar**: Visualizes trap proportions with color-coded segments and interactive category filter pills.
+  - **Pedagogical Advice Callout**: Evaluates the student's highest frequency trap category and provides actionable academic strategies.
+  - **Flashcard Review Modal**: Interactive self-testing modal enabling students to step through missed questions one-by-one, reveal Cambridge solutions and teacher reflections, and mark mastered questions to purge them from the review queue.
+  - **Persistent Local Store (`useErrorLogStore`)**: Lightweight Zustand v5 store backed by `localStorage` (`error_log_storage_v1`) pre-seeded with 6 realistic Reading and Listening Cambridge mistakes for instant presentation.
+- **Usage Example**:
+  ```tsx
+  import { ErrorLogWidget } from '@/features/dashboard/components'
+  import { useErrorLogStore } from '@/store/errorLogStore'
+
+  // Mounting the widget on Dashboard:
+  ;<ErrorLogWidget />
+
+  // Programmatically logging a missed question from exam review:
+  const logError = useErrorLogStore((s) => s.logError)
+  logError({
+    questionId: 'Q14',
+    testTitle: 'Cambridge 18 Academic Reading Test 1',
+    skill: 'reading',
+    trapType: 'TRAP_NOT_GIVEN',
+    questionPrompt: 'The scientists anticipated the negative environmental impact...',
+    correctAnswer: 'NOT GIVEN',
+    studentAnswer: 'FALSE',
+    notes: 'Text never states whether researchers anticipated impact before trials.',
+  })
+  ```
+- **Constraints & Invariants**:
+  - Zero pixel shift across filter pill toggles with identical 1px borders.
+  - Strict adherence to semantic tokens (`bg-surface-container-lowest`, `border-outline-variant`, `text-on-surface`, `bg-primary`).
+  - GPU-accelerated micro-animations (`animate-fade-in-up`, `card-interactive`).
+
+### 23. 1-Click Contextual Vocabulary Collector (Epic 2)
+
+- **Asset Name & File Path**:
+  - `useTextSelection` (`src/shared/hooks/useTextSelection.ts`, `src/shared/hooks/index.ts`)
+  - `VocabFloatingTooltip` (`src/shared/components/VocabCollector/VocabFloatingTooltip.tsx`)
+  - `VocabCollector` (`src/shared/components/VocabCollector/VocabFloatingTooltip.tsx`)
+  - Barrel export: `src/shared/components/VocabCollector/index.ts`, `src/shared/components/index.ts`
+- **Purpose & UX Intent**:
+  - **`useTextSelection`**: Custom hook that monitors text selection within the document or a designated container element (`containerRef`). Automatically computes client viewport coordinates `(x, y)` and bounding rect, sanitizes selections, and extracts the full surrounding context sentence containing the highlighted term using DOM range boundary inspection.
+  - **`VocabFloatingTooltip`**: Floating micro-card positioned dynamically near the selected text (above with arrow or flipped below near viewport bounds). Features pre-curated academic IELTS dictionary lookup, phonetic IPA, speech synthesis via Web Speech API (`window.speechSynthesis`), context sentence with selected term highlighted, and 1-click persistence to student's Personal Vocabulary Notebook (`/vocabulary?tab=personal`).
+  - **`VocabCollector`**: Plug-and-play compound component combining `useTextSelection` and `VocabFloatingTooltip`. Drop into any reading, listening transcript, or homework view with zero boilerplate.
+- **Usage Example**:
+  ```tsx
+  import { VocabCollector, VocabFloatingTooltip, useTextSelection } from '@/shared/components'
+
+  // Option 1: Drop-in auto collector across reading passage:
+  <article ref={passageRef} className="prose">
+    <p>The indiscriminate use of chemical fertilizers has led to severe soil degradation...</p>
+    <VocabCollector containerRef={passageRef} sourceTitle="Cambridge 18 Reading Passage 1" />
+  </article>
+
+  // Option 2: Programmatic hook usage:
+  const { selectedText, contextSentence, rect, isOpen, clearSelection } = useTextSelection()
+  <VocabFloatingTooltip
+    selectedText={selectedText}
+    contextSentence={contextSentence}
+    rect={rect}
+    isOpen={isOpen}
+    onClose={clearSelection}
+    sourceTitle="Cambridge 18 Academic Reading"
+  />
+  ```
+- **Constraints & Invariants**:
+  - Strict **0px layout shift** with constant 1px borders and fixed paddings.
+  - Smooth entrance via `.animate-pop-in` (under 250ms).
+  - Web Speech API speech synthesis with fallback handling and cleanup on unmount.
+  - Viewport-clamped positioning (`12px` padding from edges) with bidirectional arrow orientation (`top` vs `bottom`).
+  - Strict **`font-sans antialiased`** styling to prevent inheriting `font-serif` from academic reading passages, preserving crisp Vietnamese diacritics.
+  - Minimalist academic white dual-action floating toolbar:
+    - Button 1: **"Lưu vào sổ từ vựng của tôi"** (`BookmarkPlus`, clean white with subtle hover).
+    - Button 2: **"Highlight"** (`Highlighter`, clean white, applying authentic IELTS yellow highlight `bg-yellow-200/90 text-yellow-950 border-b border-yellow-400/80`).
+  - Seamless persistence to `personalVocabService` and `/vocabulary?tab=personal`.
+
+### 24. Student Graded Review & Detailed Essay Feedback (Epic 3)
+
+- **Asset Names & File Paths**:
+  - `ExamResultView` (`src/features/exam-runner/components/ExamResultView/index.tsx`)
+  - `AnnotatedEssayReview` (`src/features/exam-runner/components/ExamResultView/AnnotatedEssayReview.tsx`)
+  - `ModelAnswerTab` (`src/features/exam-runner/components/ExamResultView/ModelAnswerTab.tsx`)
+  - `SpeakingFeedbackReview` (`src/features/exam-runner/components/ExamResultView/SpeakingFeedbackReview.tsx`)
+  - Extended rubric models: `src/features/exam-runner/data/mockTeacherRubric.ts`
+  - Barrel exports: `src/features/exam-runner/components/ExamResultView/index.tsx`, `src/features/exam-runner/components/index.ts`
+- **Purpose & UX Intent**:
+  - **`ExamResultView`**: Central master results screen providing seamless 4-mode navigation (Score Overview, 4-Color Annotated Essay Review, Cambridge Band 8.5+ Model Answers, and Speaking Audio Feedback).
+  - **`AnnotatedEssayReview`**: Academic pedagogical essay grading view displaying student's Task 1 & Task 2 submissions with color-coded inline highlights:
+    - 🔴 **Grammar**: `bg-rose-100 text-rose-900 border-b-2 border-rose-500`
+    - 🟡 **Lexical Resource / Collocations**: `bg-amber-100 text-amber-900 border-b-2 border-amber-500`
+    - 🔵 **Coherence & Cohesion**: `bg-sky-100 text-sky-900 border-b-2 border-sky-500`
+    - 🟢 **Teacher Kudos**: `bg-emerald-100 text-emerald-900 border-b-2 border-emerald-500`
+    - Includes interactive Click-to-Inspect popover panel with teacher commentary, Band 8.0+ rewrite suggestions, 1-click clipboard copy, and category filter pills.
+  - **`ModelAnswerTab`**: Official Cambridge Band 8.5+ model essay viewer featuring collapsible structural breakdown accordions (Introduction, Overview, Body 1, Body 2, Conclusion), high-scoring collocation cards with Vietnamese translations, and examiner rationale analysis.
+  - **`SpeakingFeedbackReview`**: Multi-part Speaking assessment hub with custom HTML5 audio playback, simulated reactive sound visualizer waveforms, 5s skip/replay controls, variable playback speeds (`0.75x`, `1.0x`, `1.25x`), candidate transcript snippets, and 4 Cambridge criteria scores (Fluency, Lexical, Grammar, Pronunciation).
+- **Usage Example**:
+  ```tsx
+  import {
+    ExamResultView,
+    AnnotatedEssayReview,
+    ModelAnswerTab,
+    SpeakingFeedbackReview,
+  } from '@/features/exam-runner/components'
+
+  // Master result screen with tab switcher:
+  <ExamResultView
+    onReviewExam={() => handleOpenReview()}
+    onExit={() => navigate('/tests')}
+    initialTab="WRITING_ESSAY"
+  />
+
+  // Or modular standalone embedding:
+  <AnnotatedEssayReview initialTask={1} />
+  <ModelAnswerTab initialTask={2} />
+  <SpeakingFeedbackReview initialPart={1} />
+  ```
+- **Constraints & Invariants**:
+  - **Zero Pixel Shift (0px Shift)**: Identical border widths (`border border-slate-900` vs `border border-transparent` / `border border-slate-200`) across all tab states, category filter pills, and navigation triggers.
+  - **Academic Motion Budget**: Transitions strictly between 150ms and 200ms (`transition-all duration-150`, `.animate-fade-in-up`).
+  - **Semantic Tokens**: Styled exclusively using standard design tokens (`bg-surface-container-lowest`, `border-slate-200`, `text-slate-900`).
+  - **SVG Standard**: All icons imported from `lucide-react` with `strokeWidth={1.75}` (idle) and `strokeWidth={2.2}` (active).
+
+### 25. High-Performance Academic PDF Material Viewer
+
+- **Asset Names & File Paths**:
+  - `PdfMaterialViewer` (`src/features/materials/components/PdfMaterialViewer.tsx`)
+  - Barrel export: `src/features/materials/components/index.ts`
+  - Standalone reader route: `PdfReaderPage` (`src/features/materials/PdfReaderPage.tsx`)
+  - Mock material data & worker: `public/sample-ielts-material.pdf`, `public/pdf.worker.min.mjs`
+- **Purpose & UX Intent**:
+  - Academic PDF viewer engine built on `react-pdf@9.2.1` + Mozilla `pdfjs-dist@4.8.69` tailored for IELTS coursebooks.
+  - **Neutral Standard Reader Aesthetics (Non-system branded)**: Uses neutral grey and dark palettes (`bg-neutral-200`, `bg-neutral-900/90 text-white`) inspired by native PDF viewers (like Chrome / PDF.js) without system branding or LMS badges.
+  - **Neutral Bottom Page Switcher Bar**: Floating dark bar at the bottom (`fixed bottom-5 left-1/2 -translate-x-1/2`) with prev/next buttons and live page input. Synchronized with an `IntersectionObserver` scroll spy.
+  - **Collapsible Right-Side Table of Contents (Mục lục)**: Clean right drawer (`w-64 border-l border-neutral-300 bg-white`) toggled via the `Mục lục` button on the top right, displaying thumbnail previews that smoothly scroll to any page.
+  - **Continuous Vertical Reading**: Pages render in a natural vertical scroll flow, responsive to viewport width (`Math.min(containerWidth - 48, 900)`).
+  - **Vite 5 Web Worker Integration**: Uses local `/pdf.worker.min.mjs` for high-performance, offline-ready background PDF rendering without MIME type or CORS conflicts.
+  - **VocabCollector Integration**: Native DOM TextLayer (`renderTextLayer={true}`) directly enables the 1-click Vocabulary Collector (`Lưu vào sổ từ vựng của tôi` & `Highlight`). Students can select any vocabulary in the PDF to immediately open the pronunciation/definition tooltip and save to their personal notebook.
+- **Usage Example**:
+  ```tsx
+  import { PdfMaterialViewer } from '@/features/materials/components'
+
+  // Embedded or standalone reader:
+  ;<PdfMaterialViewer
+    url="/sample-ielts-material.pdf"
+    title="IELTS Hồ Thành Reading 6.5+ Master Method"
+    subtitle="Giáo trình cốt lõi kỹ năng Đọc hiểu tuyến tính"
+    onClose={() => navigate(-1)}
+  />
+  ```
+- **Constraints & Invariants**:
+  - Strict `font-sans antialiased` container.
+  - Responsive canvas scaling via container resize listener (`width={Math.min(containerWidth - 48, 900)}`).
+  - Zero pixel layout shift.
