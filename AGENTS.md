@@ -169,21 +169,35 @@ _When `VITE_USE_MOCK=false`, every service in `src/services/` bypasses the `getM
 
 ### 2. Service Layer & `// 🔌 WIRE:` Endpoints
 
-All API calls are strictly encapsulated in `src/services/*.ts`. Never call `apiClient` directly from UI components or hooks. Search the codebase for `// 🔌 WIRE:` to inspect all 11 integration points:
+All API calls are strictly encapsulated in `src/services/*.ts` and feature services (`src/features/exam-runner/services/`). Never call `apiClient` directly from UI components or hooks. Search the codebase for `// 🔌 WIRE:` to inspect all 25 integration points across 11 service modules:
 
-| Service                | Method                     | Backend Target                | Contract Type                          |
-| ---------------------- | -------------------------- | ----------------------------- | -------------------------------------- |
-| `courseService.ts`     | `getCourseInfo(courseId)`  | `GET /courses/:courseId/info` | `CourseInfo`                           |
-| `courseService.ts`     | `getActiveCourses()`       | `GET /courses/active`         | `CourseCard[]`                         |
-| `exerciseService.ts`   | `getExercises(filters)`    | `GET /exercises`              | `Exercise[]`                           |
-| `exerciseService.ts`   | `submitExercise(id, data)` | `POST /exercises/:id/submit`  | `{ success: boolean; score?: number }` |
-| `attendanceService.ts` | `getAttendanceRecords()`   | `GET /attendance`             | `AttendanceRecord[]`                   |
-| `homeworkService.ts`   | `getHomeworkList()`        | `GET /homework`               | `HomeworkItem[]`                       |
-| `homeworkService.ts`   | `getFinalTestOverview()`   | `GET /final-test`             | `FinalTestOverview`                    |
-| `materialService.ts`   | `getBooks()`               | `GET /materials/books`        | `CourseBook[]`                         |
-| `roadmapService.ts`    | `getRoadmapPhases()`       | `GET /roadmap`                | `RoadmapPhase[]`                       |
-| `testService.ts`       | `getTests()`               | `GET /tests`                  | `TestItem[]`                           |
-| `vocabularyService.ts` | `getVocabularyLists()`     | `GET /vocabulary`             | `VocabTopic[]`                         |
+| Service Module             | Method                            | Backend Target                                 | Contract Type                          |
+| -------------------------- | --------------------------------- | ---------------------------------------------- | -------------------------------------- |
+| `courseService.ts`         | `getCourseInfo(courseId)`         | `GET /courses/:courseId/info`                  | `CourseInfo`                           |
+| `courseService.ts`         | `getActiveCourses()`              | `GET /courses/active`                          | `CourseCard[]`                         |
+| `exerciseService.ts`       | `getExercises(filters)`           | `GET /exercises`                               | `Exercise[]`                           |
+| `exerciseService.ts`       | `submitExercise(id, data)`        | `POST /exercises/:id/submit`                   | `{ success: boolean; score?: number }` |
+| `attendanceService.ts`     | `getAttendanceRecords()`          | `GET /attendance`                              | `AttendanceRecord[]`                   |
+| `homeworkService.ts`       | `getHomeworkList()`               | `GET /homework`                                | `HomeworkItem[]`                       |
+| `homeworkService.ts`       | `getFinalTestOverview()`          | `GET /final-test`                              | `FinalTestOverview`                    |
+| `materialService.ts`       | `getBooks()`                      | `GET /materials/books`                         | `CourseBook[]`                         |
+| `roadmapService.ts`        | `getRoadmapPhases()`              | `GET /roadmap`                                 | `RoadmapPhase[]`                       |
+| `testService.ts`           | `getTests()`                      | `GET /tests`                                   | `TestItem[]`                           |
+| `vocabularyService.ts`     | `getVocabularyLists()`            | `GET /vocabulary`                              | `VocabTopic[]`                         |
+| `vocabularyService.ts`     | `getTopicDetail(setId)`           | `GET /vocabulary/:setId`                       | `VocabularySetDetail`                  |
+| `vocabularyService.ts`     | `markWordMastered(setId, wordId)` | `POST /vocabulary/:setId/words/:wordId/master` | `{ isMastered: boolean }`              |
+| `vocabularyService.ts`     | `toggleStarWord(setId, wordId)`   | `POST /vocabulary/:setId/words/:wordId/star`   | `{ isStarred: boolean }`               |
+| `personalVocabService.ts`  | `getPersonalWords()`              | `GET /personal-vocab`                          | `PersonalWord[]`                       |
+| `personalVocabService.ts`  | `savePersonalWord(payload)`       | `POST /personal-vocab`                         | `PersonalWord`                         |
+| `personalVocabService.ts`  | `toggleMastery(id)`               | `PATCH /personal-vocab/:id/mastery`            | `PersonalWord`                         |
+| `personalVocabService.ts`  | `toggleStar(id)`                  | `PATCH /personal-vocab/:id/star`               | `PersonalWord`                         |
+| `personalVocabService.ts`  | `updateNote(id, note)`            | `PATCH /personal-vocab/:id/note`               | `PersonalWord`                         |
+| `personalVocabService.ts`  | `deletePersonalWord(id)`          | `DELETE /personal-vocab/:id`                   | `{ success: boolean }`                 |
+| `studentProfileService.ts` | `getProfile()`                    | `GET /student/profile`                         | `StudentProfile`                       |
+| `studentProfileService.ts` | `updatePhone(phone)`              | `PUT /student/profile/phone`                   | `{ success: boolean; phone: string }`  |
+| `studentProfileService.ts` | `changePassword(oldPw, newPw)`    | `POST /student/security/change-password`       | `{ success: boolean }`                 |
+| `ieltsExamService.ts`      | `getExamManifest(examId)`         | `GET /exams/:examId`                           | `FullIeltsExamManifest`                |
+| `ieltsExamService.ts`      | `submitExam(examId, data)`        | `POST /exams/:examId/submit`                   | `ExamSubmissionResult`                 |
 
 ### 3. Authentication Interceptor (`src/lib/axios.ts`)
 
