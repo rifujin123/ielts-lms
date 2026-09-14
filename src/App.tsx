@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AppLayout } from '@/shared/layouts/AppLayout'
 import { PageLoader, GlobalErrorBoundary } from '@/shared/components'
 import { GlobalErrorHandler } from '@/shared/providers/GlobalErrorHandler'
@@ -7,6 +7,9 @@ import { GlobalErrorHandler } from '@/shared/providers/GlobalErrorHandler'
 // ── Lazy-loaded feature pages ─────────────────────────────────────
 // Each feature is code-split at the route level for lean bundles.
 
+const MasterDashboardPage = lazy(() => import('@/features/master-dashboard'))
+const CoursesPage = lazy(() => import('@/features/courses'))
+const CourseDetailPage = lazy(() => import('@/features/courses/CourseDetailPage'))
 const CourseInfoPage = lazy(() => import('@/features/course-info'))
 const DashboardPage = lazy(() => import('@/features/dashboard'))
 const RoadmapPage = lazy(() => import('@/features/roadmap'))
@@ -50,11 +53,21 @@ export default function App() {
           <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route path="/" element={<AppLayout />}>
-                {/* ── Course Info (ROOT) ── screen 16 */}
-                <Route index element={<CourseInfoPage />} />
+                {/* ── Root redirect to /dashboard ── */}
+                <Route index element={<Navigate to="/dashboard" replace />} />
 
-                {/* ── Dashboard ── screen 02 */}
-                <Route path="dashboard" element={<DashboardPage />} />
+                {/* ── Student Portal: Master Dashboard ── */}
+                <Route path="dashboard" element={<MasterDashboardPage />} />
+
+                {/* ── Student Portal: My Courses Hub & Detail ── */}
+                <Route path="courses" element={<CoursesPage />} />
+                <Route path="courses/:courseId" element={<CourseDetailPage />} />
+
+                {/* ── Course Workspace: Overview (screen 02, migrated from /dashboard) ── */}
+                <Route path="overview" element={<DashboardPage />} />
+
+                {/* ── Legacy / Direct Course Info ── */}
+                <Route path="course-info" element={<CourseInfoPage />} />
 
                 {/* ── Roadmap ── screens 03, 08 */}
                 <Route path="roadmap" element={<RoadmapPage />} />

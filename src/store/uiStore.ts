@@ -29,10 +29,6 @@ interface UIState {
   // Current user (stub — replace with auth store when ready)
   currentUser: CurrentUser
   setCurrentUser: (user: CurrentUser) => void
-
-  // Active course ID
-  activeCourseId: string
-  setActiveCourseId: (id: string) => void
 }
 
 /**
@@ -59,8 +55,4 @@ export const useUIStore = create<UIState>((set) => ({
     isOnline: true,
   },
   setCurrentUser: (user) => set({ currentUser: user }),
-
-  // ── Active course ─────────────────────────────────────────────
-  activeCourseId: 'IELTS-6.5-2026',
-  setActiveCourseId: (id) => set({ activeCourseId: id }),
 }))

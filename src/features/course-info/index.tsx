@@ -54,7 +54,7 @@ export const CourseInfoPage: React.FC = () => {
           aria-label="Breadcrumb"
           className="flex items-center gap-2 text-body-sm text-secondary"
         >
-          <Link to="/dashboard" className="hover:text-on-surface transition-colors">
+          <Link to="/courses" className="hover:text-on-surface transition-colors">
             Khóa học của tôi
           </Link>
           <ChevronRight className="h-4 w-4 text-secondary/70" strokeWidth={2} />

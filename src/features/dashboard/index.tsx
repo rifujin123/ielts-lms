@@ -17,21 +17,26 @@ import { courseService } from '@/services/courseService'
 import { calcProgressPercent } from '@/lib/utils'
 import { activeCoursesMock } from '@/mocks/course.mock'
 import { ProgressBar } from '@/shared/components'
+import { useCourseStore } from '@/store/courseStore'
 import { MistakeLogWidget } from './components'
 
 /**
- * DashboardPage — LMS Student Overview (screen 02).
+ * DashboardPage — LMS Student Overview (screen 02, route /overview).
  * Shows active course cards, session progress bar, and direct classroom access.
  * Line count budget: 200-300 lines.
  */
 export const DashboardPage: React.FC = () => {
   const [search, setSearch] = useState('')
   const [debouncedSearch] = useDebounce(search, 300)
+  const { activeCourseId } = useCourseStore()
 
   const { data: courses = activeCoursesMock, isLoading: _isLoading } = useQuery({
     queryKey: queryKeys.courses.active(),
     queryFn: () => courseService.getActiveCourses(),
   })
+
+  const activeCourse =
+    courses.find((c) => c.id === activeCourseId) || courses[0] || activeCoursesMock[0]
 
   // ⏸️ Skip spinner for now:
   // if (_isLoading) return <PageLoader />
@@ -42,12 +47,23 @@ export const DashboardPage: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-6">
-      {/* ── Welcome Header ──────────────────────────────────────── */}
+      {/* ── Welcome Header with Active Course Scope ──────────────── */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-headline-lg font-bold text-on-surface">Tổng quan khóa học</h1>
+          <div className="flex flex-wrap items-center gap-2.5">
+            <h1 className="text-headline-lg font-bold text-on-surface">Không gian học tập</h1>
+            <span className="rounded-full bg-primary-container px-3 py-1 text-xs font-semibold text-on-primary-container border border-primary/20">
+              {activeCourse?.name}
+            </span>
+          </div>
           <p className="mt-1 text-body-sm text-secondary">
-            Chào mừng bạn quay trở lại! Bạn có 1 buổi học trực tuyến diễn ra trong tuần này.
+            Tổng quan buổi học, lịch tuần và tiến độ bài tập.{' '}
+            <Link
+              to="/courses"
+              className="font-semibold text-on-surface underline hover:text-primary transition-colors"
+            >
+              Chuyển khóa học khác
+            </Link>
           </p>
         </div>
 
@@ -138,7 +154,7 @@ export const DashboardPage: React.FC = () => {
                   </div>
 
                   <h3 className="mt-3 text-headline-sm font-bold text-on-surface hover:text-primary transition-colors">
-                    <Link to="/">{course.name}</Link>
+                    <Link to={`/courses/${course.id}`}>{course.name}</Link>
                   </h3>
                   <p className="mt-1 text-body-sm text-secondary line-clamp-2">
                     {course.description}
@@ -179,7 +195,7 @@ export const DashboardPage: React.FC = () => {
                     Vào phòng học
                   </a>
                   <Link
-                    to="/"
+                    to={`/courses/${course.id}`}
                     className="btn-interactive inline-flex items-center justify-center rounded-lg border border-outline-variant bg-surface-container-low px-4 py-2 text-label-md font-semibold text-on-surface hover:bg-surface-container"
                   >
                     Chi tiết khóa học

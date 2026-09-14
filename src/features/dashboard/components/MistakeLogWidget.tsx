@@ -113,7 +113,7 @@ export const MistakeLogWidget: React.FC = () => {
         <button
           type="button"
           onClick={() => navigate('/mistake-log')}
-          className="btn-interactive self-start sm:self-auto inline-flex items-center gap-1.5 rounded-xl bg-slate-900 px-3.5 py-2 text-xs font-bold text-white shadow-xs hover:bg-slate-800"
+          className="btn-interactive self-start sm:self-auto inline-flex items-center gap-1.5 rounded-xl bg-primary px-3.5 py-2 text-xs font-bold text-on-primary shadow-xs hover:bg-primary-hover"
         >
           <span>Ôn tập bẫy đề</span>
           <ArrowRight className="h-3.5 w-3.5" />

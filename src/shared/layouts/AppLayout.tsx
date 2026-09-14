@@ -14,6 +14,12 @@ export const AppLayout: React.FC = () => {
   const isDistractionFree =
     location.pathname.startsWith('/exam') || location.pathname.startsWith('/materials/reader')
 
+  // Step 0: Cổng học viên (Portal Level) — hides the classroom sidebar
+  const isPortalRoute =
+    location.pathname === '/dashboard' ||
+    location.pathname === '/courses' ||
+    location.pathname.startsWith('/courses/')
+
   if (isDistractionFree) {
     return (
       <div className="flex h-screen w-screen flex-col overflow-hidden bg-slate-100 font-body text-slate-900">
@@ -33,16 +39,24 @@ export const AppLayout: React.FC = () => {
       {/* Sticky Top Header */}
       <Header />
 
-      {/* Mobile Drawer */}
-      <MobileSidebar />
+      {/* Mobile Drawer (Only shown inside classroom workspace) */}
+      {!isPortalRoute && <MobileSidebar />}
 
       {/* Main Body with Sidebar + Content */}
-      <div className="flex flex-1">
-        {/* Desktop Sidebar (fixed height under header) */}
-        <Sidebar className="hidden sticky top-16 h-[calc(100vh-64px)] md:flex" />
+      <div className="flex flex-1 min-w-0">
+        {/* Desktop Sidebar (Only shown inside classroom workspace) */}
+        {!isPortalRoute && (
+          <Sidebar className="hidden sticky top-16 h-[calc(100vh-64px)] md:flex" />
+        )}
 
         {/* Content Outlet with per-feature ErrorBoundary and Suspense */}
-        <main className="flex-1 overflow-x-hidden px-4 py-6 sm:px-6 md:px-8">
+        <main
+          className={
+            isPortalRoute
+              ? 'flex-1 overflow-x-hidden px-4 py-6 sm:px-6 md:px-8 max-w-7xl mx-auto w-full'
+              : 'flex-1 overflow-x-hidden px-4 py-6 sm:px-6 md:px-8'
+          }
+        >
           <FeatureErrorBoundary>
             <Suspense fallback={<PageLoader />}>
               <Outlet />

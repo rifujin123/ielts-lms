@@ -126,8 +126,8 @@ export const MistakeLogPage: React.FC = () => {
         <div className="flex items-center gap-3">
           <button
             type="button"
-            onClick={() => navigate('/dashboard')}
-            title="Quay lại Dashboard"
+            onClick={() => navigate('/overview')}
+            title="Quay lại Tổng quan khóa học"
             className="btn-interactive flex h-10 w-10 items-center justify-center rounded-xl border border-outline-variant bg-surface-container-lowest text-secondary hover:text-on-surface hover:bg-surface-container shadow-xs transition-colors"
           >
             <ArrowLeft className="h-5 w-5" strokeWidth={2} />
@@ -262,7 +262,7 @@ export const MistakeLogPage: React.FC = () => {
                       onClick={() => setFilterTrap(filterTrap === item.key ? 'ALL' : item.key)}
                       className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-medium border transition-all ${
                         filterTrap === item.key
-                          ? 'border-slate-900 bg-slate-900 text-white shadow-xs'
+                          ? 'border-primary bg-primary text-on-primary shadow-xs'
                           : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300'
                       }`}
                     >
@@ -499,7 +499,7 @@ export const MistakeLogPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setIsAnswerRevealed(true)}
-                    className="btn-interactive inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-slate-800"
+                    className="btn-interactive inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-xs font-bold text-on-primary shadow-xs hover:bg-primary-hover"
                   >
                     <Eye className="h-4 w-4" />
                     Hiện đáp án &amp; Lời giải
@@ -596,7 +596,7 @@ export const MistakeLogPage: React.FC = () => {
                       setReviewIndex((prev) => prev + 1)
                       setIsAnswerRevealed(false)
                     }}
-                    className="btn-interactive inline-flex items-center gap-1.5 rounded-xl bg-slate-900 px-3.5 py-2 text-xs font-bold text-white hover:bg-slate-800"
+                    className="btn-interactive inline-flex items-center gap-1.5 rounded-xl bg-primary px-3.5 py-2 text-xs font-bold text-on-primary hover:bg-primary-hover shadow-xs"
                   >
                     <span>Câu tiếp theo</span>
                     <ChevronRight className="h-3.5 w-3.5" />
@@ -605,7 +605,7 @@ export const MistakeLogPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setIsReviewOpen(false)}
-                    className="btn-interactive rounded-xl bg-slate-900 px-3.5 py-2 text-xs font-bold text-white hover:bg-slate-800"
+                    className="btn-interactive rounded-xl bg-primary px-3.5 py-2 text-xs font-bold text-on-primary hover:bg-primary-hover shadow-xs"
                   >
                     Hoàn tất ôn tập
                   </button>

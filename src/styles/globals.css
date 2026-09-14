@@ -55,9 +55,9 @@
 }
 
 @layer utilities {
-  /* Sidebar nav active state — Pill shape with deep slate / ink left border accent */
+  /* Sidebar nav active state — Pill shape with crimson red left border accent */
   .nav-item-active {
-    @apply bg-slate-100 text-slate-900 font-bold rounded-full shadow-xs border border-slate-200 border-l-4 border-l-slate-900 scale-[1.01];
+    @apply bg-primary-container/40 text-primary font-bold rounded-full shadow-xs border border-primary/20 border-l-4 border-l-primary scale-[1.01];
   }
 
   /* Sidebar nav default state */

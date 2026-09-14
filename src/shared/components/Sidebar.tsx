@@ -1,21 +1,14 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import {
-  LayoutDashboard,
-  BookOpen,
-  CalendarDays,
-  FileCheck,
+  Compass,
   Languages,
   PenLine,
-  Route,
-  Award,
   Library,
-  Video,
   Info,
   Headset,
   Film,
   ExternalLink,
-  AlertTriangle,
   type LucideIcon,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -32,33 +25,35 @@ interface NavGroupDef {
   items: NavItemDef[]
 }
 
+/**
+ * Danh sách các mục điều hướng tạm ẩn khỏi Sidebar theo yêu cầu:
+ * - Syllabus: '/homework'
+ * - Attendance: '/attendance'
+ * - Mock Tests: '/tests'
+ * - Study Roadmap: '/roadmap/personal'
+ * - Mistake Log: '/mistake-log'
+ * - Final Assessment: '/final-test'
+ * - Virtual Class: '/classroom'
+ * Toàn bộ các trang (pages) và tuyến đường (routes) trên vẫn được bảo toàn nguyên vẹn trong App.tsx.
+ */
 const navGroups: NavGroupDef[] = [
   {
-    title: 'GENERAL',
-    items: [
-      { label: 'Overview', to: '/dashboard', icon: LayoutDashboard },
-      { label: 'Syllabus', to: '/homework', icon: BookOpen },
-      { label: 'Attendance', to: '/attendance', icon: CalendarDays },
-    ],
+    title: 'KHÔNG GIAN LỚP HỌC',
+    items: [{ label: 'Overview', to: '/overview', icon: Compass }],
   },
   {
     title: 'PRACTICE',
     items: [
-      { label: 'Mock Tests', to: '/tests', icon: FileCheck },
+      { label: 'Exercises', to: '/exercises', icon: PenLine },
       { label: 'Vocabulary', to: '/vocabulary', icon: Languages },
       { label: 'Dictation', to: '/topics', icon: Film },
-      { label: 'Exercises', to: '/exercises', icon: PenLine },
-      { label: 'Study Roadmap', to: '/roadmap/personal', icon: Route },
-      { label: 'Mistake Log', to: '/mistake-log', icon: AlertTriangle },
     ],
   },
   {
     title: 'RESOURCES & INFO',
     items: [
-      { label: 'Final Assessment', to: '/final-test', icon: Award },
       { label: 'Course Materials', to: '/materials', icon: Library },
-      { label: 'Virtual Class', to: '/classroom', icon: Video },
-      { label: 'Course Info', to: '/', icon: Info },
+      { label: 'Course Info', to: '/course-info', icon: Info },
     ],
   },
 ]
@@ -94,7 +89,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, onItemClick }) => {
                   cn(
                     'group relative flex items-center gap-2.5 rounded-full px-3 py-2 text-body-sm transition-all duration-200 ease-out border border-l-4',
                     isActive
-                      ? 'bg-slate-100 text-slate-900 font-bold shadow-xs border-slate-200 border-l-slate-900 scale-[1.01]'
+                      ? 'bg-primary-container/50 text-primary font-bold shadow-xs border-primary/20 border-l-primary scale-[1.01]'
                       : 'border-transparent text-secondary hover:bg-surface-container-low hover:text-on-surface hover:translate-x-0.5',
                   )
                 }
@@ -107,14 +102,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, onItemClick }) => {
                         className={cn(
                           'h-[18px] w-[18px] shrink-0 transition-transform duration-200',
                           isActive
-                            ? 'text-slate-900 scale-110'
+                            ? 'text-primary scale-110'
                             : 'text-secondary group-hover:text-on-surface',
                         )}
                         strokeWidth={isActive ? 2.2 : 1.75}
                       />
                       <span className="truncate flex-1 text-[13px]">{item.label}</span>
                       {item.badge && (
-                        <span className="rounded-full bg-slate-900 px-2 py-0.5 text-[10px] font-bold text-white shadow-xs animate-pop-in">
+                        <span className="rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold text-on-primary shadow-xs animate-pop-in">
                           {item.badge}
                         </span>
                       )}

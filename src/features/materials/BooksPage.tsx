@@ -58,7 +58,7 @@ export const BooksPage: React.FC = () => {
           <button
             type="button"
             onClick={() => navigate(`/materials/reader?bookId=${currentBook?.id || 'BOOK-01'}`)}
-            className="btn-interactive inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2 text-xs font-bold text-white hover:bg-slate-800 shadow-xs transition-colors"
+            className="btn-interactive inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-xs font-bold text-on-primary hover:bg-primary-hover shadow-xs transition-colors"
           >
             <BookOpen className="h-4 w-4 text-amber-400" strokeWidth={2} />
             <span>Đọc giáo trình PDF</span>
@@ -152,7 +152,7 @@ export const BooksPage: React.FC = () => {
                                 `/materials/reader?bookId=${currentBook?.id || 'BOOK-01'}&unitId=${unit.id}`,
                               )
                             }
-                            className="btn-interactive inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-3 py-1.5 text-label-sm font-semibold text-white hover:bg-slate-800 transition-colors shadow-xs"
+                            className="btn-interactive inline-flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-label-sm font-semibold text-on-primary hover:bg-primary-hover transition-colors shadow-xs"
                           >
                             <span>Đọc tài liệu</span>
                             <BookOpen className="h-3.5 w-3.5 text-amber-400" strokeWidth={2} />

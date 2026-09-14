@@ -115,22 +115,26 @@ ielts-lms/
 
 ## Routing Map
 
-| Route               | Component             | Stitch Screen(s) |
-| ------------------- | --------------------- | ---------------- |
-| `/`                 | `CourseInfoPage`      | 16 — ROOT        |
-| `/dashboard`        | `DashboardPage`       | 02               |
-| `/roadmap`          | `RoadmapPage`         | 03               |
-| `/roadmap/personal` | `PersonalRoadmapPage` | 08               |
-| `/exercises`        | `ExercisesPage`       | 01, 09           |
-| `/vocabulary`       | `VocabularyPage`      | 04, 11           |
-| `/materials`        | `MaterialsPage`       | 05               |
-| `/materials/books`  | `BooksPage`           | 15               |
-| `/homework`         | `HomeworkPage`        | 07               |
-| `/final-test`       | `FinalTestPage`       | 06               |
-| `/tests`            | `TestsPage`           | 12               |
-| `/classroom`        | `ClassroomPage`       | 13               |
-| `/attendance`       | `AttendancePage`      | 14               |
-| `/practice`         | `PracticePage`        | 10               |
+| Route                | Component                | Stitch Screen(s) / Description  |
+| -------------------- | ------------------------ | ------------------------------- |
+| `/`                  | Redirect to `/dashboard` | Portal Root Redirect            |
+| `/dashboard`         | `MasterDashboardPage`    | Master Multi-Course Hub         |
+| `/courses`           | `CoursesPage`            | Enrolled Courses Directory      |
+| `/courses/:courseId` | `CourseDetailPage`       | Course Detail & Workspace Entry |
+| `/overview`          | `DashboardPage`          | 02 — Course Workspace Overview  |
+| `/course-info`       | `CourseInfoPage`         | 16 — Legacy Course Info         |
+| `/roadmap`           | `RoadmapPage`            | 03                              |
+| `/roadmap/personal`  | `PersonalRoadmapPage`    | 08                              |
+| `/exercises`         | `ExercisesPage`          | 01, 09                          |
+| `/vocabulary`        | `VocabularyPage`         | 04, 11                          |
+| `/materials`         | `MaterialsPage`          | 05                              |
+| `/materials/books`   | `BooksPage`              | 15                              |
+| `/homework`          | `HomeworkPage`           | 07                              |
+| `/final-test`        | `FinalTestPage`          | 06                              |
+| `/tests`             | `TestsPage`              | 12                              |
+| `/classroom`         | `ClassroomPage`          | 13                              |
+| `/attendance`        | `AttendancePage`         | 14                              |
+| `/practice`          | `PracticePage`           | 10                              |
 
 All routes are children of the `AppLayout` route, which renders `<Header>`, `<Sidebar>` (or `<MobileSidebar>`), and `<Outlet>`.
 
@@ -260,7 +264,16 @@ tailwind.config.ts             ← Maps tokens to Tailwind semantic class names
 JSX                            ← Uses semantic classes: text-primary, bg-surface-container-lowest
 ```
 
-**Rule**: Never use `text-[#dc2626]` or raw colors in JSX. Always use `text-primary`.
+**Mandatory Design Token Rules**:
+
+1. **Never use raw hex colors or arbitrary non-token colors in JSX**:
+   - Strictly forbidden: `text-[#dc2626]`, `bg-[#dc2626]`, or raw `bg-slate-900`/`bg-black` for primary CTA buttons and active indicators.
+   - Always use semantic tokens: `text-primary`, `bg-primary`, `hover:bg-primary-hover`, `text-on-primary`, `bg-primary-container`, `text-on-primary-container`, `border-primary`, `bg-surface-container-lowest`, etc.
+2. **Local Color Change Protocol (Quy trình đổi màu cục bộ 1–2 component)**:
+   - When a user asks to change the color of a specific component or 1–2 isolated elements:
+     - **Verify Scope**: Always verify and confirm that the change is local to that specific component variant (scoped override), NOT a global rebranding.
+     - **Never Modify System Token Files**: NEVER change values in `src/styles/tokens.css` or `tailwind.config.ts` for local requests. Apply custom classes or secondary semantic tokens directly at the target component level.
+     - **Token Immutability**: `src/styles/tokens.css` is the **Single Source of Truth** for IELTS Hồ Thành branding. Changing it causes system-wide side effects and breaks colors across unrelated screens. It may only be modified upon explicit, unequivocal user instructions for a full Rebranding overhaul.
 
 ---
 
@@ -1181,3 +1194,43 @@ Whenever an engineer or AI agent introduces a reusable component, hook, or layou
 - **Constraints & Invariants**:
   - Persisted in `localStorage` under `mistake_log_storage_v1`.
   - Zero layout shift with robust empty states and instant academic seed data.
+
+### 27. Multi-Course Portal Architecture & Active Course Store
+
+- **Asset Names & File Paths**:
+  - Global Store: `src/store/courseStore.ts` (`useCourseStore`)
+  - Master Dashboard: `src/features/master-dashboard/index.tsx` (`MasterDashboardPage`), route `/dashboard`
+  - My Courses Hub: `src/features/courses/index.tsx` (`CoursesPage`), route `/courses`
+  - Course Detail & Entry: `src/features/courses/CourseDetailPage.tsx` (`CourseDetailPage`), route `/courses/:courseId`
+  - Course Workspace Overview: `src/features/dashboard/index.tsx` (`DashboardPage`), route `/overview`
+  - Widgets: `src/features/master-dashboard/components/` (`GlobalKpiCards`, `UpcomingTimetable`, `CourseProgressSnapshot`, `UrgentDeadlines`)
+  - Filters: `src/features/courses/components/` (`CourseCardItem`, `CourseFilterTabs`)
+- **Purpose & UX Intent**:
+  - Supports multi-subject learning center scaling (IELTS, Toán, Đánh giá năng lực).
+  - Divides user journey into two distinct tiers: (1) Student Portal level for cross-course metrics, combined schedule, and course discovery, and (2) Course Workspace level for focused single-course study.
+  - Zero-distraction enrolled-only policy: Strictly shows courses the student is participating in; completely avoids upsell or marketing clutter.
+  - Persistent active course context synchronization across the app.
+- **Usage Example**:
+  ```tsx
+  import { useCourseStore } from '@/store/courseStore'
+
+  // Access or change current course
+  const { activeCourseId, setActiveCourseId } = useCourseStore()
+
+  // Switch course and navigate into workspace
+  const handleEnterCourse = (courseId: string) => {
+    setActiveCourseId(courseId)
+    navigate('/overview')
+  }
+  ```
+- **Constraints & Invariants**:
+  - **Zero Pixel Shift (0px Shift)**: `CourseFilterTabs` maintains identical `border-b-2` on all states to eliminate jumping.
+  - **Dynamic Course Categories**: Strictly avoids hardcoding static subject icons or colors in dynamic categories (Rule 6).
+  - **Two-Tier Layout Separation (Step 0 vs Step 1)**:
+    - **Step 0 (Cổng học viên / `/dashboard`, `/courses`, `/courses/:id`)**: Renders in standalone portal layout where classroom sidebars (desktop & mobile) are completely hidden. Header provides portal navigation (`Tổng quan đa môn`, `Khóa học của tôi`).
+    - **Step 1 (Không gian lớp học / `/overview`, `/homework`, etc.)**: Renders full classroom workspace sidebar with course-specific tools. Navigation back to Step 0 reuses the Header `<ChevronLeft />` button with intelligent visual affordance:
+      - When ready to exit to Cổng học viên (on `/overview` or no previous course history): styled as a square button with a 5px borderline and transparent background (`rounded-[5px] border border-outline bg-transparent hover:border-primary hover:text-primary`, title "Về Cổng học viên").
+      - When navigating between screens inside the course: styled as the normal unbordered icon button (`rounded-lg p-1.5 text-secondary hover:bg-surface-container`, title "Quay lại").
+      - Both states maintain identical 32px × 32px footprint for strict 0px layout shift.
+  - **Workspace Sidebar Scope**: The classroom sidebar (`src/shared/components/Sidebar.tsx`) is scoped to 6 primary modules (`Overview`, `Exercises`, `Vocabulary`, `Dictation`, `Course Materials`, `Course Info`). All other specialized routes (`/homework`, `/attendance`, `/tests`, `/roadmap/personal`, `/mistake-log`, `/final-test`, `/classroom`) remain fully registered and operational in `App.tsx` for direct routing and deep linking without cluttering the main navigation.
+  - **Single Source of Truth**: All active course state is centralized in `useCourseStore` with `localStorage` persistence under key `ielts_lms_active_course_v1`.

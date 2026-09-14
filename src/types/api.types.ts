@@ -87,13 +87,15 @@ export interface CourseInfo {
   studentStatus: 'active' | 'suspended' | 'graduated'
 }
 
-// ── Course Card (dashboard, screen 02) ───────────────────────────
+// ── Course Subject & Card (dashboard & courses) ───────────────────
+
+export type CourseSubject = 'IELTS' | 'TOAN' | 'DGNL'
 
 export interface CourseCard {
   id: string
   name: string
   level: string
-  type: 'IELTS' | 'SAT'
+  type: CourseSubject | string
   band: string
   status: 'active' | 'upcoming' | 'completed'
   schedule: DayKey[]
@@ -105,6 +107,43 @@ export interface CourseCard {
   currentSession: number
   nextSessionDate: string
   description: string
+  teachingAssistant?: string
+  zaloGroupLink?: string
+  attendanceRate?: number
+  homeworkCompletionRate?: number
+  averageScore?: string
+  startDate?: string
+  endDate?: string
+}
+
+export interface UpcomingSessionItem {
+  id: string
+  courseId: string
+  courseName: string
+  subject: string
+  instructor: string
+  date: string
+  time: string
+  zoomLink: string
+}
+
+export interface UrgentDeadlineItem {
+  id: string
+  courseId: string
+  courseName: string
+  title: string
+  dueDate: string
+  type: 'homework' | 'test' | 'exercise'
+}
+
+export interface StudentGlobalProgress {
+  totalEnrolledCourses: number
+  averageCompletionRate: number
+  totalCompletedSessions: number
+  totalSessions: number
+  learningStreakDays: number
+  upcomingSessions: UpcomingSessionItem[]
+  urgentDeadlines: UrgentDeadlineItem[]
 }
 
 // ── Exercise ──────────────────────────────────────────────────────

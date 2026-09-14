@@ -7,8 +7,13 @@ export const queryKeys = {
   courses: {
     all: ['courses'] as const,
     active: () => [...queryKeys.courses.all, 'active'] as const,
+    enrolled: () => [...queryKeys.courses.all, 'enrolled'] as const,
     detail: (courseId?: string) =>
       [...queryKeys.courses.all, 'detail', courseId ?? 'default'] as const,
+  },
+  dashboard: {
+    all: ['dashboard'] as const,
+    globalProgress: () => [...queryKeys.dashboard.all, 'global-progress'] as const,
   },
   vocabulary: {
     all: ['vocabulary'] as const,

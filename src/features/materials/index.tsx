@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { ChevronRight, BookMarked, BookOpen } from 'lucide-react'
+import { ChevronRight, BookOpen } from 'lucide-react'
 import { materialService } from '@/services/materialService'
 import { booksMock } from '@/mocks/books.mock'
 import { queryKeys } from '@/lib/queryKeys'
@@ -81,59 +81,29 @@ export const MaterialsPage: React.FC = () => {
             <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-transparent pointer-events-none" />
 
             {/* Card Content */}
-            <div className="relative z-10 flex flex-col justify-between h-full">
+            <div className="relative z-10 flex flex-col justify-between h-full min-h-[200px]">
               <div>
                 <span className="animate-pop-in inline-block rounded-full bg-black/25 backdrop-blur-sm px-3 py-1 text-[11px] font-bold text-white uppercase tracking-wider border border-white/20 shadow-xs">
                   {book.type === 'main' ? 'Giáo trình chính khóa' : 'Tài liệu bổ trợ'}
                 </span>
-                <h3 className="mt-2 text-headline-sm font-bold text-white leading-snug drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
+                <h3 className="mt-3 text-headline-sm font-bold text-white leading-snug drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
                   {book.title}
                 </h3>
                 <p className="mt-1 text-body-sm text-white/90 leading-relaxed drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]">
                   {book.subtitle}
                 </p>
-
-                {/* Units summary — ultra sheer glassmorphic container */}
-                <div className="mt-5 rounded-xl border border-white/15 bg-black/15 backdrop-blur-xs p-3.5 shadow-xs">
-                  <div className="flex items-center justify-between text-label-sm font-semibold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
-                    <span>Cấu trúc giáo trình:</span>
-                    <span className="text-red-400 font-bold">
-                      {book.units.length} Units học phần
-                    </span>
-                  </div>
-                  <div className="mt-2 flex flex-col gap-1.5">
-                    {book.units.slice(0, 2).map((unit) => (
-                      <div
-                        key={unit.id}
-                        className="flex items-center gap-2 text-body-sm text-white/90 truncate drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
-                      >
-                        <span className="h-1.5 w-1.5 rounded-full bg-red-400 shrink-0" />
-                        <span className="truncate">{unit.title}</span>
-                      </div>
-                    ))}
-                    {book.units.length > 2 && (
-                      <span className="text-[11px] text-white/80 italic drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
-                        + {book.units.length - 2} Units khác
-                      </span>
-                    )}
-                  </div>
-                </div>
               </div>
 
               <div className="mt-6 flex items-center justify-between border-t border-white/15 pt-4">
+                <span className="text-xs text-white/80 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+                  {book.totalPages ? `${book.totalPages} trang tài liệu` : 'Định dạng PDF'}
+                </span>
                 <Link
                   to={`/materials/reader?bookId=${book.id}`}
-                  className="btn-interactive inline-flex items-center gap-1.5 rounded-lg bg-white/20 backdrop-blur-md px-3 py-1.5 text-label-sm font-semibold text-white hover:bg-white/30 transition-colors shadow-xs border border-white/20"
+                  className="btn-interactive inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-label-sm font-semibold text-on-primary hover:bg-primary-hover transition-colors shadow-xs"
                 >
                   <BookOpen className="h-4 w-4 text-amber-300" strokeWidth={2} />
                   <span>Đọc PDF</span>
-                </Link>
-                <Link
-                  to="/materials/books"
-                  className="btn-interactive inline-flex items-center gap-1.5 rounded-lg bg-primary px-3.5 py-1.5 text-label-sm font-semibold text-on-primary hover:bg-primary-hover transition-colors shadow-xs"
-                >
-                  <BookMarked className="h-4 w-4" strokeWidth={2} />
-                  <span>Chi tiết Units</span>
                 </Link>
               </div>
             </div>
