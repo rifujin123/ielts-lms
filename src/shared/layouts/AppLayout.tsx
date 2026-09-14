@@ -13,6 +13,7 @@ export const AppLayout: React.FC = () => {
   const location = useLocation()
   const isDistractionFree =
     location.pathname.startsWith('/exam') || location.pathname.startsWith('/materials/reader')
+  const isNoSidebarRoute = location.pathname.startsWith('/profile')
 
   if (isDistractionFree) {
     return (
@@ -33,16 +34,24 @@ export const AppLayout: React.FC = () => {
       {/* Sticky Top Header */}
       <Header />
 
-      {/* Mobile Drawer */}
-      <MobileSidebar />
+      {/* Mobile Drawer (Hidden on profile page) */}
+      {!isNoSidebarRoute && <MobileSidebar />}
 
       {/* Main Body with Sidebar + Content */}
       <div className="flex flex-1 min-w-0">
-        {/* Desktop Sidebar */}
-        <Sidebar className="hidden sticky top-16 h-[calc(100vh-64px)] md:flex" />
+        {/* Desktop Sidebar (Hidden on profile page) */}
+        {!isNoSidebarRoute && (
+          <Sidebar className="hidden sticky top-16 h-[calc(100vh-64px)] md:flex" />
+        )}
 
         {/* Content Outlet with per-feature ErrorBoundary and Suspense */}
-        <main className="flex-1 overflow-x-hidden px-4 py-6 sm:px-6 md:px-8">
+        <main
+          className={
+            isNoSidebarRoute
+              ? 'flex-1 overflow-x-hidden px-4 py-6 sm:px-6 md:px-8 max-w-6xl mx-auto w-full'
+              : 'flex-1 overflow-x-hidden px-4 py-6 sm:px-6 md:px-8'
+          }
+        >
           <FeatureErrorBoundary>
             <Suspense fallback={<PageLoader />}>
               <Outlet />

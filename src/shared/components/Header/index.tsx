@@ -24,11 +24,14 @@ export const Header: React.FC = () => {
     location.pathname === '/courses' ||
     location.pathname.startsWith('/courses/')
 
+  const isProfileRoute = location.pathname.startsWith('/profile')
+
   // Distinguish when the back button will exit to Cổng học viên:
   // Inside course workspace: on /overview (entry root screen) OR if no previous course history in tab session
   const isReadyToExitToPortal =
     location.pathname === '/overview' ||
     (!isPortalRoute &&
+      !isProfileRoute &&
       typeof window !== 'undefined' &&
       (!window.history.state || window.history.state.idx === 0))
 
@@ -52,7 +55,7 @@ export const Header: React.FC = () => {
     } else if (window.history.length > 1) {
       navigate(-1)
     } else {
-      navigate('/courses')
+      navigate('/dashboard')
     }
   }
 
@@ -60,14 +63,16 @@ export const Header: React.FC = () => {
     <header className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-outline-variant bg-surface-container-lowest px-4 md:px-8">
       {/* Left side */}
       <div className="flex items-center gap-3 md:gap-4">
-        {/* Mobile menu toggle */}
-        <button
-          onClick={toggleSidebar}
-          aria-label="Toggle Navigation"
-          className="flex h-10 w-10 items-center justify-center rounded-lg text-secondary hover:bg-surface-container md:hidden"
-        >
-          <Menu className="h-5 w-5" strokeWidth={2} />
-        </button>
+        {/* Mobile menu toggle (Hidden on standalone profile page) */}
+        {!isProfileRoute && (
+          <button
+            onClick={toggleSidebar}
+            aria-label="Toggle Navigation"
+            className="flex h-10 w-10 items-center justify-center rounded-lg text-secondary hover:bg-surface-container md:hidden"
+          >
+            <Menu className="h-5 w-5" strokeWidth={2} />
+          </button>
+        )}
 
         {/* Back navigation left-chevron (Hidden on portal top-level routes /dashboard and /courses) */}
         {location.pathname !== '/dashboard' &&
@@ -84,7 +89,7 @@ export const Header: React.FC = () => {
               <ChevronLeft className="h-5 w-5" strokeWidth={2.2} />
             </button>
           ) : (
-            /* Normal back button when jumping between screens inside the course */
+            /* Normal back button when jumping between screens inside the course or navigating back from profile */
             <button
               type="button"
               onClick={handleBack}
@@ -106,7 +111,7 @@ export const Header: React.FC = () => {
         </Link>
 
         {/* Step 1: Course Workspace Title Badge (Only shown inside classroom workspace) */}
-        {!isPortalRoute && (
+        {!isPortalRoute && !isProfileRoute && (
           <Link
             to="/courses"
             title="Đổi khóa học"
@@ -135,7 +140,7 @@ export const Header: React.FC = () => {
             <span className="h-2 w-2 rounded-full bg-primary"></span>
             <span>Cổng Học Viên Đa Môn</span>
           </div>
-        ) : (
+        ) : isProfileRoute ? null : (
           <div className="animate-pop-in hidden items-center gap-1.5 rounded-full border border-outline-variant bg-surface-container-low px-3 py-1 text-label-sm font-medium text-secondary sm:flex">
             <span className="h-2 w-2 rounded-full bg-tertiary"></span>
             <span>{activePhase.label}</span>
