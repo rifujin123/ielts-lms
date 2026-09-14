@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { BookMarked, UserCog, LogOut, ChevronDown } from 'lucide-react'
+import { UserCog, LogOut, ChevronDown } from 'lucide-react'
 import { useUIStore } from '@/store/uiStore'
 import { toast } from '@/shared/components/Toast/toastStore'
 
@@ -99,23 +99,6 @@ export const UserDropdown: React.FC = () => {
 
           {/* Navigation Links */}
           <div className="space-y-0.5 py-1">
-            <button
-              type="button"
-              role="menuitem"
-              onClick={() => handleNavigate('/vocabulary?tab=personal')}
-              className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-label-md font-medium text-on-surface hover:bg-surface-container transition-colors duration-150 cursor-pointer text-left group"
-            >
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-surface-container text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-150">
-                <BookMarked className="h-4 w-4" strokeWidth={2} />
-              </div>
-              <div className="flex-1">
-                <div className="leading-snug">Sổ từ vựng</div>
-                <div className="text-[11px] text-secondary font-normal">
-                  Từ vựng cá nhân tích lũy
-                </div>
-              </div>
-            </button>
-
             <button
               type="button"
               role="menuitem"

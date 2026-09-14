@@ -1,5 +1,5 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import {
   Compass,
   Languages,
@@ -9,6 +9,8 @@ import {
   Headset,
   Film,
   ExternalLink,
+  LayoutDashboard,
+  GraduationCap,
   type LucideIcon,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -26,15 +28,23 @@ interface NavGroupDef {
 }
 
 /**
- * Danh sách các mục điều hướng tạm ẩn khỏi Sidebar theo yêu cầu:
- * - Syllabus: '/homework'
- * - Attendance: '/attendance'
- * - Mock Tests: '/tests'
- * - Study Roadmap: '/roadmap/personal'
- * - Mistake Log: '/mistake-log'
- * - Final Assessment: '/final-test'
- * - Virtual Class: '/classroom'
- * Toàn bộ các trang (pages) và tuyến đường (routes) trên vẫn được bảo toàn nguyên vẹn trong App.tsx.
+ * Danh sách điều hướng Cổng học viên (Step 0)
+ */
+const portalNavGroups: NavGroupDef[] = [
+  {
+    title: 'CỔNG HỌC VIÊN',
+    items: [
+      { label: 'Tổng quan đa môn', to: '/dashboard', icon: LayoutDashboard },
+      { label: 'Khóa học của tôi', to: '/courses', icon: GraduationCap },
+    ],
+  },
+]
+
+/**
+ * Danh sách các mục điều hướng Không gian lớp học (Step 1):
+ * Các mục tạm ẩn: Syllabus (/homework), Attendance (/attendance), Mock Tests (/tests),
+ * Study Roadmap (/roadmap/personal), Mistake Log (/mistake-log), Final Assessment (/final-test), Virtual Class (/classroom).
+ * Toàn bộ các trang trên vẫn được bảo toàn nguyên vẹn trong App.tsx.
  */
 const navGroups: NavGroupDef[] = [
   {
@@ -64,6 +74,14 @@ export interface SidebarProps {
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ className, onItemClick }) => {
+  const location = useLocation()
+  const isPortalRoute =
+    location.pathname === '/dashboard' ||
+    location.pathname === '/courses' ||
+    location.pathname.startsWith('/courses/')
+
+  const activeGroups = isPortalRoute ? portalNavGroups : navGroups
+
   return (
     <aside
       className={cn(
@@ -72,7 +90,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, onItemClick }) => {
       )}
     >
       <nav className="flex flex-col gap-5 px-2.5">
-        {navGroups.map((group, gIdx) => (
+        {activeGroups.map((group, gIdx) => (
           <div key={gIdx} className="flex flex-col gap-0.5">
             {group.title && (
               <h4 className="px-2.5 pb-1 text-[10px] font-bold uppercase tracking-wider text-secondary/70">
@@ -83,7 +101,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, onItemClick }) => {
               <NavLink
                 key={item.to}
                 to={item.to}
-                end={item.to === '/'}
+                end={item.to === '/' || item.to === '/dashboard'}
                 onClick={onItemClick}
                 className={({ isActive }) =>
                   cn(

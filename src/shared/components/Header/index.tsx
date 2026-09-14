@@ -1,7 +1,6 @@
 import React from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { Menu, ChevronLeft, Bell } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import { useUIStore } from '@/store/uiStore'
 import { useCourseStore } from '@/store/courseStore'
 import { activeCoursesMock } from '@/mocks/course.mock'
@@ -61,19 +60,18 @@ export const Header: React.FC = () => {
     <header className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-outline-variant bg-surface-container-lowest px-4 md:px-8">
       {/* Left side */}
       <div className="flex items-center gap-3 md:gap-4">
-        {/* Mobile menu toggle (Only shown inside classroom workspace where sidebar exists) */}
-        {!isPortalRoute && (
-          <button
-            onClick={toggleSidebar}
-            aria-label="Toggle Navigation"
-            className="flex h-10 w-10 items-center justify-center rounded-lg text-secondary hover:bg-surface-container md:hidden"
-          >
-            <Menu className="h-5 w-5" strokeWidth={2} />
-          </button>
-        )}
+        {/* Mobile menu toggle */}
+        <button
+          onClick={toggleSidebar}
+          aria-label="Toggle Navigation"
+          className="flex h-10 w-10 items-center justify-center rounded-lg text-secondary hover:bg-surface-container md:hidden"
+        >
+          <Menu className="h-5 w-5" strokeWidth={2} />
+        </button>
 
-        {/* Back navigation left-chevron (Hidden on portal root /dashboard) */}
+        {/* Back navigation left-chevron (Hidden on portal top-level routes /dashboard and /courses) */}
         {location.pathname !== '/dashboard' &&
+          location.pathname !== '/courses' &&
           (isReadyToExitToPortal ? (
             /* Square button with 5px border line, transparent color when ready to jump to portal */
             <button
@@ -107,33 +105,8 @@ export const Header: React.FC = () => {
           />
         </Link>
 
-        {/* Step 0: Cổng học viên navigation vs Step 1: Course Workspace Title Badge */}
-        {isPortalRoute ? (
-          <nav className="hidden sm:flex items-center gap-1 border-l border-outline-variant pl-4">
-            <Link
-              to="/dashboard"
-              className={cn(
-                'rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors',
-                location.pathname === '/dashboard'
-                  ? 'bg-primary-container text-on-primary-container font-bold'
-                  : 'text-secondary hover:bg-surface-container hover:text-on-surface',
-              )}
-            >
-              Tổng quan đa môn
-            </Link>
-            <Link
-              to="/courses"
-              className={cn(
-                'rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors',
-                location.pathname.startsWith('/courses')
-                  ? 'bg-primary-container text-on-primary-container font-bold'
-                  : 'text-secondary hover:bg-surface-container hover:text-on-surface',
-              )}
-            >
-              Khóa học của tôi
-            </Link>
-          </nav>
-        ) : (
+        {/* Step 1: Course Workspace Title Badge (Only shown inside classroom workspace) */}
+        {!isPortalRoute && (
           <Link
             to="/courses"
             title="Đổi khóa học"
